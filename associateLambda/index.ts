@@ -21,4 +21,14 @@ export const putAssociate = async (): Promise<any> => {};
 
 //method is patch
 //update an existing note or status
-export const patchAssociate = async (): Promise<any> => {};
+export const patchAssociate = async (): Promise<any> => {
+
+}
+
+export class qcFeedback {
+    batchId: string;
+    weekId: number;
+    associateId: string;
+    qcNote: string;
+    qcTechnicalStatus: number;
+}
