@@ -30,6 +30,7 @@
     "typescript": "^4.1.5"
   },
   "dependencies": {
+    "axios": "^0.21.1",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "http-errors": "^1.8.0",
