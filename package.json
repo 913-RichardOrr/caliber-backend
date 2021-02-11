@@ -1,0 +1,19 @@
+{
+  "name": "caliber-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/913-RichardOrr/caliber-backend.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/913-RichardOrr/caliber-backend/issues"
+  },
+  "homepage": "https://github.com/913-RichardOrr/caliber-backend#readme"
+}
