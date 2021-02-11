@@ -1,6 +1,7 @@
 import AWS from 'aws-sdk-mock';
 import { Client } from 'pg';
 
+// mocked client
 jest.mock('pg', () => {
     const mClient = {
       connect: jest.fn(),
@@ -9,6 +10,28 @@ jest.mock('pg', () => {
     };
     return { Client: jest.fn(() => mClient) };
   });
+
+function success(data: any){jest.fn()}
+function failure(data: any){jest.fn()}
+
+describe('Given an event, the handler can determine the correct method', () => {
+    // mocked event
+    const mEvent = {
+        path: '',
+        body: {},
+        method: ''
+    }
+
+    test('that method is GET', () => {
+        mEvent.method = 'GET';
+
+    });
+
+    test('that method is POST', () => {
+        mEvent.method = 'POST';
+        
+    });
+});
 
 describe('handler', () => {
     let client: any;
@@ -24,51 +47,22 @@ describe('handler', () => {
     });
 
     test('GET request should succeed', () => {
-        client.query.mockResolvedValueOnce({ rows: [], rowCount: 0 });
+        client.query.mockReturnValue('default');
         expect(client.connect).toBeCalledTimes(1);
-        expect(client.query).toBeCalledWith('');
+        expect(client.query).toBeCalledWith('select * from categories');
         expect(client.end).toBeCalledTimes(1);
-        expect(success).toBeCalledWith({ message: '0 item(s) returned', data: [], status: true });
     });
 
     test('GET request should fail', () => {
-        // connect to client
-
-        // perform an action to postgres
-
-        // create a response
-
-        // end connection to client
-
-        // return response
 
     });
 
     test('POST request should succeed', () => {
 
-        // connect to client
-
-        // perform an action to postgres
-
-        // create a response
-
-        // end connection to client
-
-        // return response
 
     });
 
-
-
-        // connect to client
-
-        // perform an action to postgres
-
-        // create a response
-
-        // end connection to client
-
-        // return response
+    test('POST request should fail', () => {
 
     });
 
