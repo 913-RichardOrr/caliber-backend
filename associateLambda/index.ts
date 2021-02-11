@@ -2,8 +2,8 @@
 
 interface AssocEvent {
   path: string;
+  method: string;
   body?: string;
-  method?: string;
 }
 
 //figures out what http method has been called: GET, PUT, PATCH

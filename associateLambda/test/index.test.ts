@@ -1,10 +1,12 @@
 //Tests for associate lambda handler and helpers
 
-import { handler, getAssociate, putAssociate, patchAssociate, qcFeedback } from '../index';
+const { handler, getAssociate, putAssociate, patchAssociate, qcFeedback } = require('../index');
+const { Client } = require('pg');
+
 let testEvent = {
     path: 'path',
-    body?: {"1":1},
-    method?: 'method'
+    body: {"1":1},
+    method: 'method'
 }
 
 describe('tests for handler', () => {
@@ -57,7 +59,7 @@ describe('tests for putAssociate', () => {
 });
 
 describe('tests for patchAssociate', () => {
-    const original: qcFeedback = {
+    const original = {
         batchId: 'YYMM-mmmDD-Stuff',
         weekId: 1,
         associateId: 'example@example.net',
@@ -70,7 +72,7 @@ describe('tests for patchAssociate', () => {
     const mockEnd = jest.fn();
     jest.mock('pg', ()=>{
         return {
-            Client: ()=>({connect: mockConnect, query: mockQuery, end: mockEnd})
+            Client: jest.fn(()=>({connect: mockConnect, query: mockQuery, end: mockEnd}))
         }
     });
 
