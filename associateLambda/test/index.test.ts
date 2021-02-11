@@ -18,7 +18,7 @@ describe('tests for handler', () => {
   })
       
   test('test handler can differentiate between get/put/patch', async () => {
-    thishandler = jest.fn()
+    handler(testEvent) = jest.fn();
   });
 });
 
