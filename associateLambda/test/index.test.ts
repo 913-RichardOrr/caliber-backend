@@ -1,59 +1,103 @@
 //Tests for associate lambda handler and helpers
 
-import { handler, getAssociate, putAssociate, patchAssociate } from '../index';
-let testEvent = {
-    path: 'path',
-    body?: {"1":1},
-    method?: 'method'
-}
+import * as associateLambda from '../associateService';
+import { handler, AssocEvent } from '../index';
 
+let testEvent: AssocEvent;
+
+//Author: Tyler
 describe('tests for handler', () => {
-    
-  beforeEach( () => {
-    {
-        testEvent.path = '/something';
-        testEvent.body = {"1":1};
-        testEvent.method = 'PUT';
-    }
-  })
-      
   test('test handler can differentiate between get/put/patch', async () => {
-    handler(testEvent) = jest.fn();
+    testEvent = {
+      path: '/something',
+      body: { '1': 1 },
+      method: 'PUT',
+    };
+
+    jest.mock('../associateService', () => ({
+      getAssociate: jest.fn().mockImplementation(),
+    }));
+    jest.mock('../associateService', () => ({
+      putAssociate: jest.fn().mockImplementation(),
+    }));
+    jest.mock('../associateService', () => ({
+      patchAssociate: jest.fn().mockImplementation(),
+    }));
+
+    await handler(testEvent);
+
+    expect(associateLambda.putAssociate).toHaveBeenCalledTimes(1);
+    expect(associateLambda.getAssociate).toHaveBeenCalledTimes(0);
+    expect(associateLambda.patchAssociate).toHaveBeenCalledTimes(0);
+  });
+  test('test handler can differentiate between get/put/patch', async () => {
+    testEvent = {
+      path: '/something',
+      body: { '1': 1 },
+      method: 'GET',
+    };
+
+    jest.mock('../associateService', () => ({
+      getAssociate: jest.fn().mockImplementation(),
+    }));
+    jest.mock('../associateService', () => ({
+      putAssociate: jest.fn().mockImplementation(),
+    }));
+    jest.mock('../associateService', () => ({
+      patchAssociate: jest.fn().mockImplementation(),
+    }));
+
+    await handler(testEvent);
+
+    expect(associateLambda.putAssociate).toHaveBeenCalledTimes(0);
+    expect(associateLambda.getAssociate).toHaveBeenCalledTimes(1);
+    expect(associateLambda.patchAssociate).toHaveBeenCalledTimes(0);
+  });
+  test('test handler can differentiate between get/put/patch', async () => {
+    testEvent = {
+      path: '/something',
+      body: { '1': 1 },
+      method: 'PATCH',
+    };
+
+    jest.mock('../associateService', () => ({
+      getAssociate: jest.fn().mockImplementation(),
+    }));
+    jest.mock('../associateService', () => ({
+      putAssociate: jest.fn().mockImplementation(),
+    }));
+    jest.mock('../associateService', () => ({
+      patchAssociate: jest.fn().mockImplementation(),
+    }));
+
+    await handler(testEvent);
+
+    expect(associateLambda.putAssociate).toHaveBeenCalledTimes(0);
+    expect(associateLambda.getAssociate).toHaveBeenCalledTimes(0);
+    expect(associateLambda.patchAssociate).toHaveBeenCalledTimes(1);
   });
 });
 
 describe('tests for getAssociate', async () => {
   testEvent.path = '/something';
-  
 
-  test('that getAssociate gets associate')
+  test('that getAssociate gets associate');
 });
 
 describe('tests for putAssociate', () => {
   testEvent.path = 'idk';
-  testEvent.body = { note: 'test note', status: 2 };
-  test('that putAssociate does things....', () => {
+  testEvent.body = {
+    batchId: 'batch1',
+    weekId: 1,
+    associateId: 'testAssociateId',
+    qcNote: 'test note',
+    qcTechnicalStatus: 2,
+  };
 
-  });
-    {
-        testEvent.path = '1';
-    }
-  })
-      
-  test('test handler can differentiate between get/put/patch', async () => {
-    
+  test('that putAssociate does things....', () => {
+    let response;
+
+    expect(associateLambda.putAssociate).toBeCalledTimes(1);
+    expect(associateLambda.putAssociate).toBeCalledWith();
   });
 });
-
-describe('tests for getAssociate', async () => {});
-
-describe('tests for putAssociate', () => {
-  let testEvent = {
-    path:
-  }
-  test('that putAssociate does things....', () => {
-
-  });
-});
-
-describe('tests for patchAssociate', () => {});
