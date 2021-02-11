@@ -1,6 +1,7 @@
 // lambda handler function
+import * as associateLambda from './associateService';
 
-interface AssocEvent {
+export interface AssocEvent {
   path: string;
   method: string;
   body?: string;
