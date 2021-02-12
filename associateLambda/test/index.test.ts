@@ -11,7 +11,7 @@ describe('tests for handler', () => {
     testEvent = {
       path: '/something',
       body: '{1:1}',
-      method: 'PUT',
+      httpMethod: 'PUT',
     };
 
     jest.mock('../associateService', () => ({
@@ -34,7 +34,7 @@ describe('tests for handler', () => {
     testEvent = {
       path: '/something',
       body: '{1:1}',
-      method: 'GET',
+      httpMethod: 'GET',
     };
 
     jest.mock('../associateService', () => ({
@@ -57,7 +57,7 @@ describe('tests for handler', () => {
     testEvent = {
       path: '/something',
       body: '{1:1}',
-      method: 'PATCH',
+      httpMethod: 'PATCH',
     };
 
     jest.mock('../associateService', () => ({
