@@ -143,7 +143,7 @@ describe('tests for patchAssociate', () => {
         qcTechnicalStatus: 2
     };
 
-    test('That updating an associate\'s note works', async () => {
+    test('That updating an associate\'s note calls pg with correct query', async () => {
         const testUpdateObject = {qcNote: 'Updated blablabla'};
 
         const updatedObject = original;
@@ -152,10 +152,13 @@ describe('tests for patchAssociate', () => {
         await expect(associateLambda.patchAssociate(JSON.stringify(testUpdateObject))).toBe(updatedObject);
         expect(mockConnect).toHaveBeenCalledTimes(1);
         expect(mockQuery).toHaveBeenCalledTimes(1);
+        expect(mockQuery).toHaveBeenLastCalledWith(
+          'update qcnotes set note = $1::text where associateid = $2::text and weekid = $3::integer and batchid = $3::text',
+          [testUpdateObject.qcNote, original.associateId, original.weekId, original.batchId]);
         expect(mockEnd).toHaveBeenCalledTimes(1);
     });
 
-    test('That updating an associate\'s status works', async () => {
+    test('That updating an associate\'s status calls pg with correct query', async () => {
         const testUpdateObject = {qcTechnicalStatus: 3};
 
         const updatedObject = original;
@@ -164,10 +167,13 @@ describe('tests for patchAssociate', () => {
         await expect(associateLambda.patchAssociate(JSON.stringify(testUpdateObject))).toBe(updatedObject);
         expect(mockConnect).toHaveBeenCalledTimes(1);
         expect(mockQuery).toHaveBeenCalledTimes(1);
+        expect(mockQuery).toHaveBeenLastCalledWith(
+          'update qcnotes set techstatus = $1::integer where associateid = $2::text and weekid = $3::integer and batchid = $3::text',
+          [testUpdateObject.qcTechnicalStatus, original.associateId, original.weekId, original.batchId]);
         expect(mockEnd).toHaveBeenCalledTimes(1);
     });
 
-    test('That invalid input returns an error but doesn\'t break anything', async () => {
+    test('That invalid input returns null but doesn\'t break anything', async () => {
         const testUpdateObject = {nonsense: 3};
 
         await expect(associateLambda.patchAssociate(JSON.stringify(testUpdateObject))).toBe(null);
