@@ -3,6 +3,7 @@
 import * as associateLambda from '../index';
 import { handler, AssocEvent } from '../index';
 import { Client } from 'pg';
+import { getAssociate, patchAssociate, putAssociate } from '../index';
 
 let testEvent: associateLambda.AssocEvent;
 
@@ -21,15 +22,9 @@ jest.mock('pg', () => {
 
 //Author: Tyler
 describe('tests for handler', () => {
-  jest.mock('../index', () => ({
-    getAssociate: jest.fn().mockImplementation(),
-  }));
-  jest.mock('../index', () => ({
-    putAssociate: jest.fn().mockImplementation(),
-  }));
-  jest.mock('../index', () => ({
-    patchAssociate: jest.fn().mockImplementation(),
-  }));
+  associateLambda.getAssociate = jest.fn().mockReturnValue('');
+  associateLambda.putAssociate = jest.fn().mockReturnValue('');
+  associateLambda.patchAssociate = jest.fn().mockReturnValue('');
 
   test('test handler can differentiate between get/put/patch', async () => {
     testEvent = {
@@ -40,8 +35,8 @@ describe('tests for handler', () => {
 
     await associateLambda.handler(testEvent);
 
-    expect(associateLambda.putAssociate).toHaveBeenCalledTimes(1);
     expect(associateLambda.getAssociate).toHaveBeenCalledTimes(0);
+    expect(associateLambda.putAssociate).toHaveBeenCalledTimes(1);
     expect(associateLambda.patchAssociate).toHaveBeenCalledTimes(0);
   });
   test('test handler can differentiate between get/put/patch', async () => {
@@ -53,8 +48,8 @@ describe('tests for handler', () => {
 
     await associateLambda.handler(testEvent);
 
-    expect(associateLambda.putAssociate).toHaveBeenCalledTimes(0);
     expect(associateLambda.getAssociate).toHaveBeenCalledTimes(1);
+    expect(associateLambda.putAssociate).toHaveBeenCalledTimes(0);
     expect(associateLambda.patchAssociate).toHaveBeenCalledTimes(0);
   });
   test('test handler can differentiate between get/put/patch', async () => {
@@ -66,8 +61,8 @@ describe('tests for handler', () => {
 
     await associateLambda.handler(testEvent);
 
-    expect(associateLambda.putAssociate).toHaveBeenCalledTimes(0);
     expect(associateLambda.getAssociate).toHaveBeenCalledTimes(0);
+    expect(associateLambda.putAssociate).toHaveBeenCalledTimes(0);
     expect(associateLambda.patchAssociate).toHaveBeenCalledTimes(1);
   });
 });
