@@ -27,25 +27,17 @@ describe('batch-week test for handler', () => {
       httpMethod: 'GET'
     };
 
-    
-    // we don't need these to actually do anything right now
-    jest.mock('../index', () => ({
-      getWeek: jest.fn().mockImplementation(),
-    }));
-
-    jest.mock('../index', () => ({
-      addNewWeek: jest.fn().mockImplementation(),
-    }));
-
-    jest.mock('../index', () => ({
-      addNote: jest.fn().mockImplementation(),
-    }));
-
     await batchweek.handler(testEvent);
-    // Make sure only the correct function is being called based on path & http method
-    expect(batchweek.getWeek).toHaveBeenCalledTimes(1);
-    expect(batchweek.addNewWeek).toHaveBeenCalledTimes(0);
-    expect(batchweek.addNote).toHaveBeenCalledTimes(0);
+
+    let testAddNewWeek = batchweek.addNewWeek;
+    let testGetWeek = batchweek.getWeek;
+    let testAddNote = batchweek.addNote;
+    testAddNewWeek = jest.fn().mockImplementation();
+    testGetWeek = jest.fn().mockImplementation();
+    testAddNote = jest.fn().mockImplementation();
+    expect(testAddNewWeek).toHaveBeenCalledTimes(0);
+    expect(testAddNote).toHaveBeenCalledTimes(0);
+    expect(testGetWeek).toHaveBeenCalledTimes(1);
   });
 
   test('handler routes correctly to addNewWeek function', async () => {
@@ -54,25 +46,18 @@ describe('batch-week test for handler', () => {
       body: '1',
       httpMethod: 'POST'
     };
-    
-    // we don't need these to actually do anything right now
-    jest.mock('../index', () => ({
-      getWeek: jest.fn().mockImplementation(),
-    }));
-
-    jest.mock('../index', () => ({
-      addNewWeek: jest.fn().mockImplementation(),
-    }));
-
-    jest.mock('../index', () => ({
-      addNote: jest.fn().mockImplementation(),
-    }));
 
     await batchweek.handler(testEvent);
-    // Make sure only the correct function is being called based on path & http method
-    expect(batchweek.getWeek).toHaveBeenCalledTimes(0);
-    expect(batchweek.addNewWeek).toHaveBeenCalledTimes(1);
-    expect(batchweek.addNote).toHaveBeenCalledTimes(0);
+
+    let testAddNewWeek = batchweek.addNewWeek;
+    let testGetWeek = batchweek.getWeek;
+    let testAddNote = batchweek.addNote;
+    testAddNewWeek = jest.fn().mockImplementation();
+    testGetWeek = jest.fn().mockImplementation();
+    testAddNote = jest.fn().mockImplementation();
+    expect(testAddNewWeek).toHaveBeenCalledTimes(1);
+    expect(testAddNote).toHaveBeenCalledTimes(0);
+    expect(testGetWeek).toHaveBeenCalledTimes(0);
   });
 
   test('handler routes correctly to addNote function', async () => {
@@ -81,25 +66,19 @@ describe('batch-week test for handler', () => {
       body: '1',
       httpMethod: 'POST'
     };
-    
-    // we don't need these to actually do anything right now
-    jest.mock('../index', () => ({
-      getWeek: jest.fn().mockImplementation(),
-    }));
 
-    jest.mock('../index', () => ({
-      addNewWeek: jest.fn().mockImplementation(),
-    }));
-
-    jest.mock('../index', () => ({
-      addNote: jest.fn().mockImplementation(),
-    }));
 
     await batchweek.handler(testEvent);
-    // Make sure only the correct function is being called based on path & http method
-    expect(batchweek.getWeek).toHaveBeenCalledTimes(0);
-    expect(batchweek.addNewWeek).toHaveBeenCalledTimes(0);
-    expect(batchweek.addNote).toHaveBeenCalledTimes(1);
+
+    let testAddNewWeek = batchweek.addNewWeek;
+    let testGetWeek = batchweek.getWeek;
+    let testAddNote = batchweek.addNote;
+    testAddNewWeek = jest.fn().mockImplementation();
+    testGetWeek = jest.fn().mockImplementation();
+    testAddNote = jest.fn().mockImplementation();
+    expect(testAddNewWeek).toHaveBeenCalledTimes(0);
+    expect(testAddNote).toHaveBeenCalledTimes(1);
+    expect(testGetWeek).toHaveBeenCalledTimes(0);
   });
 });
 
@@ -119,9 +98,25 @@ describe('batch-week test for getWeek', ()=> {
 });
 
 describe('batch-week test for addNewWeek', ()=> {
-  
+    testEvent.path = '/batches/1/weeks/1';
+    testEvent.body = JSON.stringify({
+      id: 1,
+      category_id: 1,
+      batch_id: '1',
+      week: 1
+    });
+
+    test('add a new week', () => {
+        let testAddNewWeek = batchweek.addNewWeek;
+        testAddNewWeek = jest.fn().mockImplementation();
+        expect(testAddNewWeek).toBeCalledTimes(1);
+    })
 });
 
 describe('batch-week test for addNote', ()=> {
-  
+
 });
+
+//batches
+    //batchid ---> 7
+
