@@ -7,22 +7,23 @@ let testEvent: associateLambda.AssocEvent;
 
 //Author: Tyler
 describe('tests for handler', () => {
+  
+  jest.mock('../index', () => ({
+    getAssociate: jest.fn().mockImplementation(),
+  }));
+  jest.mock('../index', () => ({
+    putAssociate: jest.fn().mockImplementation(),
+  }));
+  jest.mock('../index', () => ({
+    patchAssociate: jest.fn().mockImplementation(),
+  }));
+
   test('test handler can differentiate between get/put/patch', async () => {
     testEvent = {
       path: '/something',
       body: '{1:1}',
       httpMethod: 'PUT',
     };
-
-    jest.mock('../index', () => ({
-      getAssociate: jest.fn().mockImplementation(),
-    }));
-    jest.mock('../index', () => ({
-      putAssociate: jest.fn().mockImplementation(),
-    }));
-    jest.mock('../index', () => ({
-      patchAssociate: jest.fn().mockImplementation(),
-    }));
 
     await associateLambda.handler(testEvent);
 
@@ -37,16 +38,6 @@ describe('tests for handler', () => {
       httpMethod: 'GET',
     };
 
-    jest.mock('../associateService', () => ({
-      getAssociate: jest.fn().mockImplementation(),
-    }));
-    jest.mock('../associateService', () => ({
-      putAssociate: jest.fn().mockImplementation(),
-    }));
-    jest.mock('../associateService', () => ({
-      patchAssociate: jest.fn().mockImplementation(),
-    }));
-
     await associateLambda.handler(testEvent);
 
     expect(associateLambda.putAssociate).toHaveBeenCalledTimes(0);
@@ -59,16 +50,6 @@ describe('tests for handler', () => {
       body: '{1:1}',
       httpMethod: 'PATCH',
     };
-
-    jest.mock('../associateService', () => ({
-      getAssociate: jest.fn().mockImplementation(),
-    }));
-    jest.mock('../associateService', () => ({
-      putAssociate: jest.fn().mockImplementation(),
-    }));
-    jest.mock('../associateService', () => ({
-      patchAssociate: jest.fn().mockImplementation(),
-    }));
 
     await associateLambda.handler(testEvent);
 

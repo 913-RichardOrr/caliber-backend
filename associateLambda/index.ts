@@ -2,7 +2,7 @@
 
 export interface AssocEvent {
   path: string;
-  method: string;
+  httpMethod: string;
   body?: string;
 }
 
