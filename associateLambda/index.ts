@@ -2,8 +2,8 @@
 
 export interface AssocEvent {
   path: string;
-  body?: any;
-  method?: string;
+  method: string;
+  body?: string;
 }
 
 //figures out what http method has been called: GET, PUT, PATCH
