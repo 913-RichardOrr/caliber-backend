@@ -1,4 +1,6 @@
 import * as batchweek from '../index';
+import { Client } from 'pg';
+
 
 let testEvent = {
   path: 'path',
@@ -70,7 +72,8 @@ describe('batch-week test for handler', () => {
       httpMethod: 'POST'
     };
     
-    // we don't need these to actually do anything right now
+
+    /* // we don't need these to actually do anything right now
     jest.mock('../index', () => ({
       getWeek: jest.fn().mockImplementation(),
     }));
@@ -81,7 +84,7 @@ describe('batch-week test for handler', () => {
 
     jest.mock('../index', () => ({
       addNote: jest.fn().mockImplementation(),
-    }));
+    })); */
 
     await batchweek.handler(testEvent);
     // Make sure only the correct function is being called based on path & http method
@@ -100,5 +103,25 @@ describe('batch-week test for addNewWeek', ()=> {
 });
 
 describe('batch-week test for addNote', ()=> {
-  
+  const testNote: batchweek.WeekInfo = {
+    batchId: 'YYMM-dd',
+    weekId: 1,
+    overallNote: 'good job'
+  }
+
+  const mockConnect = jest.fn();
+  const mockQuery = jest.fn();
+  const mockEnd = jest.fn();
+
+  jest.mock('pg', () => {
+    return {
+      Client: jest.fn(() => ({ connect: mockConnect, query: mockQuery, end: mockEnd }))
+    }
+  });
+
+  test('That adding an overall note works', async () => {
+    const testOverallNote = { overallNote: 'yey'};
+
+    const 
+  })
 });

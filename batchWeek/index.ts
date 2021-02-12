@@ -30,3 +30,9 @@ export let getWeek = async (): Promise<any> => {};
 
 //a POST method to a note to an overall note to a week
 export const addNote = async (): Promise<any> => {};
+
+export class WeekInfo {
+    batchId: string = '';
+    weekId: number = 0;
+    overallNote: string = '';
+}
