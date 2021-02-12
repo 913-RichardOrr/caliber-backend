@@ -1,6 +1,6 @@
 //Tests for associate lambda handler and helpers
 
-import * as associateLambda from '../associateService';
+import * as associateLambda from '../index';
 import { handler, AssocEvent } from '../index';
 
 let testEvent: AssocEvent;
@@ -86,16 +86,19 @@ describe('tests for getAssociate', async () => {
 
 describe('tests for putAssociate', () => {
   testEvent.path = 'idk';
-  testEvent.body = {
+  testEvent.body = JSON.stringify({
     batchId: 'batch1',
     weekId: 1,
     associateId: 'testAssociateId',
     qcNote: 'test note',
     qcTechnicalStatus: 2,
-  };
+  });
 
-  test('that putAssociate does things....', () => {
+  test('that putAssociate does things....', async () => {
     let response;
+    await associateLambda.putAssociate().then((result: any) => {
+      response = result;
+    });
 
     expect(associateLambda.putAssociate).toBeCalledTimes(1);
     expect(associateLambda.putAssociate).toBeCalledWith();
