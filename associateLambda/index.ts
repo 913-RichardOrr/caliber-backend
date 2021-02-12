@@ -1,10 +1,9 @@
 // lambda handler function
-import * as associateLambda from './associateService';
 
 export interface AssocEvent {
   path: string;
   method: string;
-  body?: string;
+  body?: any;
 }
 
 //figures out what http method has been called: GET, PUT, PATCH
@@ -14,7 +13,9 @@ export const handler = async (event: AssocEvent): Promise<any> => {};
 
 //method is get
 //get the note and technical status for that person for that week
-export const getAssociate = async (): Promise<any> => {};
+export const getAssociate = async (batchId: string, weekId: number, associateId: string): Promise<qcFeedback|null> => {
+  return null;
+};
 
 //method is put
 //create the note and technical status for that person for that week

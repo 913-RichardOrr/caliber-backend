@@ -79,15 +79,22 @@ describe('tests for handler', () => {
 });
 
 describe('tests for getAssociate', async () => {
+
+  testEvent.path = 'idk';
+  testEvent.body = {
+    batchId: 'batch1',
+    weekId: 1,
+    associateId: 'testAssociateId',
+    qcNote: 'test note',
+    qcTechnicalStatus: 2,
+  };
   testEvent.path = '/something';
   test('that getAssociate returns a promise with associate data.', () => {
-  const mockResponse = {code: 200, data: 'mocked data'};
-  //const mockGet = jest.fn().mockResolvedValueOnce(mockResponse);
-  //const mockGet = jest.spyOn(Client,'get').mockResolvedValueOnce(mockResponse);
-  const actualValue = associateLambda.getAssociate;
-  expect(actualValue).toEqual(mockResponse);  
-  expect(associateLambda.getAssociate).toBeCalledTimes(1);
-  expect(associateLambda.getAssociate).toBeCalledWith();
+    const mockResponse = testEvent.body;
+    const actualValue = associateLambda.getAssociate('batch1', 1, 'testAssociateId');
+    expect(actualValue).toEqual(mockResponse);  
+    expect(associateLambda.getAssociate).toBeCalledTimes(1);
+    expect(associateLambda.getAssociate).toBeCalledWith();
   });
   
  
