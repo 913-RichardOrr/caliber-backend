@@ -19,7 +19,7 @@ export async function getAssociate(): Promise<any> {
 
 //method is put
 //create the note and technical status for that person for that week
-export async function putAssociate(): Promise<qcFeedback> {
+export async function putAssociate(): Promise<qcFeedback | null> {
   let response = new qcFeedback();
   return response;
 }

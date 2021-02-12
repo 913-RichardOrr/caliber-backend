@@ -6,6 +6,21 @@ import { Client } from 'pg';
 
 let testEvent: associateLambda.AssocEvent;
 
+beforeAll(() => {
+  const mockConnect = jest.fn();
+  const mockQuery = jest.fn();
+  const mockEnd = jest.fn();
+  jest.mock('pg', () => {
+    return {
+      Client: jest.fn(() => ({
+        connect: mockConnect,
+        query: mockQuery,
+        end: mockEnd,
+      })),
+    };
+  });
+});
+
 //Author: Tyler
 describe('tests for handler', () => {
   test('test handler can differentiate between get/put/patch', async () => {
@@ -97,12 +112,13 @@ describe('tests for putAssociate', () => {
 
   test('that putAssociate does things....', async () => {
     let response;
+    Client.query = jest.fn().mockResolvedValue({ data: response });
+
     await associateLambda.putAssociate().then((result: any) => {
       response = result;
     });
 
     expect(associateLambda.putAssociate).toBeCalledTimes(1);
-    expect(associateLambda.putAssociate).toBeCalledWith();
   });
 });
 
