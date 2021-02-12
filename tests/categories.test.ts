@@ -1,6 +1,6 @@
-/* const getCategories = require('../categories/categories.get')
+const getCategories = require('../categories/categories.get')
 const addCategory = require('../categories/category.add')
-const deleteCategory = require('../categories/category.delete') */
+const deleteCategory = require('../categories/category.delete')
 
 import { createResponse } from '../response'
 import { Client } from 'pg';
@@ -54,11 +54,11 @@ jest.mock('pg', () => {
 
   test('that addCategories returns a created status', async () => {
     client.query.mockResolvedValueOnce({ rows: [], rowCount: 0 });
-    let body = JSON.stringify({ skill: 'React', batchID:0, week:0 });
+    let body = JSON.stringify({ categoryID:0, batchID:0, week:0 });
     let event = { body, test };
     await addCategory.handler(event);
     expect(client.connect).toBeCalledTimes(1);
-    expect(client.query).toBeCalledWith('insert into weekCategories (skill, batchID, week) values ($1, $2, $3)', ["React", 0,0]);
+    expect(client.query).toBeCalledWith('insert into weekCategories (categoryID, batchID, week) values ($1, $2, $3)', [0, 0,0]);
     expect(client.end).toBeCalledTimes(1);
     expect(createResponse).toBeCalledWith('', 200);
 
@@ -66,11 +66,11 @@ jest.mock('pg', () => {
 
   test('that addCategories returns an error status when client returns nothing', async () => {
     client.query.mockResolvedValueOnce();
-    let body = JSON.stringify({ skill: 'React', batchID:0, week:0 });
+    let body = JSON.stringify({ categoryID:0, batchID:0, week:0 });
     let event = { body, test };
     await addCategory.handler(event);
     expect(client.connect).toBeCalledTimes(1);
-    expect(client.query).toBeCalledWith('insert into weekCategories (skill, batchID, week) values ($1, $2, $3)', ["React", 0,0]);
+    expect(client.query).toBeCalledWith('insert into weekCategories (categoryID, batchID, week) values ($1, $2, $3)', [0, 0,0]);
     expect(client.end).toBeCalledTimes(1);
     expect(createResponse).toBeCalledWith('', 400);
 
