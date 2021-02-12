@@ -1,3 +1,5 @@
+import * as indexModule from './index'
+
 // lambda handler function
 
 export interface AssocEvent {
