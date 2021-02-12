@@ -92,8 +92,10 @@ describe('batch-week test for getWeek', ()=> {
   test('getWeek returns a non-empty object in it/`s promise', async ()=> {
     let result = await batchweek.getWeek();
     // Make sure it's not an empty object
-    expect(result).not.toBeNull();
-    expect(result).toHaveProperty('id');
+    expect(result).toBeTruthy();
+    if(result) {
+      expect(result).toHaveProperty('id');
+    }
   });
 });
 
