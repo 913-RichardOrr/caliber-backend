@@ -67,7 +67,6 @@ describe('batch-week test for handler', () => {
       httpMethod: 'POST'
     };
 
-
     await batchweek.handler(testEvent);
 
     let testAddNewWeek = batchweek.addNewWeek;
@@ -116,9 +115,17 @@ describe('batch-week test for addNewWeek', ()=> {
 });
 
 describe('batch-week test for addNote', ()=> {
+  testEvent.path = '/batches/1/weeks/1';
+  testEvent.body = JSON.stringify({
+    batchId: '1',
+    weekId: 1,
+    overallNote: 'yey'
+  });
 
+  test('that addNote has been called', () => {
+    let testAddNote = batchweek.addNote;
+    testAddNote = jest.fn().mockImplementation();
+    expect(testAddNote).toBeCalledTimes(1);
+  });
 });
-
-//batches
-    //batchid ---> 7
 
