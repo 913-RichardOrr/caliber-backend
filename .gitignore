@@ -1,1 +1,12 @@
+<<<<<<< HEAD
 node_modules
+=======
+**/node_modules/
+**/coverage/
+**/*.log
+**/build/**
+**/.vscode
+**/.env
+**/.eslintcache
+.vscode/
+>>>>>>> 3a9c2f594fd4bb6d53a32a4fc54566e2a5b8f9df
