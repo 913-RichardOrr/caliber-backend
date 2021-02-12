@@ -1,9 +1,7 @@
 //Tests for associate lambda handler and helpers
 
 import * as associateLambda from '../index';
-import { handler, AssocEvent } from '../index';
 import { Client } from 'pg';
-import { getAssociate, patchAssociate, putAssociate } from '../index';
 
 let testEvent: associateLambda.AssocEvent;
 
