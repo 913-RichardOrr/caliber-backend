@@ -22,8 +22,11 @@ export const handler = async (event: BatchWeekEvent) => {
     return '';
 }
 
-//a GET method to get all weeks
-export const getAllWeeks = async (): Promise<any> => {};
-
 //a POST method to add a new week to a batch
 export const addNewWeek = async (): Promise<any> => {};
+
+//a GET method to get all weeks
+export let getWeek = async (): Promise<any> => {};
+
+//a POST method to a note to an overall note to a week
+export const addNote = async (): Promise<any> => {};
