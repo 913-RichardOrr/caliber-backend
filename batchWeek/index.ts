@@ -17,11 +17,13 @@ export interface BatchWeekEvent {
     method?: string;
 }
 
-export const handler = (event: BatchWeekEvent) => {
+//handler function for Lambda
+export const handler = async (event: BatchWeekEvent) => {
     return '';
 }
 
-export function getAllWeeks(){
-    return [];
-}
+//a GET method to get all weeks
+export const getAllWeeks = async (): Promise<any> => {};
 
+//a POST method to add a new week to a batch
+export const addNewWeek = async (): Promise<any> => {};
