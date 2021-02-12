@@ -1,9 +1,7 @@
 //Tests for associate lambda handler and helpers
 
 import * as associateLambda from '../index';
-import { handler, AssocEvent } from '../index';
 import { Client } from 'pg';
-import { getAssociate, patchAssociate, putAssociate } from '../index';
 
 let testEvent: associateLambda.AssocEvent;
 
@@ -115,9 +113,11 @@ describe('tests for patchAssociate', () => {
     const updatedObject = original;
     updatedObject.qcNote = testUpdateObject.qcNote;
 
-    await expect(
-      associateLambda.patchAssociate(JSON.stringify(testUpdateObject))
-    ).toBe(updatedObject);
+    const res = await associateLambda.patchAssociate(
+      JSON.stringify(testUpdateObject)
+    );
+    expect(res).toBe(updatedObject);
+    expect(mockConnect).toHaveBeenCalledTimes(1);
     expect(mockQuery).toHaveBeenCalledTimes(1);
     expect(mockConnect).toHaveBeenCalledTimes(1);
     expect(
@@ -140,9 +140,10 @@ describe('tests for patchAssociate', () => {
     const updatedObject = original;
     updatedObject.qcTechnicalStatus = testUpdateObject.qcTechnicalStatus;
 
-    await expect(
-      associateLambda.patchAssociate(JSON.stringify(testUpdateObject))
-    ).toBe(updatedObject);
+    const res = await associateLambda.patchAssociate(
+      JSON.stringify(testUpdateObject)
+    );
+    expect(res).toBe(updatedObject);
     expect(mockConnect).toHaveBeenCalledTimes(1);
     expect(mockQuery).toHaveBeenCalledTimes(1);
     expect(
@@ -162,9 +163,10 @@ describe('tests for patchAssociate', () => {
   test("That invalid input returns null but doesn't break anything", async () => {
     const testUpdateObject = { nonsense: 3 };
 
-    await expect(
-      associateLambda.patchAssociate(JSON.stringify(testUpdateObject))
-    ).toBe(null);
+    const res = await associateLambda.patchAssociate(
+      JSON.stringify(testUpdateObject)
+    );
+    expect(res).toBe(null);
     expect(mockConnect).toHaveBeenCalledTimes(0);
     expect(mockQuery).toHaveBeenCalledTimes(0);
     expect(mockEnd).toHaveBeenCalledTimes(0);
