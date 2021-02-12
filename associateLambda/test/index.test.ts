@@ -21,22 +21,22 @@ jest.mock('pg', () => {
 
 //Author: Tyler
 describe('tests for handler', () => {
+  jest.mock('../index', () => ({
+    getAssociate: jest.fn().mockImplementation(),
+  }));
+  jest.mock('../index', () => ({
+    putAssociate: jest.fn().mockImplementation(),
+  }));
+  jest.mock('../index', () => ({
+    patchAssociate: jest.fn().mockImplementation(),
+  }));
+
   test('test handler can differentiate between get/put/patch', async () => {
     testEvent = {
       path: '/something',
-      body: JSON.stringify({ '1': 1 }),
-      method: 'PUT',
+      body: '{1:1}',
+      httpMethod: 'PUT',
     };
-
-    jest.mock('../associateService', () => ({
-      getAssociate: jest.fn().mockImplementation(),
-    }));
-    jest.mock('../associateService', () => ({
-      putAssociate: jest.fn().mockImplementation(),
-    }));
-    jest.mock('../associateService', () => ({
-      patchAssociate: jest.fn().mockImplementation(),
-    }));
 
     await associateLambda.handler(testEvent);
 
@@ -47,19 +47,9 @@ describe('tests for handler', () => {
   test('test handler can differentiate between get/put/patch', async () => {
     testEvent = {
       path: '/something',
-      body: JSON.stringify({ '1': 1 }),
-      method: 'GET',
+      body: '{1:1}',
+      httpMethod: 'GET',
     };
-
-    jest.mock('../associateService', () => ({
-      getAssociate: jest.fn().mockImplementation(),
-    }));
-    jest.mock('../associateService', () => ({
-      putAssociate: jest.fn().mockImplementation(),
-    }));
-    jest.mock('../associateService', () => ({
-      patchAssociate: jest.fn().mockImplementation(),
-    }));
 
     await associateLambda.handler(testEvent);
 
@@ -70,19 +60,9 @@ describe('tests for handler', () => {
   test('test handler can differentiate between get/put/patch', async () => {
     testEvent = {
       path: '/something',
-      body: JSON.stringify({ '1': 1 }),
-      method: 'PATCH',
+      body: '{1:1}',
+      httpMethod: 'PATCH',
     };
-
-    jest.mock('../associateService', () => ({
-      getAssociate: jest.fn().mockImplementation(),
-    }));
-    jest.mock('../associateService', () => ({
-      putAssociate: jest.fn().mockImplementation(),
-    }));
-    jest.mock('../associateService', () => ({
-      patchAssociate: jest.fn().mockImplementation(),
-    }));
 
     await associateLambda.handler(testEvent);
 
@@ -99,13 +79,14 @@ describe('tests for getAssociate', async () => {
 });
 
 describe('tests for putAssociate', () => {
-  let body: associateLambda.qcFeedback = {
+  testEvent.path = 'idk';
+  testEvent.body = JSON.stringify({
     batchId: 'batch1',
     weekId: 1,
     associateId: 'testAssociateId',
     qcNote: 'test note',
     qcTechnicalStatus: 2,
-  };
+  });
 
   test('that putAssociate returns the object', async () => {
     let response;
