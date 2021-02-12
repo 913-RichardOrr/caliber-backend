@@ -32,7 +32,7 @@ export const patchAssociate = async (
   updateObject: string
 ): Promise<qcFeedback | null> => {
   return null;
-}
+};
 
 export class qcFeedback {
   batchId: string = '';
