@@ -96,9 +96,23 @@ describe('batch-week test for getWeek', ()=> {
 });
 
 describe('batch-week test for addNewWeek', ()=> {
+    testEvent.path = '/batches/1/weeks/1';
+    testEvent.body = JSON.stringify({
+      id: 1,
+      category_id: 1,
+      batch_id: '1',
+      week: 1
+    });
 
+    test('add a new week', () => {
+        expect(batchweek.addNewWeek).toBeCalledTimes(1);
+    })
 });
 
 describe('batch-week test for addNote', ()=> {
 
 });
+
+//batches
+    //batchid ---> 7
+
