@@ -10,7 +10,7 @@ describe('tests for handler', () => {
   test('test handler can differentiate between get/put/patch', async () => {
     testEvent = {
       path: '/something',
-      body: { '1': 1 },
+      body: '{1:1}',
       method: 'PUT',
     };
 
@@ -33,7 +33,7 @@ describe('tests for handler', () => {
   test('test handler can differentiate between get/put/patch', async () => {
     testEvent = {
       path: '/something',
-      body: { '1': 1 },
+      body: '{1:1}',
       method: 'GET',
     };
 
@@ -56,7 +56,7 @@ describe('tests for handler', () => {
   test('test handler can differentiate between get/put/patch', async () => {
     testEvent = {
       path: '/something',
-      body: { '1': 1 },
+      body: '{1:1}',
       method: 'PATCH',
     };
 
@@ -86,13 +86,13 @@ describe('tests for getAssociate', async () => {
 
 describe('tests for putAssociate', () => {
   testEvent.path = 'idk';
-  testEvent.body = {
+  testEvent.body = JSON.stringify({
     batchId: 'batch1',
     weekId: 1,
     associateId: 'testAssociateId',
     qcNote: 'test note',
     qcTechnicalStatus: 2,
-  };
+  });
 
   test('that putAssociate does things....', () => {
     let response;
