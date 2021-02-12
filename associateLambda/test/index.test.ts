@@ -80,8 +80,7 @@ describe('tests for handler', () => {
 
 describe('tests for getAssociate', async () => {
   testEvent.path = '/something';
-
-  test('that getAssociate gets associate');
+  test('that getAssociate returns a promise with associate data.');
 });
 
 describe('tests for putAssociate', () => {
