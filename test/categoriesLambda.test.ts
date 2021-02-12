@@ -22,11 +22,9 @@ describe('Given an event, the handler can determine the correct method', () => {
 
     // mock functions needed
     beforeAll(() => {
-        jest.mock('helper functions', () => ({
-            getCategories: jest.fn().mockImplementation(),
-            postCategories: jest.fn().mockImplementation(),
-            putCategory: jest.fn().mockImplementation(),
-        }));
+        categoriesLambda.getCategories = jest.fn();
+        categoriesLambda.postCategories = jest.fn();;
+        categoriesLambda.putCategory = jest.fn();
     });
 
     test('that method is GET', async () => {
@@ -34,9 +32,9 @@ describe('Given an event, the handler can determine the correct method', () => {
 
         await categoriesLambda.handler(mEvent);
 
-        expect(categoriesLambda.getCategories).toHaveBeenCalledTimes(1);
-        expect(categoriesLambda.postCategories).toHaveBeenCalledTimes(0);
-        expect(categoriesLambda.putCategory).toHaveBeenCalledTimes(0);
+        expect(categoriesLambda.getCategories).toBeCalledTimes(1);
+        expect(categoriesLambda.postCategories).toBeCalledTimes(0);
+        expect(categoriesLambda.putCategory).toBeCalledTimes(0);
     });
 
     test('that method is POST', async () => {
@@ -44,9 +42,9 @@ describe('Given an event, the handler can determine the correct method', () => {
 
         await categoriesLambda.handler(mEvent);
         
-        expect(categoriesLambda.postCategories).toHaveBeenCalledTimes(1);
-        expect(categoriesLambda.getCategories).toHaveBeenCalledTimes(0);
-        expect(categoriesLambda.putCategory).toHaveBeenCalledTimes(0);
+        expect(categoriesLambda.postCategories).toBeCalledTimes(1);
+        expect(categoriesLambda.getCategories).toBeCalledTimes(0);
+        expect(categoriesLambda.putCategory).toBeCalledTimes(0);
         
     });
 
@@ -55,9 +53,9 @@ describe('Given an event, the handler can determine the correct method', () => {
         
         await categoriesLambda.handler(mEvent);
         
-        expect(categoriesLambda.putCategory).toHaveBeenCalledTimes(1);
-        expect(categoriesLambda.getCategories).toHaveBeenCalledTimes(0);
-        expect(categoriesLambda.postCategories).toHaveBeenCalledTimes(0);
+        expect(categoriesLambda.putCategory).toBeCalledTimes(1);
+        expect(categoriesLambda.getCategories).toBeCalledTimes(0);
+        expect(categoriesLambda.postCategories).toBeCalledTimes(0);
     });
 });
 
