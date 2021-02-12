@@ -82,18 +82,21 @@ describe('tests for putAssociate', () => {
     qcTechnicalStatus: 2,
   };
 
+  Client.connect = jest.fn();
+  Client.query = jest.fn().mockResolvedValue(body);
+  Client.end = jest.fn();
   test('that putAssociate returns the object', async () => {
-    let response;
-    Client.query = jest.fn().mockResolvedValue({ data: response });
-
-    await associateLambda.putAssociate().then((result: any) => {
-      response = result;
-    });
-
-    expect(Client.query).toHaveBeenCalledTimes(1);
     expect(Client.connect).toHaveBeenCalledTimes(1);
+    expect(associateLambda.putAssociate()).toBe(body);
+    expect(Client.query).toHaveBeenCalledTimes(1);
     expect(Client.end).toHaveBeenCalledTimes(1);
-    expect(response).toBe(body);
+  });
+
+  test('that an incorrect input does not break anything', async () => {
+    expect(Client.query).toHaveBeenCalledTimes(0);
+    expect(Client.connect).toHaveBeenCalledTimes(0);
+    expect(Client.end).toHaveBeenCalledTimes(0);
+    expect(associateLambda.putAssociate()).toBe(null);
   });
 });
 
@@ -115,8 +118,8 @@ describe('tests for patchAssociate', () => {
     await expect(
       associateLambda.patchAssociate(JSON.stringify(testUpdateObject))
     ).toBe(updatedObject);
-    expect(mockConnect).toHaveBeenCalledTimes(1);
     expect(mockQuery).toHaveBeenCalledTimes(1);
+    expect(mockConnect).toHaveBeenCalledTimes(1);
     expect(
       mockQuery
     ).toHaveBeenLastCalledWith(
