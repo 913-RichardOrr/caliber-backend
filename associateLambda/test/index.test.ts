@@ -100,11 +100,17 @@ describe('tests for getAssociate', () => {
   });
  
   test('that invalid input returns an error and does not call anything.', async () => {
-    await expect(associateLambda.getAssociate('fakeBatchId', 12, 'fakeAssociateId')).toBe(null);
+    const result = await associateLambda.getAssociate('fakeBatchId', 12, 'fakeAssociateId');
+    expect(result).toBe(null);
     expect(mockConnect).toHaveBeenCalledTimes(0);
     expect(mockQuery).toHaveBeenCalledTimes(0);
     expect(mockEnd).toHaveBeenCalledTimes(0);
 });
+/* 
+test('that invalid input fails with an error', () => {
+  expect.assertions(1);
+  associateLambda.getAssociate('fakeBatchId', 12, 'fakeAssociateId').catch(e => expect(e).toMatch('error'));
+}); */
 });
 
 describe('tests for putAssociate', () => {
