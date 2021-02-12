@@ -99,16 +99,12 @@ describe('tests for getAssociate', async () => {
 });
 
 describe('tests for putAssociate', () => {
-  testEvent = {
-    path: 'idk',
-    body: JSON.stringify({
-      batchId: 'batch1',
-      weekId: 1,
-      associateId: 'testAssociateId',
-      qcNote: 'test note',
-      qcTechnicalStatus: 2,
-    }),
-    method: 'put',
+  let body: associateLambda.qcFeedback = {
+    batchId: 'batch1',
+    weekId: 1,
+    associateId: 'testAssociateId',
+    qcNote: 'test note',
+    qcTechnicalStatus: 2,
   };
 
   test('that putAssociate returns the object', async () => {
@@ -119,7 +115,7 @@ describe('tests for putAssociate', () => {
       response = result;
     });
 
-    expect(response).toBe(JSON.parse(testEvent.body));
+    expect(response).toBe(body);
     expect(Client.query).toHaveBeenCalledTimes(1);
     expect(Client.connect).toHaveBeenCalledTimes(1);
     expect(Client.end).toHaveBeenCalledTimes(1);
