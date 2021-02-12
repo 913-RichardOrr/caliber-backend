@@ -14,13 +14,13 @@ describe('tests for handler', () => {
       httpMethod: 'PUT',
     };
 
-    jest.mock('../associateService', () => ({
+    jest.mock('../index', () => ({
       getAssociate: jest.fn().mockImplementation(),
     }));
-    jest.mock('../associateService', () => ({
+    jest.mock('../index', () => ({
       putAssociate: jest.fn().mockImplementation(),
     }));
-    jest.mock('../associateService', () => ({
+    jest.mock('../index', () => ({
       patchAssociate: jest.fn().mockImplementation(),
     }));
 
