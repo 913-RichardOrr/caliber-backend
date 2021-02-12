@@ -1,9 +1,11 @@
+import * as indexModule from './index'
+
 // lambda handler function
 
 export interface AssocEvent {
   path: string;
-  method: string;
-  body?: any;
+  httpMethod: string;
+  body?: string;
 }
 
 //figures out what http method has been called: GET, PUT, PATCH
