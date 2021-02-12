@@ -6,19 +6,17 @@ import { Client } from 'pg';
 
 let testEvent: associateLambda.AssocEvent;
 
-beforeAll(() => {
-  const mockConnect = jest.fn();
-  const mockQuery = jest.fn();
-  const mockEnd = jest.fn();
-  jest.mock('pg', () => {
-    return {
-      Client: jest.fn(() => ({
-        connect: mockConnect,
-        query: mockQuery,
-        end: mockEnd,
-      })),
-    };
-  });
+const mockConnect = jest.fn();
+const mockQuery = jest.fn();
+const mockEnd = jest.fn();
+jest.mock('pg', () => {
+  return {
+    Client: jest.fn(() => ({
+      connect: mockConnect,
+      query: mockQuery,
+      end: mockEnd,
+    })),
+  };
 });
 
 //Author: Tyler
@@ -101,16 +99,19 @@ describe('tests for getAssociate', async () => {
 });
 
 describe('tests for putAssociate', () => {
-  testEvent.path = 'idk';
-  testEvent.body = JSON.stringify({
-    batchId: 'batch1',
-    weekId: 1,
-    associateId: 'testAssociateId',
-    qcNote: 'test note',
-    qcTechnicalStatus: 2,
-  });
+  testEvent = {
+    path: 'idk',
+    body: JSON.stringify({
+      batchId: 'batch1',
+      weekId: 1,
+      associateId: 'testAssociateId',
+      qcNote: 'test note',
+      qcTechnicalStatus: 2,
+    }),
+    method: 'put',
+  };
 
-  test('that putAssociate does things....', async () => {
+  test('that putAssociate returns the object', async () => {
     let response;
     Client.query = jest.fn().mockResolvedValue({ data: response });
 
@@ -118,7 +119,10 @@ describe('tests for putAssociate', () => {
       response = result;
     });
 
-    expect(associateLambda.putAssociate).toBeCalledTimes(1);
+    expect(response).toBe(JSON.parse(testEvent.body));
+    expect(Client.query).toHaveBeenCalledTimes(1);
+    expect(Client.connect).toHaveBeenCalledTimes(1);
+    expect(Client.end).toHaveBeenCalledTimes(1);
   });
 });
 
@@ -130,19 +134,6 @@ describe('tests for patchAssociate', () => {
     qcNote: 'blablabla',
     qcTechnicalStatus: 2,
   };
-
-  const mockConnect = jest.fn();
-  const mockQuery = jest.fn();
-  const mockEnd = jest.fn();
-  jest.mock('pg', () => {
-    return {
-      Client: jest.fn(() => ({
-        connect: mockConnect,
-        query: mockQuery,
-        end: mockEnd,
-      })),
-    };
-  });
 
   test("That updating an associate's note works", async () => {
     const testUpdateObject = { qcNote: 'Updated blablabla' };

@@ -26,7 +26,11 @@ export async function putAssociate(): Promise<qcFeedback | null> {
 
 //method is patch
 //update an existing note or status
-export const patchAssociate = async (updateObject: string): Promise<any> => {};
+export const patchAssociate = async (
+  updateObject: string
+): Promise<qcFeedback | null> => {
+  return null;
+};
 
 export class qcFeedback {
   batchId: string = '';
