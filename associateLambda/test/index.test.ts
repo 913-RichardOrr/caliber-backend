@@ -87,28 +87,36 @@ describe('tests for handler', () => {
   });
 });
 
-describe('tests for getAssociate', async () => {
-
-  testEvent.path = 'idk';
-  testEvent.body = {
+describe('tests for getAssociate', () => {
+  let body = {
     batchId: 'batch1',
     weekId: 1,
     associateId: 'testAssociateId',
     qcNote: 'test note',
     qcTechnicalStatus: 2,
   };
-  testEvent.path = '/something';
-  test('that getAssociate returns a promise with associate data.', () => {
+  test('that getAssociate returns a promise with associate data.', async () => {
     let client = new Client();
-    client.query = jest.fn().mockResolvedValueOnce(testEvent.body);
-    const mockResponse = testEvent.body;
-    const actualValue = associateLambda.getAssociate('batch1', 1, 'testAssociateId')
-    expect(actualValue).toEqual(mockResponse);  
+    client.query = jest.fn().mockResolvedValueOnce(body);
+    const mockResponse = body;
+    //const actualValue = associateLambda.getAssociate('batch1', 1, 'testAssociateId');
+
+    let actualResponse;
+    //Client.query = jest.fn().mockResolvedValue({ data: response });
+
+    await associateLambda.getAssociate('batch1', 1, 'testAssociateId').then((result: any) => {
+      actualResponse = result;
+    });
+
+    expect(client.query).toHaveBeenCalledTimes(1);
+    expect(client.connect).toHaveBeenCalledTimes(1);
+    expect(client.end).toHaveBeenCalledTimes(1);
     expect(associateLambda.getAssociate).toBeCalledTimes(1);
     expect(associateLambda.getAssociate).toBeCalledWith('batch1', 1, 'testAssociateId');
+    expect(actualResponse).toEqual(mockResponse);  
   });
  
-  test('That invalid input returns an error and does not call anything.', async () => {
+  test('that invalid input returns an error and does not call anything.', async () => {
     await expect(associateLambda.getAssociate('fakeBatchId', 12, 'fakeAssociateId')).toBe(null);
     expect(mockConnect).toHaveBeenCalledTimes(0);
     expect(mockQuery).toHaveBeenCalledTimes(0);
