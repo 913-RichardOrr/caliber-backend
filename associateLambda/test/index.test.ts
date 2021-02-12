@@ -91,6 +91,7 @@ describe('tests for getAssociate', async () => {
   testEvent.path = '/something';
   test('that getAssociate returns a promise with associate data.', () => {
     const mockResponse = testEvent.body;
+    Client.query = jest.fn().mockResolvedValueOnce
     const actualValue = associateLambda.getAssociate('batch1', 1, 'testAssociateId');
     expect(actualValue).toEqual(mockResponse);  
     expect(associateLambda.getAssociate).toBeCalledTimes(1);
