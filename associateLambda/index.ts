@@ -1,9 +1,8 @@
 // lambda handler function
-import * as associateLambda from './associateService';
 
 export interface AssocEvent {
   path: string;
-  method: string;
+  httpMethod: string;
   body?: string;
 }
 
