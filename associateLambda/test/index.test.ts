@@ -30,7 +30,7 @@ describe('tests for handler', () => {
     await associateLambda.handler(testEvent);
 
     expect(associateLambda.getAssociate).toHaveBeenCalledTimes(0);
-    expect(associateLambda.putAssociate).toHaveBeenCalledTimes(0);
+    expect(associateLambda.putAssociate).toHaveBeenCalledTimes(1);
     expect(associateLambda.patchAssociate).toHaveBeenCalledTimes(0);
   });
   test('test handler can differentiate between get/put/patch', async () => {
@@ -42,7 +42,7 @@ describe('tests for handler', () => {
 
     await associateLambda.handler(testEvent);
 
-    expect(associateLambda.getAssociate).toHaveBeenCalledTimes(0);
+    expect(associateLambda.getAssociate).toHaveBeenCalledTimes(1);
     expect(associateLambda.putAssociate).toHaveBeenCalledTimes(0);
     expect(associateLambda.patchAssociate).toHaveBeenCalledTimes(0);
   });
@@ -57,7 +57,7 @@ describe('tests for handler', () => {
 
     expect(associateLambda.getAssociate).toHaveBeenCalledTimes(0);
     expect(associateLambda.putAssociate).toHaveBeenCalledTimes(0);
-    expect(associateLambda.patchAssociate).toHaveBeenCalledTimes(0);
+    expect(associateLambda.patchAssociate).toHaveBeenCalledTimes(1);
   });
 });
 
