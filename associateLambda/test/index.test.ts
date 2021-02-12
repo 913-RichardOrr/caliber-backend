@@ -5,6 +5,15 @@ import { Client } from 'pg';
 
 let testEvent: associateLambda.AssocEvent;
 
+const mockConnect = jest.fn();
+const mockQuery = jest.fn();
+const mockEnd = jest.fn();
+jest.mock('pg', ()=>{
+    return {
+        Client: jest.fn(()=>({connect: mockConnect, query: mockQuery, end: mockEnd}))
+    }
+});
+
 //Author: Tyler
 describe('tests for handler', () => {
   test('test handler can differentiate between get/put/patch', async () => {
@@ -110,15 +119,6 @@ describe('tests for patchAssociate', () => {
         qcNote: 'blablabla',
         qcTechnicalStatus: 2
     };
-
-    const mockConnect = jest.fn();
-    const mockQuery = jest.fn();
-    const mockEnd = jest.fn();
-    jest.mock('pg', ()=>{
-        return {
-            Client: jest.fn(()=>({connect: mockConnect, query: mockQuery, end: mockEnd}))
-        }
-    });
 
     test('That updating an associate\'s note works', async () => {
         const testUpdateObject = {qcNote: 'Updated blablabla'};
