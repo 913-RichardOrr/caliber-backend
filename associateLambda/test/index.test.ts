@@ -1,6 +1,7 @@
 //Tests for associate lambda handler and helpers
 
 import * as associateLambda from '../index';
+import { Client } from 'pg';
 
 let testEvent: associateLambda.AssocEvent;
 
@@ -115,7 +116,7 @@ describe('tests for patchAssociate', () => {
     const mockEnd = jest.fn();
     jest.mock('pg', ()=>{
         return {
-            Client: ()=>({connect: mockConnect, query: mockQuery, end: mockEnd})
+            Client: jest.fn(()=>({connect: mockConnect, query: mockQuery, end: mockEnd}))
         }
     });
 
