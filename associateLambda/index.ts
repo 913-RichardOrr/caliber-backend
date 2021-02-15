@@ -15,24 +15,29 @@ export const handler = async (event: AssocEvent): Promise<any> => {};
 
 //method is get
 //get the note and technical status for that person for that week
-export const getAssociate = async (batchId: string, weekId: number, associateId: string): Promise<qcFeedback|null> => {
+export async function getAssociate(batchId: string, weekId: number, associateId: string): Promise<qcFeedback|null> {
   return null;
 };
 
 //method is put
 //create the note and technical status for that person for that week
-export const putAssociate = async (): Promise<any> => {};
+export async function putAssociate(): Promise<qcFeedback | null> {
+  let response = new qcFeedback();
+  return response;
+}
 
 //method is patch
 //update an existing note or status
-export const patchAssociate = async (updateObject: string): Promise<qcFeedback | null> => {
+export const patchAssociate = async (
+  updateObject: string
+): Promise<qcFeedback | null> => {
   return null;
-}
+};
 
 export class qcFeedback {
-    batchId: string = '';
-    weekId: number = 0;
-    associateId: string = '';
-    qcNote: string = '';
-    qcTechnicalStatus: number = 0;
+  batchId: string = '';
+  weekId: number = 0;
+  associateId: string = '';
+  qcNote: string = '';
+  qcTechnicalStatus: number = 0;
 }
