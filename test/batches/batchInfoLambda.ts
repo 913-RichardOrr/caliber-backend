@@ -1,13 +1,12 @@
-import axios from 'axios';
-import https from 'https';
-
-exports.handler = async (batchId: string) => {
+const axios = require('axios');
+const https = require('https');
+exports.handler = async (event: any) => {
   try {
     const agent = new https.Agent({
       rejectUnauthorized: false,
     });
     const res = await axios.get(
-      `https://caliber2-mock.revaturelabs.com:443/mock/training/batch/${batchId}`,
+      `https://caliber2-mock.revaturelabs.com:443/mock/training/batch/${event.batchId}`,
       { httpsAgent: agent }
     );
     const batchInfo = {
@@ -16,7 +15,7 @@ exports.handler = async (batchId: string) => {
       name: res.data.name,
       startDate: res.data.startDate,
       endDate: res.data.endDate,
-      skills: res.data.skills,
+      skill: res.data.skill,
       location: res.data.location,
       type: res.data.type,
     };
