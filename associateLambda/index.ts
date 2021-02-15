@@ -1,5 +1,5 @@
 import * as indexModule from './index'
-
+import createResponse from './createResponse'
 // lambda handler function
 
 export interface AssocEvent {
@@ -8,20 +8,55 @@ export interface AssocEvent {
   body?: string;
 }
 
-//figures out what http method has been called: GET, PUT, PATCH
-//call the relevant helper function
-//return the relevant object
-export const handler = async (event: AssocEvent): Promise<any> => {};
+/**
+ * figures out what http method has been called: GET, PUT, PATCH, then 
+ * calls the relevant helper function return the relevant object
+ * @param event 
+ */
+export const handler = async (event: AssocEvent): Promise<any> => {
+  switch (event.httpMethod) {
+    case ('GET'): {
+      const associate = await getAssociate(event.path.batchId, event.path.weekId, event.path.associateId);
+      if (associate) {
+        return createResponse(JSON.stringify(associate), 200);
+      } else {
+        return createResponse('', 404);
+      }
+    }
+    case ('PUT'): {
+      const associate = await putAssociate(event.body);
+      if (associate) {
+        return createResponse(JSON.stringify(associate), 200);
+      } else {
+        return createResponse('', 404);
+      }
+    }
+    case ('PATCH'): {
+      const associate = await patch(event.body);
+      if (associate) {
+        return createResponse(JSON.stringify(associate), 200);
+      } else {
+        return createResponse('', 404);
+      }
+    }
+    default: {
+      console.log("Something went wrong in handler");
+      break;
+    }
+  }
+
+
+};
 
 //method is get
 //get the note and technical status for that person for that week
-export async function getAssociate(batchId: string, weekId: number, associateId: string): Promise<qcFeedback|null> {
+export async function getAssociate(batchId: string, weekId: number, associateId: string): Promise<qcFeedback | null> {
   return null;
 };
 
 //method is put
 //create the note and technical status for that person for that week
-export async function putAssociate(): Promise<qcFeedback | null> {
+export async function putAssociate(updateObject: any): Promise<qcFeedback | null> {
   let response = new qcFeedback();
   return response;
 }
@@ -29,7 +64,7 @@ export async function putAssociate(): Promise<qcFeedback | null> {
 //method is patch
 //update an existing note or status
 export const patchAssociate = async (
-  updateObject: string
+  updateObject: any
 ): Promise<qcFeedback | null> => {
   return null;
 };
