@@ -15,9 +15,9 @@ export const handler = async (event: AssocEvent): Promise<any> => {};
 
 //method is get
 //get the note and technical status for that person for that week
-export async function getAssociate(): Promise<any> {
-  return true;
-}
+export async function getAssociate(batchId: string, weekId: number, associateId: string): Promise<qcFeedback|null> {
+  return null;
+};
 
 //method is put
 //create the note and technical status for that person for that week
