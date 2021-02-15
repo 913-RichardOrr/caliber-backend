@@ -73,25 +73,30 @@ describe('tests for getAssociate', () => {
     qcNote: 'test note',
     qcTechnicalStatus: 2,
   };
+  test('that getAssociate calls pg', async () => {
+    expect(mockConnect).toHaveBeenCalledTimes(1);
+    expect(mockQuery).toHaveBeenCalledTimes(1);
+    expect(mockEnd).toHaveBeenCalledTimes(1);
+  })
+
   test('that getAssociate returns a promise with associate data.', async () => {
     let client = new Client();
     client.query = jest.fn().mockResolvedValueOnce(body);
-    const mockResponse = body;
-    //const actualValue = associateLambda.getAssociate('batch1', 1, 'testAssociateId');
+    const mockResult = body;
+    let result = await associateLambda.getAssociate('batch1', 1, 'testAssociateId');
 
-    let actualResponse;
-    //Client.query = jest.fn().mockResolvedValue({ data: response });
-
-    await associateLambda.getAssociate('batch1', 1, 'testAssociateId').then((result: any) => {
-      actualResponse = result;
-    });
-
-    expect(client.query).toHaveBeenCalledTimes(1);
-    expect(client.connect).toHaveBeenCalledTimes(1);
-    expect(client.end).toHaveBeenCalledTimes(1);
+    expect(result).toBeTruthy(); //non-empty object
     expect(associateLambda.getAssociate).toBeCalledTimes(1);
     expect(associateLambda.getAssociate).toBeCalledWith('batch1', 1, 'testAssociateId');
-    expect(actualResponse).toEqual(mockResponse);  
+    //update qcnotes set note = $1::text where associateid = $2::text and weekid = $3::integer and batchid = $3::text'
+    expect(client.query).toBeCalledWith('select associate from associates where batchid = $1::text and weekid = $2::integer and associateid = $3::text',
+    [
+      body.batchId,
+      body.weekId,
+      body.associateId,
+    ]
+    )
+    expect(result).toEqual(mockResult);  
   });
  
   test('that invalid input returns an error and does not call anything.', async () => {
@@ -100,12 +105,7 @@ describe('tests for getAssociate', () => {
     expect(mockConnect).toHaveBeenCalledTimes(0);
     expect(mockQuery).toHaveBeenCalledTimes(0);
     expect(mockEnd).toHaveBeenCalledTimes(0);
-});
-/* 
-test('that invalid input fails with an error', () => {
-  expect.assertions(1);
-  associateLambda.getAssociate('fakeBatchId', 12, 'fakeAssociateId').catch(e => expect(e).toMatch('error'));
-}); */
+  });
 });
 
 describe('tests for putAssociate', () => {
