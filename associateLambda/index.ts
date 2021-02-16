@@ -16,7 +16,7 @@ export interface AssocEvent {
 export const handler = async (event: AssocEvent): Promise<any> => {
   switch (event.httpMethod) {
     case ('GET'): {
-      const associate = await getAssociate(event.path.batchId, event.path.weekId, event.path.associateId);
+      const associate = await getAssociate(event.path);
       if (associate) {
         return createResponse(JSON.stringify(associate), 200);
       } else {
@@ -32,7 +32,7 @@ export const handler = async (event: AssocEvent): Promise<any> => {
       }
     }
     case ('PATCH'): {
-      const associate = await patch(event.body);
+      const associate = await patchAssociate(event.body);
       if (associate) {
         return createResponse(JSON.stringify(associate), 200);
       } else {
@@ -50,7 +50,8 @@ export const handler = async (event: AssocEvent): Promise<any> => {
 
 //method is get
 //get the note and technical status for that person for that week
-export async function getAssociate(batchId: string, weekId: number, associateId: string): Promise<qcFeedback | null> {
+export async function getAssociate(path:string): Promise<qcFeedback | null> {
+
   return null;
 };
 
@@ -63,9 +64,7 @@ export async function putAssociate(updateObject: any): Promise<qcFeedback | null
 
 //method is patch
 //update an existing note or status
-export const patchAssociate = async (
-  updateObject: any
-): Promise<qcFeedback | null> => {
+export const patchAssociate = async (path:string,  updateObject: any): Promise<qcFeedback | null> => {
   return null;
 };
 
