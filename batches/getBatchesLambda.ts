@@ -49,7 +49,7 @@ const URI = "https://caliber2-mock.revaturelabs.com:443/mock/training/batch/";
 export const agent = new https.Agent({ rejectUnauthorized: false });
 
 async function getBatchIDs(trainerEmail: string): Promise<any | null> {
-  return await axios
+  return axios
     .get(`${URI}${trainerEmail}/ids`, { httpsAgent: agent })
     .catch(() => null);
 }
