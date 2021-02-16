@@ -66,10 +66,14 @@ export async function getAssociate(path: string): Promise<QCFeedback | null> {
   return res;
 }
 /**
- * adds a new associate
+ * adds a new associate's note and technical status for the given week.
  * @param body - contains the qcNote and technical status
+ * @param path - contains the batchId, weekId, and associateId
  */
-export async function putAssociate(body: string, path: string) {
+export async function putAssociate(
+  body: string,
+  path: string
+): Promise<QCFeedback | null> {
   let bodyObject = JSON.parse(body);
   let pathObject = JSON.parse(parsePath(path));
   let response = {
@@ -79,25 +83,31 @@ export async function putAssociate(body: string, path: string) {
     qcNote: bodyObject.qcNote,
     qcTechnicalStatus: bodyObject.qcTechnicalStatus,
   };
-  console.log(`body: ${JSON.stringify(bodyObject)}`);
-  console.log(`path: ${JSON.stringify(pathObject)}`);
-  console.log(`response: ${JSON.stringify(response)}`);
-
-  const client = new Client();
-  await client.connect();
-  const res = await client.query(
-    'insert into qc_note(batchid, weekid, associateid, qcnote, qctechnicalstatus) values ($1::text, $2::integer, $3::integer, $4::text, $5::integer) returning *',
-    [
-      response.batchId,
-      response.weekId,
-      response.associateId,
-      response.qcNote,
-      response.qcTechnicalStatus,
-    ]
-  );
-  client.end();
-  return response || null;
+  if (response.batchId === undefined) {
+    return null;
+  } else {
+    const client = new Client();
+    await client.connect();
+    const res = await client.query(
+      'insert into qc_note(batchid, weekid, associateid, qcnote, qctechnicalstatus) values ($1::text, $2::integer, $3::integer, $4::text, $5::integer) returning *',
+      [
+        response.batchId,
+        response.weekId,
+        response.associateId,
+        response.qcNote,
+        response.qcTechnicalStatus,
+      ]
+    );
+    client.end();
+    return response;
+  }
 }
+
+/**
+ * patchAssociate
+ * @param path
+ * @param updateObject
+ */
 export const patchAssociate = async (
   path: string,
   updateObject: string
