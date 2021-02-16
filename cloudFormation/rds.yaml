@@ -63,3 +63,7 @@ Resources:
       EngineVersion: 12.4
       MasterUsername: temp
       MasterUserPassword: temp
+Outputs:
+  Endpoint:
+    Description: Generated endpoint address for database connection
+    Value: !GetAtt Database.Endpoint.Address
