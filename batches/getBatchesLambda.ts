@@ -37,7 +37,6 @@ export const handler = async (event: MyEvent) => {
     return resp;
   }
   const batchIDs = await getBatchIDs(trainerEmail);
-  console.log(batchIDs)
   let batchInfo: BatchInfo[] = [];
   if (batchIDs.data) {
     batchInfo = await getBatchesLambda(batchIDs.data);
@@ -50,10 +49,9 @@ const URI = "https://caliber2-mock.revaturelabs.com:443/mock/training/batch/";
 export const agent = new https.Agent({ rejectUnauthorized: false });
 
 async function getBatchIDs(trainerEmail: string): Promise<any | null> {
-  let reply = await axios
+  return await axios
     .get(`${URI}${trainerEmail}/ids`, { httpsAgent: agent })
     .catch(() => null);
-  return reply;
 }
 
 export async function getBatchesLambda(batchIDs: string[]) {
@@ -77,4 +75,3 @@ export async function getBatchesLambda(batchIDs: string[]) {
   }
   return batchInfo;
 }
-
