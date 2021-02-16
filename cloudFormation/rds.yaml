@@ -61,5 +61,5 @@ Resources:
       AllocatedStorage: !Ref DBAllocatedStorage
       Engine: postgres
       EngineVersion: 12.4
-      MasterUsername: username
-      MasterUserPassword: revature
+      MasterUsername: temp
+      MasterUserPassword: temp
