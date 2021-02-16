@@ -2,7 +2,10 @@ import axios from 'axios';
 import https from 'https';
 
 interface MyEvent {
-	path: string;
+  path: string;
+  queryStringParameters: {
+    "trainerEmail": string
+  };
 }
 
 interface BatchInfo {
@@ -17,24 +20,30 @@ interface BatchInfo {
 }
 
 export const handler = async (event: MyEvent) => {
-	let trainerEmail = event.path.substring(
-		event.path.lastIndexOf('=') + 1,
-		event.path.length
-	);
-	const batchIDs = await getBatchIDs(trainerEmail);
-	let batchInfo: BatchInfo[] = [];
-	if (batchIDs.data) {
-		batchInfo = await getBatchesLambda(batchIDs.data);
-	}
-	return {
+  const resp = {
 		statusCode: 200,
 		headers: {
 			'Access-Control-Allow-Headers': 'Content-Type',
 			'Access-Control-Allow-Origin': '*',
 			'Access-Control-Allow-Methods': 'OPTIONS,POST,GET',
-		},
-		body: JSON.stringify(batchInfo),
-	};
+    },
+    body: ''
+  }
+  let trainerEmail: string;
+  if (event.queryStringParameters.trainerEmail) {
+    trainerEmail = event.queryStringParameters.trainerEmail
+  } else {
+    resp.statusCode = 400;
+    resp.body = 'Bad request.'
+    return resp
+  }
+	const batchIDs = await getBatchIDs(trainerEmail);
+	let batchInfo: BatchInfo[] = [];
+	if (batchIDs.data) {
+		batchInfo = await getBatchesLambda(batchIDs.data);
+  }
+  resp.body = JSON.stringify(batchInfo)
+	return resp
 };
 
 const URI = 'https://caliber2-mock.revaturelabs.com:443/mock/training/batch/';
@@ -44,7 +53,7 @@ export async function getBatchesLambda(batchIDs: string[]) {
 	let batchInfo: BatchInfo[] = [];
 
 	for (let batchID of batchIDs) {
-		await axios.get(`${URI}/${batchID}`, { httpsAgent: agent }).then((res) => {
+		await axios.get(`${URI}${batchID}`, { httpsAgent: agent }).then((res) => {
 			//transform batch info and add to batchInfo array
 			const batchData = {
 				id: res.data.id,
@@ -62,19 +71,9 @@ export async function getBatchesLambda(batchIDs: string[]) {
 	return batchInfo;
 }
 
-<<<<<<< HEAD
-async function getBatchIDs(trainerEmail: string): Promise<string[]> {
-  const URI = 'https://caliber2-mock.revaturelabs.com:443/mock/training/';
-  let reply = await axios.get(`${URI}batch/${trainerEmail}/ids`, {httpsAgent: agent} )
-    .catch((err) => {
-      return err
-    })
-  return reply.data
-=======
 async function getBatchIDs(trainerEmail: string): Promise<any | null> {
 	let reply = await axios
 		.get(`${URI}${trainerEmail}/ids`, { httpsAgent: agent })
 		.catch(() => null);
 	return reply;
->>>>>>> 8139f40c29b1fdaca726cea20b4196744a5517a9
 }
