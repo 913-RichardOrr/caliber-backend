@@ -9,7 +9,7 @@ interface MyEvent {
 export const handler = async (event: MyEvent) => {
     let trainerEmail = event.path.substring(event.path.lastIndexOf('=')+1, event.path.length);
   const batchIDs = await getBatchIDs(trainerEmail);
-  const response = {
+  return {
     statusCode: 200,
     headers: {
         "Access-Control-Allow-Headers" : "Content-Type",
@@ -18,7 +18,6 @@ export const handler = async (event: MyEvent) => {
     },
     body: JSON.stringify(batchIDs)
   };
-  return response;
 };
 
 const agent = new https.Agent({rejectUnauthorized:false,});
