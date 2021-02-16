@@ -10,7 +10,6 @@
 //check path and method name
 
 
-
 export interface BatchWeekEvent {
     path: string;
     body?: string;
