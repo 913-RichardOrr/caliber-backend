@@ -1,3 +1,4 @@
+import e from 'cors';
 import createResponse from './createResponse';
 import {getAssociate,putAssociate,patchAssociate} from './index'
 
@@ -32,7 +33,12 @@ export interface AssociateEvent {
         }
       }
       case ('PATCH'): {
-        const associate = await patchAssociate(event.path, event.body);
+        let associate;
+        if(event.body){
+            associate = await patchAssociate(event.path, event.body);
+        } else {
+            console.log("No body found!"); 
+        }
         if (associate) {
           return createResponse(JSON.stringify(associate), 200);
         } else {
