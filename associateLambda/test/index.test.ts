@@ -98,7 +98,7 @@ describe('tests for getAssociate', () => {
     )
     expect(result).toEqual(mockResult);  
   });
- 
+
   test('that invalid input returns an error and does not call anything.', async () => {
     const result = await associateLambda.getAssociate('fakeBatchId', 12, 'fakeAssociateId');
     expect(result).toBe(null);
@@ -143,6 +143,11 @@ describe('tests for patchAssociate', () => {
     qcNote: 'blablabla',
     qcTechnicalStatus: 2,
   };
+  const testPath = 'blablabla/batches/YYMM-mmmDD-Stuff/weeks/1/associates/example@example.net'
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
 
   test("That updating an associate's note calls pg with correct query", async () => {
     const testUpdateObject = { qcNote: 'Updated blablabla' };
@@ -150,24 +155,44 @@ describe('tests for patchAssociate', () => {
     const updatedObject = original;
     updatedObject.qcNote = testUpdateObject.qcNote;
 
+    mockQuery.mockResolvedValueOnce(1)
+      .mockResolvedValueOnce({ rows: [updatedObject] });
+
     const res = await associateLambda.patchAssociate(
+      testPath,
       JSON.stringify(testUpdateObject)
     );
     expect(res).toBe(updatedObject);
     expect(mockConnect).toHaveBeenCalledTimes(1);
-    expect(mockQuery).toHaveBeenCalledTimes(1);
+    expect(mockQuery).toHaveBeenCalledTimes(2);
     expect(mockConnect).toHaveBeenCalledTimes(1);
-    expect(
-      mockQuery
-    ).toHaveBeenLastCalledWith(
-      'update qcnotes set note = $1::text where associateid = $2::text and weekid = $3::integer and batchid = $3::text',
+    
+    expect(mockQuery.mock.calls[0][0]).toBe(
+      'update qcnotes set qcNote = $1::text where associateid = $2::text and weekid = $3::integer and batchid = $4::text'
+    );
+
+    expect(mockQuery.mock.calls[0][1]).toEqual(
       [
         testUpdateObject.qcNote,
         original.associateId,
         original.weekId,
-        original.batchId,
+        original.batchId
       ]
     );
+    
+    expect(mockQuery.mock.calls[1][0]).toBe(
+      'select q.batchId, q.weekId, q.associateId, q.qcNote, q.qcTechnicalStatus from qcNotes q where associateid = $2::text and weekid = $3::integer and batchid = $4::text'
+    );
+
+    expect(mockQuery.mock.calls[1][1]).toEqual(
+      [
+        testUpdateObject.qcNote,
+        original.associateId,
+        original.weekId,
+        original.batchId
+      ]
+    );
+
     expect(mockEnd).toHaveBeenCalledTimes(1);
   });
 
@@ -177,23 +202,43 @@ describe('tests for patchAssociate', () => {
     const updatedObject = original;
     updatedObject.qcTechnicalStatus = testUpdateObject.qcTechnicalStatus;
 
+    mockQuery.mockResolvedValueOnce(1)
+      .mockResolvedValueOnce({ rows: [updatedObject] });
+
     const res = await associateLambda.patchAssociate(
+      testPath,
       JSON.stringify(testUpdateObject)
     );
     expect(res).toBe(updatedObject);
     expect(mockConnect).toHaveBeenCalledTimes(1);
-    expect(mockQuery).toHaveBeenCalledTimes(1);
-    expect(
-      mockQuery
-    ).toHaveBeenLastCalledWith(
-      'update qcnotes set techstatus = $1::integer where associateid = $2::text and weekid = $3::integer and batchid = $3::text',
+    expect(mockQuery).toHaveBeenCalledTimes(2);
+
+    expect(mockQuery.mock.calls[0][0]).toBe(
+      'update qcnotes set qcTechnicalStatus = $1::integer where associateid = $2::text and weekid = $3::integer and batchid = $4::text'
+    );
+
+    expect(mockQuery.mock.calls[0][1]).toEqual(
       [
         testUpdateObject.qcTechnicalStatus,
         original.associateId,
         original.weekId,
-        original.batchId,
+        original.batchId
       ]
     );
+    
+    expect(mockQuery.mock.calls[1][0]).toBe(
+      'select q.batchId, q.weekId, q.associateId, q.qcNote, q.qcTechnicalStatus from qcNotes q where associateid = $2::text and weekid = $3::integer and batchid = $4::text'
+    );
+
+    expect(mockQuery.mock.calls[1][1]).toEqual(
+      [
+        testUpdateObject.qcTechnicalStatus,
+        original.associateId,
+        original.weekId,
+        original.batchId
+      ]
+    );
+
     expect(mockEnd).toHaveBeenCalledTimes(1);
   });
 
@@ -201,6 +246,7 @@ describe('tests for patchAssociate', () => {
     const testUpdateObject = { nonsense: 3 };
 
     const res = await associateLambda.patchAssociate(
+      testPath,
       JSON.stringify(testUpdateObject)
     );
     expect(res).toBe(null);

@@ -76,31 +76,60 @@ export async function putAssociate(updateObject: any): Promise<QCFeedback | null
   return response;
 }
 
+
+/**
+ * Updates an associate's technical status or note for this week
+ * @param path 
+ * @param updateObject 
+ */
 export const patchAssociate = async (
   path: string,
   updateObject: string
 ): Promise<QCFeedback | null> => {
+  // Connect to database
   const client = new Client();
 
+  // Get the IDs from the path
+  const {batchId, weekId, associateId} = parsePath(path);
 
-
-  const q_note = 'update qcnotes set note = $1::text where associateid = $2::text and weekid = $3::integer and batchid = $3::text';
-  const q_status = 'update qcnotes set techstatus = $1::integer where associateid = $2::text and weekid = $3::integer and batchid = $3::text';
-
-  try {
-    await client.connect();
-    
+  // Figure out if we're editing the note or the technical status
+  let q: string;
+  let args = ['', associateId, weekId, batchId];
+  const obj = JSON.parse(updateObject);
+  if(obj.qcNote) {
+    q = 'update qcnotes set qcNote = $1::text where associateid = $2::text and weekid = $3::integer and batchid = $4::text';
+    args[0] = obj.qcNote;
+  } else if(obj.qcTechnicalStatus) {
+    q = 'update qcnotes set qcTechnicalStatus = $1::integer where associateid = $2::text and weekid = $3::integer and batchid = $4::text';
+    args[0] = obj.qcTechnicalStatus;
+  } else {
+    return null;
   }
 
-  return null;
+  // Actually update the table, return updated object if successful (or null if not)
+  try {
+    await client.connect();
+    await client.query(q, args);
+
+    const q_check = 'select q.batchId, q.weekId, q.associateId, q.qcNote, q.qcTechnicalStatus from qcNotes q where associateid = $2::text and weekid = $3::integer and batchid = $4::text';
+    const res = await client.query(q_check, args);
+  
+    return res.rows[0] as QCFeedback;
+  } catch (err) {
+    console.log(err);
+  
+    return null;
+  } finally {
+    client.end();
+  }
 }
 
 function parsePath (path: string): any {
   const parts = path.split('/');
   const associateId = parts[parts.length - 1];
   const weekId = Number(parts[parts.length - 3]);
-  const batchId = Number(parts[parts.length - 5]);
-  return {batchId, weekId, associateId};
+  const batchId = parts[parts.length - 5];
+  return {'batchId': batchId, 'weekId': weekId, 'associateId': associateId};
 }
 
 export interface QCFeedback {
@@ -110,3 +139,4 @@ export interface QCFeedback {
   qcNote: string;
   qcTechnicalStatus: number;
 }
+
