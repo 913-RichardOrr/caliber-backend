@@ -1,79 +1,79 @@
-import axios from 'axios';
-import https from 'https';
+import axios from "axios";
+import https from "https";
 
 interface MyEvent {
   path: string;
   queryStringParameters: {
-    "trainerEmail": string
+    trainerEmail: string;
   };
 }
 
 interface BatchInfo {
-	id: string;
-	batchId: string;
-	name: string;
-	startDate: string;
-	endDate: string;
-	skill: string;
-	location: string;
-	type: string;
+  id: string;
+  batchId: string;
+  name: string;
+  startDate: string;
+  endDate: string;
+  skill: string;
+  location: string;
+  type: string;
 }
 
 export const handler = async (event: MyEvent) => {
   const resp = {
-		statusCode: 200,
-		headers: {
-			'Access-Control-Allow-Headers': 'Content-Type',
-			'Access-Control-Allow-Origin': '*',
-			'Access-Control-Allow-Methods': 'OPTIONS,POST,GET',
+    statusCode: 200,
+    headers: {
+      "Access-Control-Allow-Headers": "Content-Type",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
     },
-    body: ''
-  }
+    body: "",
+  };
   let trainerEmail: string;
   if (event.queryStringParameters.trainerEmail) {
-    trainerEmail = event.queryStringParameters.trainerEmail
+    trainerEmail = event.queryStringParameters.trainerEmail;
   } else {
     resp.statusCode = 400;
-    resp.body = 'Bad request.'
-    return resp
+    resp.body = "Bad request.";
+    return resp;
   }
-	const batchIDs = await getBatchIDs(trainerEmail);
-	let batchInfo: BatchInfo[] = [];
-	if (batchIDs.data) {
-		batchInfo = await getBatchesLambda(batchIDs.data);
+  const batchIDs = await getBatchIDs(trainerEmail);
+  let batchInfo: BatchInfo[] = [];
+  if (batchIDs.data) {
+    batchInfo = await getBatchesLambda(batchIDs.data);
   }
-  resp.body = JSON.stringify(batchInfo)
-	return resp
+  resp.body = JSON.stringify(batchInfo);
+  return resp;
 };
 
-const URI = 'https://caliber2-mock.revaturelabs.com:443/mock/training/batch/';
+const URI = "https://caliber2-mock.revaturelabs.com:443/mock/training/batch/";
 const agent = new https.Agent({ rejectUnauthorized: false });
 
 export async function getBatchesLambda(batchIDs: string[]) {
-	let batchInfo: BatchInfo[] = [];
+  let batchInfo: BatchInfo[] = [];
 
-	for (let batchID of batchIDs) {
-		await axios.get(`${URI}${batchID}`, { httpsAgent: agent }).then((res) => {
-			//transform batch info and add to batchInfo array
-			const batchData = {
-				id: res.data.id,
-				batchId: res.data.batchId,
-				name: res.data.name,
-				startDate: res.data.startDate,
-				endDate: res.data.endDate,
-				skill: res.data.skill,
-				location: res.data.location,
-				type: res.data.type,
-			};
-			batchInfo.push(batchData);
-		});
-	}
-	return batchInfo;
+  for (let batchID of batchIDs) {
+    await axios.get(`${URI}${batchID}`, { httpsAgent: agent }).then((res) => {
+      //transform batch info and add to batchInfo array
+      const batchData = {
+        id: res.data.id,
+        batchId: res.data.batchId,
+        name: res.data.name,
+        startDate: res.data.startDate,
+        endDate: res.data.endDate,
+        skill: res.data.skill,
+        location: res.data.location,
+        type: res.data.type,
+      };
+      batchInfo.push(batchData);
+    });
+  }
+  return batchInfo;
 }
 
 async function getBatchIDs(trainerEmail: string): Promise<any | null> {
-	let reply = await axios
-		.get(`${URI}${trainerEmail}/ids`, { httpsAgent: agent })
-		.catch(() => null);
-	return reply;
+  let reply = await axios
+    .get(`${URI}${trainerEmail}/ids`, { httpsAgent: agent })
+    .catch(() => null);
+  return reply;
 }
