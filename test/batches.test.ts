@@ -1,7 +1,7 @@
 //welcome we are testing the batches endpoint.
 
 import axios from 'axios';
-import { getBatchesLambda, handler } from '../../batches/getBatchesLambda';
+import { getBatchesLambda, handler, MyEvent, agent } from '../batches/getBatchesLambda';
 
 /**
  * getBatchesLambda takes in a trainer ID (there is no trainer ID, only trainer email) and returns a list of batchIDs from the caliber mock api
@@ -93,21 +93,27 @@ describe('Batches Test Suite', () => {
 		//mock axios request to the caliber api to get info about the batches based on the batchID
 		axios.get = jest
 			.fn()
-			.mockImplementationOnce(() => Promise.resolve(batchIDs))
-			.mockImplementationOnce(() => Promise.resolve(batch1))
-			.mockImplementationOnce(() => Promise.resolve(batch2))
-			.mockImplementationOnce(() => Promise.resolve(batch3));
-
-		await handler(trainerEmail).then((data: any) => (returnValues = data));
+			.mockImplementationOnce(() => { return Promise.resolve({data: batchIDs})})
+			.mockImplementationOnce(() => { return Promise.resolve({data: batch1})})
+			.mockImplementationOnce(() => { return Promise.resolve({data: batch2})})
+			.mockImplementationOnce(() => { return Promise.resolve({data: batch3})});
+		
+		let myEvent: MyEvent = {
+			queryStringParameters: {
+				trainerEmail: trainerEmail
+			}
+		};
+		await handler(myEvent).then((data: any) => (returnValues = data));
 		// test to make sure that the axios requests have been called the number of batches plus one
 		expect(axios.get).toHaveBeenCalledTimes(batches.length + 1);
 
 		// test to make sure that response is equal to resp
-		expect(returnValues).toEqual(resp.data);
+		expect(JSON.parse(returnValues.body)).toEqual(resp.data);
 		// test to make sure that all of the requests are called with the caliber api
-		expect(axios.get).toHaveBeenCalledWith(`${caliberURI}/${trainerEmail}/ids`);
-		for (let batchID in batchIDs) {
-			expect(axios.get).toHaveBeenCalledWith(`${caliberURI}/${batchID}`);
+		
+		expect(axios.get).toHaveBeenCalledWith(`${caliberURI}/${trainerEmail}/ids`, { httpsAgent: agent });
+		for (let batchID of batchIDs) {
+			expect(axios.get).toHaveBeenCalledWith(`${caliberURI}/${batchID}`, { httpsAgent: agent });
 		}
 	});
 });

@@ -1,8 +1,7 @@
 import axios from "axios";
 import https from "https";
 
-interface MyEvent {
-  path: string;
+export interface MyEvent {
   queryStringParameters: {
     trainerEmail: string;
   };
@@ -38,6 +37,7 @@ export const handler = async (event: MyEvent) => {
     return resp;
   }
   const batchIDs = await getBatchIDs(trainerEmail);
+  console.log(batchIDs)
   let batchInfo: BatchInfo[] = [];
   if (batchIDs.data) {
     batchInfo = await getBatchesLambda(batchIDs.data);
@@ -47,7 +47,14 @@ export const handler = async (event: MyEvent) => {
 };
 
 const URI = "https://caliber2-mock.revaturelabs.com:443/mock/training/batch/";
-const agent = new https.Agent({ rejectUnauthorized: false });
+export const agent = new https.Agent({ rejectUnauthorized: false });
+
+async function getBatchIDs(trainerEmail: string): Promise<any | null> {
+  let reply = await axios
+    .get(`${URI}${trainerEmail}/ids`, { httpsAgent: agent })
+    .catch(() => null);
+  return reply;
+}
 
 export async function getBatchesLambda(batchIDs: string[]) {
   let batchInfo: BatchInfo[] = [];
@@ -71,9 +78,3 @@ export async function getBatchesLambda(batchIDs: string[]) {
   return batchInfo;
 }
 
-async function getBatchIDs(trainerEmail: string): Promise<any | null> {
-  let reply = await axios
-    .get(`${URI}${trainerEmail}/ids`, { httpsAgent: agent })
-    .catch(() => null);
-  return reply;
-}
