@@ -72,34 +72,40 @@ describe('tests for getAssociate', async () => {
 });
 
 describe('tests for putAssociate', () => {
-  let body = {
-    batchId: 'batch1',
-    weekId: 1,
-    associateId: 'testAssociateId',
-    qcNote: 'test note',
-    qcTechnicalStatus: 2,
-  };
+  let path = '{"batchId":"batch1","weekId":1,"associateId":"testAssociateId"}';
+  let body = '{"qcNote":"test note","qcTechnicalStatus":2}';
 
   Client.connect = jest.fn();
   Client.query = jest.fn().mockResolvedValue(body);
   Client.end = jest.fn();
+
   test('that putAssociate returns the object', async () => {
+    let response = await associateLambda.putAssociate(body, path);
+    let expectedResponse = {
+      batchId: 'batch1',
+      weekId: 1,
+      associateId: 'testAssociateId',
+      qcNote: 'test note',
+      qcTechnicalStatus: 2,
+    };
+
+    expect(response).toStrictEqual(expectedResponse);
     expect(Client.connect).toHaveBeenCalledTimes(1);
     expect(Client.query).toHaveBeenCalledTimes(1);
     expect(Client.end).toHaveBeenCalledTimes(1);
-    expect(associateLambda.putAssociate()).toBe(body);
   });
 
   test('that an incorrect input does not break anything', async () => {
+    let response = await associateLambda.putAssociate('', '');
+    expect(response).toBe(null);
     expect(Client.query).toHaveBeenCalledTimes(0);
     expect(Client.connect).toHaveBeenCalledTimes(0);
     expect(Client.end).toHaveBeenCalledTimes(0);
-    expect(associateLambda.putAssociate()).toBe(null);
   });
 });
 
 describe('tests for patchAssociate', () => {
-  const original: associateLambda.qcFeedback = {
+  const original: associateLambda.QCFeedback = {
     batchId: 'YYMM-mmmDD-Stuff',
     weekId: 1,
     associateId: 'example@example.net',
