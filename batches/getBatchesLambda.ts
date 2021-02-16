@@ -5,6 +5,17 @@ interface MyEvent {
     path: string;
 }
 
+interface BatchInfo {
+	id: string;
+	batchId: string;
+	name: string;
+	startDate: string;
+	endDate: string;
+	skill: string;
+	location: string;
+	type: string;
+}
+
 export const handler = async (event: MyEvent) => {
   let trainerEmail = event.path.substring(event.path.lastIndexOf('=')+1, event.path.length);
   const batchIDs = await getBatchIDs(trainerEmail);
@@ -24,7 +35,7 @@ async function getBatchesLambda(batchIDs:string[]) {
 	let caliberURI: string =
 		'https://caliber2-mock.revaturelabs.com:443/mock/training/batch';
 
-	let batchInfo = [];
+	let batchInfo: BatchInfo[] = [];
 
 	for (let batchID of batchIDs) {
 		await axios.get(`${caliberURI}/${batchID}`, {httpsAgent: agent}).then((res) => {
