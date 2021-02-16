@@ -1,9 +1,10 @@
 //Tests for associate lambda handler and helpers
 
 import * as associateLambda from '../index';
+import { handler } from '../handler'
 import { Client } from 'pg';
 
-let testEvent: associateLambda.AssocEvent;
+let testEvent: associateLambda.AssociateEvent;
 
 const mockConnect = jest.fn();
 const mockQuery = jest.fn();
@@ -18,50 +19,57 @@ jest.mock('pg', () => {
   };
 });
 
+
+jest.mock('../index', () => {
+  const mockget = jest.fn();
+  const mockput = jest.fn();
+  const mockpatch = jest.fn();
+
+  return {
+      getAssociate: mockget,
+      putAssociate: mockput,
+      patchAssociate: mockpatch,
+  };
+});
+
 //Author: Tyler
 describe('tests for handler', () => {
-  associateLambda.getAssociate = jest.fn().mockReturnValue('');
-  associateLambda.putAssociate = jest.fn().mockReturnValue('');
-  associateLambda.patchAssociate = jest.fn().mockReturnValue('');
 
-  test('test handler can differentiate between get/put/patch', async () => {
+  test('test handler can differentiate between put', async () => {
     testEvent = {
       path: '/something',
       body: '{1:1}',
       httpMethod: 'PUT',
     };
+    await handler(testEvent);
 
-    await associateLambda.handler(testEvent);
+    expect(associateLambda.putAssociate).toHaveBeenCalledTimes(1)
 
-    expect(associateLambda.getAssociate).toHaveBeenCalledTimes(0);
-    expect(associateLambda.putAssociate).toHaveBeenCalledTimes(1);
-    expect(associateLambda.patchAssociate).toHaveBeenCalledTimes(0);
   });
-  test('test handler can differentiate between get/put/patch', async () => {
+  test('test handler can differentiate between get', async () => {
     testEvent = {
       path: '/something',
       body: '{1:1}',
       httpMethod: 'GET',
     };
 
-    await associateLambda.handler(testEvent);
+    await handler(testEvent);
 
-    expect(associateLambda.getAssociate).toHaveBeenCalledTimes(1);
-    expect(associateLambda.putAssociate).toHaveBeenCalledTimes(0);
-    expect(associateLambda.patchAssociate).toHaveBeenCalledTimes(0);
+    expect(associateLambda.getAssociate).toHaveBeenCalledTimes(1)
+
+    
   });
-  test('test handler can differentiate between get/put/patch', async () => {
+  test('test handler can differentiate between patch', async () => {
     testEvent = {
       path: '/something',
       body: '{1:1}',
       httpMethod: 'PATCH',
     };
 
-    await associateLambda.handler(testEvent);
+    await handler(testEvent);
 
-    expect(associateLambda.getAssociate).toHaveBeenCalledTimes(0);
-    expect(associateLambda.putAssociate).toHaveBeenCalledTimes(0);
-    expect(associateLambda.patchAssociate).toHaveBeenCalledTimes(1);
+    expect(associateLambda.patchAssociate).toHaveBeenCalledTimes(1)
+
   });
 });
 
