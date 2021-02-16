@@ -1,3 +1,4 @@
+import { Client } from 'pg';
 import * as indexModule from './index';
 
 // lambda handler function
@@ -33,8 +34,19 @@ export async function putAssociate(body: string): Promise<qcFeedback | null> {
   let response = new qcFeedback();
   // gets the strings from the path helper function.
   response = { ...JSON.parse(body) };
-
-  return response;
+  const client = new Client();
+  await client.connect();
+  const res = await client.query(
+    'insert into qc_note(batchid, weekid, associateid, qcnote, qctechnicalstatus) values ($1::text, $2::integer, $3::integer, $4::text, $5::integer) returning *',
+    [
+      response.batchId,
+      response.weekId,
+      response.associateId,
+      response.qcNote,
+      response.qcTechnicalStatus,
+    ]
+  );
+  return res;
 }
 
 //method is patch
