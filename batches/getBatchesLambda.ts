@@ -27,8 +27,19 @@ export function getBatchesLambda(batchIDs) {
 	let batchInfo = [];
 
 	for (let batchID of batchIDs) {
-		axios.get(`${caliberURI}/${batchID}`).then(() => {
+		axios.get(`${caliberURI}/${batchID}`).then((res) => {
 			//transform batch info and add to batchInfo array
+      const batchData = {
+        id: res.data.id,
+        batchId: res.data.batchId,
+        name: res.data.name,
+        startDate: res.data.startDate,
+        endDate: res.data.endDate,
+        skill: res.data.skill,
+        location: res.data.location,
+        type: res.data.type,
+      };
+      batchInfo.push(batchData)
 		});
 	}
 
