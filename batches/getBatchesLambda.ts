@@ -5,6 +5,17 @@ interface MyEvent {
     path: string;
 }
 
+interface BatchInfo {
+	id: string;
+	batchId: string;
+	name: string;
+	startDate: string;
+	endDate: string;
+	skill: string;
+	location: string;
+	type: string;
+}
+
 export const handler = async (event: MyEvent) => {
   let trainerEmail = event.path.substring(event.path.lastIndexOf('=')+1, event.path.length);
   const batchIDs = await getBatchIDs(trainerEmail);
@@ -20,18 +31,30 @@ export const handler = async (event: MyEvent) => {
   };
 };
 
-export function getBatchesLambda(batchIDs) {
+async function getBatchesLambda(batchIDs:string[]) {
 	let caliberURI: string =
 		'https://caliber2-mock.revaturelabs.com:443/mock/training/batch';
 
-	let batchInfo = [];
+	let batchInfo: BatchInfo[] = [];
 
 	for (let batchID of batchIDs) {
-		axios.get(`${caliberURI}/${batchID}`).then(() => {
+		await axios.get(`${caliberURI}/${batchID}`, {httpsAgent: agent}).then((res) => {
 			//transform batch info and add to batchInfo array
+      const batchData = {
+        id: res.data.id,
+        batchId: res.data.batchId,
+        name: res.data.name,
+        startDate: res.data.startDate,
+        endDate: res.data.endDate,
+        skill: res.data.skill,
+        location: res.data.location,
+        type: res.data.type,
+      };
+      batchInfo.push(batchData)
 		});
-	}
-
+  }
+  return batchInfo
+}
 const agent = new https.Agent({rejectUnauthorized:false,});
 
 async function getBatchIDs(trainerEmail: string): Promise<string[]> {
