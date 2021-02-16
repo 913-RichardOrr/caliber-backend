@@ -20,14 +20,14 @@ export const handler = async (event: MyEvent) => {
   };
 };
 
-export function getBatchesLambda(batchIDs) {
+async function getBatchesLambda(batchIDs:string[]) {
 	let caliberURI: string =
 		'https://caliber2-mock.revaturelabs.com:443/mock/training/batch';
 
 	let batchInfo = [];
 
 	for (let batchID of batchIDs) {
-		axios.get(`${caliberURI}/${batchID}`).then((res) => {
+		await axios.get(`${caliberURI}/${batchID}`, {httpsAgent: agent}).then((res) => {
 			//transform batch info and add to batchInfo array
       const batchData = {
         id: res.data.id,
@@ -41,8 +41,9 @@ export function getBatchesLambda(batchIDs) {
       };
       batchInfo.push(batchData)
 		});
-	}
-
+  }
+  return batchInfo
+}
 const agent = new https.Agent({rejectUnauthorized:false,});
 
 async function getBatchIDs(trainerEmail: string): Promise<string[]> {
