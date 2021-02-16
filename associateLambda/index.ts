@@ -32,7 +32,7 @@ export const handler = async (event: AssocEvent): Promise<any> => {
       }
     }
     case ('PATCH'): {
-      const associate = await patchAssociate(event.body);
+      const associate = await patchAssociate(event.path,event.body);
       if (associate) {
         return createResponse(JSON.stringify(associate), 200);
       } else {
@@ -48,10 +48,14 @@ export const handler = async (event: AssocEvent): Promise<any> => {
 
 };
 
-//method is get
-//get the note and technical status for that person for that week
+/**
+ * method is get
+ * get the note and technical status for that person for that week
+ * @param path is the string path with the batch/week/associate information.
+ */
 export async function getAssociate(path:string): Promise<qcFeedback | null> {
-
+  // let splitter = path.split('/');
+  // console.log(splitter);
   return null;
 };
 
