@@ -11,18 +11,29 @@ export interface AssociateEvent {
 //figures out what http method has been called: GET, PUT, PATCH
 //call the relevant helper function
 //return the relevant object
-export const handler = async (event: AssociateEvent): Promise<any> => {};
+export const handler = async (event: AssociateEvent): Promise<any> => {
+  putAssociate(JSON.stringify({ qcNote: 'note', qcTechnicalStatus: 'status' }));
+};
 
 //method is get
 //get the note and technical status for that person for that week
-export async function getAssociate(batchId: string, weekId: number, associateId: string): Promise<qcFeedback|null> {
+export async function getAssociate(
+  batchId: string,
+  weekId: number,
+  associateId: string
+): Promise<qcFeedback | null> {
   return null;
-};
+}
 
-//method is put
-//create the note and technical status for that person for that week
-export async function putAssociate(): Promise<qcFeedback | null> {
+/**
+ * adds a new associate
+ * @param body - contains the qcNote and technical status
+ */
+export async function putAssociate(body: string): Promise<qcFeedback | null> {
   let response = new qcFeedback();
+  // gets the strings from the path helper function.
+  response = { ...JSON.parse(body) };
+
   return response;
 }
 
