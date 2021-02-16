@@ -3,7 +3,7 @@ import { Client } from 'pg';
 
 // lambda handler function
 
-export interface AssocEvent {
+export interface AssociateEvent {
   path: string;
   httpMethod: string;
   body?: string;
@@ -12,7 +12,7 @@ export interface AssocEvent {
 //figures out what http method has been called: GET, PUT, PATCH
 //call the relevant helper function
 //return the relevant object
-export const handler = async (event: AssocEvent): Promise<any> => {};
+export const handler = async (event: AssociateEvent): Promise<any> => {};
 
 //method is get
 //get the note and technical status for that person for that week
