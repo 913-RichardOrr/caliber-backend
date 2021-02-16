@@ -58,10 +58,8 @@ export const patchAssociate = async (
 
   // Actually update the table, return updated object if successful (or null if not)
   try {
-    console.log(`args: ${JSON.stringify(args)}`);
     await client.connect();
     await client.query(q, args);
-    console.log(`after args: ${JSON.stringify(args)}`);
 
     const q_check = 'select q.batchId, q.weekId, q.associateId, q.qcNote, q.qcTechnicalStatus from qcNotes q where associateid = $2::text and weekid = $3::integer and batchid = $4::text';
     const res = await client.query(q_check, args);
