@@ -19,16 +19,23 @@ interface BatchInfo {
 export const handler = async (event: MyEvent) => {
   let trainerEmail = event.path.substring(event.path.lastIndexOf('=')+1, event.path.length);
   const batchIDs = await getBatchIDs(trainerEmail);
-  const batchInfo = await getBatchesLambda(batchIDs);
-  return {
-    statusCode: 200,
-    headers: {
+  if (batchIDs) {
+    const batchInfo = await getBatchesLambda(batchIDs);
+    return {
+      statusCode: 200,
+      headers: {
         "Access-Control-Allow-Headers" : "Content-Type",
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
-    },
-    body: JSON.stringify(batchInfo)
-  };
+      },
+      body: JSON.stringify(batchInfo)
+    };
+  } else {
+    return {
+      statusCode: 404,
+      body: "No Batches Found"
+    }
+  }
 };
 
 async function getBatchesLambda(batchIDs:string[]) {
@@ -60,5 +67,8 @@ const agent = new https.Agent({rejectUnauthorized:false,});
 async function getBatchIDs(trainerEmail: string): Promise<string[]> {
   const URI = 'https://caliber2-mock.revaturelabs.com:443/mock/training/';
   let reply = await axios.get(`${URI}batch/${trainerEmail}/ids`, {httpsAgent: agent} )
+    .catch((err) => {
+      return err
+    })
   return reply.data
 }
