@@ -1,0 +1,159 @@
+# Specify which version of the spec you are using.
+AWSTemplateFormatVersion: 2010-09-09
+# Describe what our Cloudformation Stack is
+Description: My API Gateway and Lambda stack.
+
+# Things we can pass into the template as variables.
+Parameters:
+  getRestaurantFunctionName:
+    Type: String
+    # Protect from bad input. Cloudformation will ensure this regex applies to any parameter
+    AllowedPattern: "[a-zA-Z0-9]+[a-zA-Z0-9-]+[a-zA-Z0-9]"
+    # Default value if none is passed
+    Default: getRestaurants-cf
+# Things CloudFormation will make for us.
+Resources:
+  # Internal name for this template
+  getRestaurantsFunction:
+    # What kind of resource are we making
+    Type: AWS::Lambda::Function
+    # Configure the resource
+    Properties:
+      Description: get Restaurant function created by CloudFormation
+      # !Ref will allow us to reference other parts of the template
+      FunctionName: !Ref getRestaurantFunctionName
+      # Entrypoint into the code?
+      Handler: index.handler
+      MemorySize: 128
+      # What IAM role should we give this function. (we can actually create and reference roles within the template)
+      Role: arn:aws:iam::701190584422:role/LambdaDynamoRole
+      Runtime: nodejs12.x
+      Code:
+        S3Bucket: stuff-2012-dec14
+        S3Key: getRestaurants.zip
+  # The API
+  apiGateway:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Description: Creating RestApi using Cloudfront for the restaurant api.
+      EndpointConfiguration:
+        Types:
+          - REGIONAL
+      Name: restaurant-api-cf
+  # Define a resource on the api
+  restaurantResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      # Attach the resource to the api above.
+      RestApiId: !Ref apiGateway
+      # This resource is a child of the "root resource" (the / of the api)
+      ParentId: !GetAtt apiGateway.RootResourceId
+      # What is the path of the resource?
+      PathPart: restaurants
+  # Define a method on the resource
+  getRestaurantsMethod:
+    Type: AWS::ApiGateway::Method
+    DependsOn:
+      - getRestaurantsFunction
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: GET
+      Integration:
+        Type: AWS_PROXY
+        # Technically speaking all AWS_PROXY integrations are POST requests
+        IntegrationHttpMethod: POST
+        # The invocation url for invoking the lambda from apigateway
+        Uri: !Sub
+          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
+          - lambdaArn: !GetAtt getRestaurantsFunction.Arn
+      # reference the resource we attach the method to
+      ResourceId: !Ref restaurantResource
+      # reference the api the method is in
+      RestApiId: !Ref apiGateway
+  # CORS
+  OptionsMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      RestApiId:
+        Ref: apiGateway
+      ResourceId:
+        Ref: restaurantResource
+      HttpMethod: OPTIONS
+      Integration:
+        IntegrationResponses:
+        - StatusCode: 200
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+            method.response.header.Access-Control-Allow-Methods: "'GET,PUT,DELETE,OPTIONS'"
+            method.response.header.Access-Control-Allow-Origin: "'*'"
+          ResponseTemplates:
+            application/json: ''
+        PassthroughBehavior: WHEN_NO_MATCH
+        RequestTemplates:
+          application/json: '{"statusCode": 200}'
+        Type: MOCK
+      MethodResponses:
+      - StatusCode: 200
+        ResponseModels:
+          application/json: 'Empty'
+        ResponseParameters:
+          method.response.header.Access-Control-Allow-Headers: false
+          method.response.header.Access-Control-Allow-Methods: false
+          method.response.header.Access-Control-Allow-Origin: false
+  # Create a deployment in the api gateway
+  apiGatewayDefaultDeployment:
+    Type: AWS::ApiGateway::Deployment
+    # This resource cannot be created until certain other resources have been created.
+    DependsOn:
+      - getRestaurantsMethod
+      - OptionsMethod
+    Properties:
+      RestApiId: !Ref apiGateway
+      StageName: default
+  # Give API Gateway permission to invoke Lambda
+  apiGatewayInvokeGetRestaurants:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !GetAtt getRestaurantsFunction.Arn
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${apiGateway}/default/GET/restaurants
+  # Give api gateway some iam roles for lamda
+  lambdaIAMRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Action:
+              - sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+      Policies:
+        - PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Effect: Allow
+                Resource:
+                  - !Sub arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/getRestaurants-cf:*
+          PolicyName: lambda-cf
+
+  # Create our log group
+  lambdaLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: /aws/lambda/getRestaurants-cf-2
+      RetentionInDays: 90
+# What comes out of the template?
+Outputs:
+  getRestaurantsArn:
+    Value: !GetAtt getRestaurantsFunction.Arn
+  apiGatewayInvokeUrl:
+    Value: !Sub https://${apiGateway}.execute-api.${AWS::Region}.amazonaws.com/default

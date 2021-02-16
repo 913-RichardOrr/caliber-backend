@@ -2,51 +2,11 @@ import * as indexModule from './index'
 import createResponse from './createResponse'
 import { Client } from 'pg';
 
-
 export interface AssociateEvent {
   path: string;
   httpMethod: string;
   body?: string;
 }
-
-/**
- * figures out what http method has been called: GET, PUT, PATCH, then 
- * calls the relevant helper function return the relevant object
- * @param event 
- */
-export const handler = async (event: AssociateEvent): Promise<any> => {
-  switch (event.httpMethod) {
-    case ('GET'): {
-      const associate = await getAssociate(event.path);
-      if (associate) {
-        return createResponse(JSON.stringify(associate), 200);
-      } else {
-        return createResponse('', 404);
-      }
-    }
-    case ('PUT'): {
-      const associate = await putAssociate(event.body);
-      if (associate) {
-        return createResponse(JSON.stringify(associate), 200);
-      } else {
-        return createResponse('', 404);
-      }
-    }
-    case ('PATCH'): {
-      const associate = await patchAssociate(event.path, event.body);
-      if (associate) {
-        return createResponse(JSON.stringify(associate), 200);
-      } else {
-        return createResponse('', 404);
-      }
-    }
-    default: {
-      console.log("Something went wrong in handler");
-      break;
-    }
-  }
-};
-
 /**
  * Method is get
  * get the note and technical status for that person for that week
@@ -70,8 +30,10 @@ export async function getAssociate(path: string): Promise<QCFeedback | null> {
 //method is put
 //create the note and technical status for that person for that week
 export async function putAssociate(updateObject: any): Promise<QCFeedback | null> {
-  let response = new QCFeedback();
-  return response;
+  console.log("Inside put associate!");
+  
+  // let response = new QCFeedback();
+  return null;
 }
 
 export const patchAssociate = async (
@@ -85,10 +47,6 @@ export const patchAssociate = async (
   const q_note = 'update qcnotes set note = $1::text where associateid = $2::text and weekid = $3::integer and batchid = $3::text';
   const q_status = 'update qcnotes set techstatus = $1::integer where associateid = $2::text and weekid = $3::integer and batchid = $3::text';
 
-  try {
-    await client.connect();
-
-  }
 
   return null;
 }
