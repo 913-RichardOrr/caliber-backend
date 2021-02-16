@@ -2,7 +2,7 @@ import axios from 'axios';
 import https from 'https';
 
 interface MyEvent {
-    path: string;
+	path: string;
 }
 
 interface BatchInfo {
@@ -17,53 +17,52 @@ interface BatchInfo {
 }
 
 export const handler = async (event: MyEvent) => {
-  let trainerEmail = event.path.substring(event.path.lastIndexOf('=')+1, event.path.length);
-  const batchIDs = await getBatchIDs(trainerEmail);
-  if (batchIDs) {
-    const batchInfo = await getBatchesLambda(batchIDs);
-    return {
-      statusCode: 200,
-      headers: {
-        "Access-Control-Allow-Headers" : "Content-Type",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
-      },
-      body: JSON.stringify(batchInfo)
-    };
-  } else {
-    return {
-      statusCode: 404,
-      body: "No Batches Found"
-    }
-  }
+	let trainerEmail = event.path.substring(
+		event.path.lastIndexOf('=') + 1,
+		event.path.length
+	);
+	const batchIDs = await getBatchIDs(trainerEmail);
+	let batchInfo: BatchInfo[] = [];
+	if (batchIDs.data) {
+		batchInfo = await getBatchesLambda(batchIDs.data);
+	}
+	return {
+		statusCode: 200,
+		headers: {
+			'Access-Control-Allow-Headers': 'Content-Type',
+			'Access-Control-Allow-Origin': '*',
+			'Access-Control-Allow-Methods': 'OPTIONS,POST,GET',
+		},
+		body: JSON.stringify(batchInfo),
+	};
 };
 
-async function getBatchesLambda(batchIDs:string[]) {
-	let caliberURI: string =
-		'https://caliber2-mock.revaturelabs.com:443/mock/training/batch';
+const URI = 'https://caliber2-mock.revaturelabs.com:443/mock/training/batch/';
+const agent = new https.Agent({ rejectUnauthorized: false });
 
+export async function getBatchesLambda(batchIDs: string[]) {
 	let batchInfo: BatchInfo[] = [];
 
 	for (let batchID of batchIDs) {
-		await axios.get(`${caliberURI}/${batchID}`, {httpsAgent: agent}).then((res) => {
+		await axios.get(`${URI}/${batchID}`, { httpsAgent: agent }).then((res) => {
 			//transform batch info and add to batchInfo array
-      const batchData = {
-        id: res.data.id,
-        batchId: res.data.batchId,
-        name: res.data.name,
-        startDate: res.data.startDate,
-        endDate: res.data.endDate,
-        skill: res.data.skill,
-        location: res.data.location,
-        type: res.data.type,
-      };
-      batchInfo.push(batchData)
+			const batchData = {
+				id: res.data.id,
+				batchId: res.data.batchId,
+				name: res.data.name,
+				startDate: res.data.startDate,
+				endDate: res.data.endDate,
+				skill: res.data.skill,
+				location: res.data.location,
+				type: res.data.type,
+			};
+			batchInfo.push(batchData);
 		});
-  }
-  return batchInfo
+	}
+	return batchInfo;
 }
-const agent = new https.Agent({rejectUnauthorized:false,});
 
+<<<<<<< HEAD
 async function getBatchIDs(trainerEmail: string): Promise<string[]> {
   const URI = 'https://caliber2-mock.revaturelabs.com:443/mock/training/';
   let reply = await axios.get(`${URI}batch/${trainerEmail}/ids`, {httpsAgent: agent} )
@@ -71,4 +70,11 @@ async function getBatchIDs(trainerEmail: string): Promise<string[]> {
       return err
     })
   return reply.data
+=======
+async function getBatchIDs(trainerEmail: string): Promise<any | null> {
+	let reply = await axios
+		.get(`${URI}${trainerEmail}/ids`, { httpsAgent: agent })
+		.catch(() => null);
+	return reply;
+>>>>>>> 8139f40c29b1fdaca726cea20b4196744a5517a9
 }
