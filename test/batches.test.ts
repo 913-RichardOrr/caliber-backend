@@ -1,7 +1,7 @@
 //welcome we are testing the batches endpoint.
 
-import axios from 'axios';
-import { handler, MyEvent, agent } from '../batches/getBatchesLambda';
+import axios from "axios";
+import { handler, MyEvent, agent } from "../batches/getBatchesLambda";
 
 /**
  * getBatchesLambda takes in a trainer ID (there is no trainer ID, only trainer email) and returns a list of batchIDs from the caliber mock api
