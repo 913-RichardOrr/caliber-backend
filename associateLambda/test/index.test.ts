@@ -136,7 +136,7 @@ describe('tests for putAssociate', () => {
 });
 
 describe('tests for patchAssociate', () => {
-  const original: associateLambda.qcFeedback = {
+  const original: associateLambda.QCFeedback = {
     batchId: 'YYMM-mmmDD-Stuff',
     weekId: 1,
     associateId: 'example@example.net',

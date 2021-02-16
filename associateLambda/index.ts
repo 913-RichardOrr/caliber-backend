@@ -1,6 +1,7 @@
 import * as indexModule from './index'
 import createResponse from './createResponse'
-// lambda handler function
+import { Client } from 'pg';
+
 
 export interface AssocEvent {
   path: string;
@@ -56,6 +57,8 @@ export const handler = async (event: AssocEvent): Promise<any> => {
 export async function getAssociate(path:string): Promise<qcFeedback | null> {
   // let splitter = path.split('/');
   // console.log(splitter);
+  let associateInfo =  parsePath(path);
+  
   return null;
 };
 
