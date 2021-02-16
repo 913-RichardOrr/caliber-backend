@@ -1,6 +1,7 @@
 //Tests for associate lambda handler and helpers
 
 import * as associateLambda from '../index';
+import { handler } from '../handler';
 import { Client } from 'pg';
 
 let testEvent: associateLambda.AssociateEvent;
@@ -18,51 +19,8 @@ jest.mock('pg', () => {
   };
 });
 
-//Author: Tyler
-describe('tests for handler', () => {
-  associateLambda.getAssociate = jest.fn().mockReturnValue('');
-  associateLambda.putAssociate = jest.fn().mockReturnValue('');
-  associateLambda.patchAssociate = jest.fn().mockReturnValue('');
-
-  test('test handler can differentiate between get/put/patch', async () => {
-    testEvent = {
-      path: '/something',
-      body: '{1:1}',
-      httpMethod: 'PUT',
-    };
-
-    await associateLambda.handler(testEvent);
-
-    expect(associateLambda.getAssociate).toHaveBeenCalledTimes(0);
-    expect(associateLambda.putAssociate).toHaveBeenCalledTimes(1);
-    expect(associateLambda.patchAssociate).toHaveBeenCalledTimes(0);
-  });
-  test('test handler can differentiate between get/put/patch', async () => {
-    testEvent = {
-      path: '/something',
-      body: '{1:1}',
-      httpMethod: 'GET',
-    };
-
-    await associateLambda.handler(testEvent);
-
-    expect(associateLambda.getAssociate).toHaveBeenCalledTimes(1);
-    expect(associateLambda.putAssociate).toHaveBeenCalledTimes(0);
-    expect(associateLambda.patchAssociate).toHaveBeenCalledTimes(0);
-  });
-  test('test handler can differentiate between get/put/patch', async () => {
-    testEvent = {
-      path: '/something',
-      body: '{1:1}',
-      httpMethod: 'PATCH',
-    };
-
-    await associateLambda.handler(testEvent);
-
-    expect(associateLambda.getAssociate).toHaveBeenCalledTimes(0);
-    expect(associateLambda.putAssociate).toHaveBeenCalledTimes(0);
-    expect(associateLambda.patchAssociate).toHaveBeenCalledTimes(1);
-  });
+afterEach(() => {
+  jest.clearAllMocks();
 });
 
 describe('tests for getAssociate', () => {
@@ -119,10 +77,6 @@ describe('tests for putAssociate', () => {
   let path = '/batches/batch1/weeks/1/associates/testAssociateId';
   let body = '{"qcNote":"test note","qcTechnicalStatus":2}';
 
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
   test('that an incorrect input does not break anything', async () => {
     let response = await associateLambda.putAssociate(
       '{"wrongPropertyBody":"some value"}',
@@ -161,10 +115,6 @@ describe('tests for patchAssociate', () => {
   };
   const testPath =
     'blablabla/batches/YYMM-mmmDD-Stuff/weeks/1/associates/example@example.net';
-
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
 
   test("That updating an associate's note calls pg with correct query", async () => {
     const testUpdateObject = { qcNote: 'Updated blablabla' };
