@@ -1,6 +1,7 @@
 //welcome we are testing the batches endpoint.
 
 import axios from 'axios';
+import { getBatchesLambda, handler } from '../../batches/getBatchesLambda';
 
 /**
  * getBatchesLambda takes in a trainer ID (there is no trainer ID, only trainer email) and returns a list of batchIDs from the caliber mock api
@@ -97,9 +98,7 @@ describe('Batches Test Suite', () => {
 			.mockImplementationOnce(() => Promise.resolve(batch2))
 			.mockImplementationOnce(() => Promise.resolve(batch3));
 
-		await getBatchesLambda(trainerEmail).then(
-			(data: any) => (returnValues = data)
-		);
+		await handler(trainerEmail).then((data: any) => (returnValues = data));
 		// test to make sure that the axios requests have been called the number of batches plus one
 		expect(axios.get).toHaveBeenCalledTimes(batches.length + 1);
 
