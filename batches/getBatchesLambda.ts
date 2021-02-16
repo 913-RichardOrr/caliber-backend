@@ -5,10 +5,10 @@ interface MyEvent {
     path: string;
 }
 
-// create handler
 export const handler = async (event: MyEvent) => {
-    let trainerEmail = event.path.substring(event.path.lastIndexOf('=')+1, event.path.length);
+  let trainerEmail = event.path.substring(event.path.lastIndexOf('=')+1, event.path.length);
   const batchIDs = await getBatchIDs(trainerEmail);
+  const batchInfo = await getBatchesLambda(batchIDs);
   return {
     statusCode: 200,
     headers: {
@@ -16,12 +16,23 @@ export const handler = async (event: MyEvent) => {
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
     },
-    body: JSON.stringify(batchIDs)
+    body: JSON.stringify(batchInfo)
   };
 };
 
-const agent = new https.Agent({rejectUnauthorized:false,});
+export function getBatchesLambda(batchIDs) {
+	let caliberURI: string =
+		'https://caliber2-mock.revaturelabs.com:443/mock/training/batch';
 
+	let batchInfo = [];
+
+	for (let batchID of batchIDs) {
+		axios.get(`${caliberURI}/${batchID}`).then(() => {
+			//transform batch info and add to batchInfo array
+		});
+	}
+
+const agent = new https.Agent({rejectUnauthorized:false,});
 
 async function getBatchIDs(trainerEmail: string): Promise<string[]> {
   const URI = 'https://caliber2-mock.revaturelabs.com:443/mock/training/';
