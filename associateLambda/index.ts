@@ -58,8 +58,19 @@ export async function getAssociate(path:string): Promise<qcFeedback | null> {
   // let splitter = path.split('/');
   // console.log(splitter);
   let associateInfo =  parsePath(path);
-  
-  return null;
+  const client = new Client();
+    client.connect();
+    const q = `select id, username, money from diner`;
+    //const args = [event.username, event.password];
+    let res;
+    try{
+        res = await client.query(q);
+    } catch (error) {
+        console.log(error);
+    }
+    console.log(res);
+    client.end();
+    return res;
 };
 
 //method is put
@@ -69,13 +80,34 @@ export async function putAssociate(updateObject: any): Promise<qcFeedback | null
   return response;
 }
 
-//method is patch
-//update an existing note or status
-export const patchAssociate = async (path:string,  updateObject: any): Promise<qcFeedback | null> => {
-  return null;
-};
+export const patchAssociate = async (
+  path: string,
+  updateObject: string
+): Promise<QCFeedback | null> => {
+  const client = new Client();
 
-export class qcFeedback {
+
+
+  const q_note = 'update qcnotes set note = $1::text where associateid = $2::text and weekid = $3::integer and batchid = $3::text';
+  const q_status = 'update qcnotes set techstatus = $1::integer where associateid = $2::text and weekid = $3::integer and batchid = $3::text';
+
+  try {
+    await client.connect();
+    
+  }
+
+  return null;
+}
+
+function parsePath (path: string): Object {
+  const parts = path.split('/');
+  const associateId = parts[parts.length - 1];
+  const weekId = Number(parts[parts.length - 3]);
+  const batchId = Number(parts[parts.length - 5]);
+  return {batchId, weekId, associateId};
+}
+
+export class QCFeedback {
   batchId: string = '';
   weekId: number = 0;
   associateId: string = '';
