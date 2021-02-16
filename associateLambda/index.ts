@@ -3,7 +3,7 @@ import createResponse from './createResponse'
 import { Client } from 'pg';
 
 
-export interface AssocEvent {
+export interface AssociateEvent {
   path: string;
   httpMethod: string;
   body?: string;
@@ -14,7 +14,7 @@ export interface AssocEvent {
  * calls the relevant helper function return the relevant object
  * @param event 
  */
-export const handler = async (event: AssocEvent): Promise<any> => {
+export const handler = async (event: AssociateEvent): Promise<any> => {
   switch (event.httpMethod) {
     case ('GET'): {
       const associate = await getAssociate(event.path);
@@ -50,33 +50,29 @@ export const handler = async (event: AssocEvent): Promise<any> => {
 };
 
 /**
- * method is get
+ * Method is get
  * get the note and technical status for that person for that week
  * @param path is the string path with the batch/week/associate information.
  */
-export async function getAssociate(path:string): Promise<qcFeedback | null> {
-  // let splitter = path.split('/');
-  // console.log(splitter);
+export async function getAssociate(path:string): Promise<QCFeedback | null> {
   let associateInfo =  parsePath(path);
   const client = new Client();
     client.connect();
-    const q = `select id, username, money from diner`;
-    //const args = [event.username, event.password];
-    let res;
+    const q = `select batchId,weekId,associateId from associates where batchId = '${associateInfo.batchId}'
+    && weekId = '${associateInfo.weekId}' && associateId = '${associateInfo.associateId}'`;
+    let res:any;
     try{
         res = await client.query(q);
     } catch (error) {
         console.log(error);
     }
-    console.log(res);
-    client.end();
     return res;
 };
 
 //method is put
 //create the note and technical status for that person for that week
-export async function putAssociate(updateObject: any): Promise<qcFeedback | null> {
-  let response = new qcFeedback();
+export async function putAssociate(updateObject: any): Promise<QCFeedback | null> {
+  let response = new QCFeedback();
   return response;
 }
 
@@ -99,7 +95,7 @@ export const patchAssociate = async (
   return null;
 }
 
-function parsePath (path: string): Object {
+function parsePath (path: string): any {
   const parts = path.split('/');
   const associateId = parts[parts.length - 1];
   const weekId = Number(parts[parts.length - 3]);
@@ -107,10 +103,10 @@ function parsePath (path: string): Object {
   return {batchId, weekId, associateId};
 }
 
-export class QCFeedback {
-  batchId: string = '';
-  weekId: number = 0;
-  associateId: string = '';
-  qcNote: string = '';
-  qcTechnicalStatus: number = 0;
+export interface QCFeedback {
+  batchId: string;
+  weekId: number;
+  associateId: string;
+  qcNote: string;
+  qcTechnicalStatus: number;
 }
