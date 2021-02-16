@@ -58,7 +58,7 @@ export async function getAssociate(path:string): Promise<QCFeedback | null> {
   let associateInfo =  parsePath(path);
   const client = new Client();
     client.connect();
-    const q = `select batchId,weekId,associateId from associates where batchId = '${associateInfo.batchId}'
+    const q = `select batchId,weekId,associateId from qc_notes where batchId = '${associateInfo.batchId}'
     && weekId = '${associateInfo.weekId}' && associateId = '${associateInfo.associateId}'`;
     let res:any;
     try{
