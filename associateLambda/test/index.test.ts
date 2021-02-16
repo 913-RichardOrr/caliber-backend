@@ -131,7 +131,7 @@ describe('tests for putAssociate', () => {
   test('that putAssociate returns the object', async () => {
     expect(Client.connect).toHaveBeenCalledTimes(1);
     expect(associateLambda.putAssociate()).toBe(body);
-    expect(Client.query).toHaveBeenCalledTimes(1);
+    expect(Client.query).toHaveBeenCalledTimes(1); 
     expect(Client.end).toHaveBeenCalledTimes(1);
   });
 
