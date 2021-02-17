@@ -20,7 +20,7 @@ jest.mock('pg', () => {
     };
   });
   
-  describe('Lambda Tests', () => {
+  describe('Lambda Week Category Tests', () => {
     let client: any;
     beforeEach(() => {
       client = new Client;
