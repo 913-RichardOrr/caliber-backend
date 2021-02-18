@@ -10,7 +10,7 @@ Resources:
           - BatchesRole
           - Arn
       Code:
-        S3Bucket: batches-jeff
+        S3Bucket: caliber-batches
         S3Key: BatchesCode
       Runtime: nodejs12.x
       Timeout: 300
