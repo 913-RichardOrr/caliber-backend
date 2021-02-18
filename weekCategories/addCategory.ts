@@ -1,7 +1,12 @@
 
 import createResponse from "../response";
 
-
+/**
+ * Given a category and week id, add the item from the database
+ * @param event
+ * @path the week id
+ * @body the category id
+ */
 
 exports.handler = async (event: any) => {
     const {Client} = require('pg');
