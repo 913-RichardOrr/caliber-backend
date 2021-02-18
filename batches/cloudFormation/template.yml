@@ -1,45 +1,50 @@
 AWSTemplateFormatVersion: '2010-09-09'
-
-Description: 'Example Lambda zip copy'
-
 Resources:
-  LambdaZipsBucket:
-    Type: AWS::S3::Bucket
-
-  MyFunctionRole:
-    Type: AWS::IAM::Role
-
+  Batches:
+    Type: AWS::Lambda::Function
     Properties:
+      FunctionName: Batches
+      Handler: lambda/index.handler
+      Role:
+        Fn::GetAtt:
+          - BatchesRole
+          - Arn
+      Code:
+        S3Bucket: batches-jeff
+        S3Key: BatchesCode
+      Runtime: nodejs12.x
+      Timeout: 300
+  BatchesRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      RoleName: BatchesRole
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
-
         Statement:
-          Effect: Allow
-
-          Principal:
-            Service: lambda.amazonaws.com
-
-          Action: sts:AssumeRole
-
-      ManagedPolicyArns: arn:aws:iam::aws:policy/service role/AWSLambdaBasicExecutionRole
-
-  MyFunction:
-    DependsOn: CopyZips
-
-    Type: AWS::Lambda::Function
-
-    Properties:
-      Description: Example
-
-      Handler: index.handler
-
-      Runtime: nodejs12.x
-
-      Role: !GetAtt 'MyFunctionRole.Arn'
-
-      Timeout: 300
-
-      Code:
-        S3Bucket: !Ref 'LambdaZipsBucket'
-
-        S3Key: !Sub '${QSS3KeyPrefix}/lambda.zip'
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Path: /
+      Policies:
+        - PolicyName: AWSLambdaBasicExecutionRole
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 'logs:CreateLogGroup'
+                  - 'logs:CreateLogStream'
+                  - 'logs:PutLogEvents'
+                Resource: '*'
+        - PolicyName: AmazonS3FullAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: 's3:*'
+                Resource:
+                  - 'arn:aws:s3:::exchange-data-raw'
+                  - 'arn:aws:s3:::exchange-data-raw/*'
