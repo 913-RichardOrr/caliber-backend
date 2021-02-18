@@ -1,5 +1,11 @@
 import createResponse from "../response";
 
+/**
+ * Given week id, retrieve all categories for that week
+ * @param event
+ * @path the week id
+ */
+
 exports.handler = async(event:any)=>{
 
     const { Client } = require("pg");
