@@ -11,8 +11,9 @@ exports.handler = async(event:any)=>{
     let response;
 
     //we want the name of category and the id
-    response = await client.query(`select name, catID from category where catID = (select catID from catweek where weekID = '${week}')`);
+    response = await client.query(`select skill,id from category where id = (select category_id from week_categories where week_id = '${week}')`);
     client.end();
+    
     if (response){
         return createResponse(JSON.stringify(response.rows), 200);
     } else{
