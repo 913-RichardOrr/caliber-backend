@@ -19,7 +19,7 @@ let retres;
 // 
 let client = new Client(myConn); 
 await client.query('delete from week-categories where week-categories_id = ($1::text)', [event.category_id]).then((response:any)=>{
-  retres = response
+  retres = response; 
 });
 client.end(); 
 
