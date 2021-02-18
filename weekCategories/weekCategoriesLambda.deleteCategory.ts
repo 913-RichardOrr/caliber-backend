@@ -1,3 +1,7 @@
+import {Client} from 'pg';
+
+
+
 exports.handler = async (event:any)=>{
 
     
@@ -10,12 +14,13 @@ let myConn = new Object({
     port: process.env.port_env,
   }); 
  
-let category_id = 0;
 let retres;
 
 // 
 let client = new Client(myConn); 
-await client.query('delete from week-categories where week-categories_id = ($1::text)', [category_id]).then((response)=>{retres = response});
+await client.query('delete from week-categories where week-categories_id = ($1::text)', [event.category_id]).then((response:any)=>{
+  retres = response
+});
 client.end(); 
 
   return {
