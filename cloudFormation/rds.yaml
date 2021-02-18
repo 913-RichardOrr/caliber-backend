@@ -1,9 +1,7 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: >-
-  Description": "AWS CloudFormation Sample Template for creating an Amazon RDS DB instance: 
-  Sample template showing how to create a DB instance with Enhanced Monitoring enabled. 
-  **WARNING** This template creates an RDS DB instance. You will be billed for the AWS 
-  resources used if you create a stack from this template.
+  This is a CloudFormation Template to create the AWS RDS Resource for the Revature Caliber Mobile application. It was
+  created by batch 913.
 Parameters:
   DBInstanceID:
     Default: calibermobile
@@ -51,6 +49,7 @@ Parameters:
     MaxLength: '41'
     AllowedPattern: '[a-zA-Z0-9]*'
     ConstraintDescription: must contain only alphanumeric characters.
+
 Resources:
   MyDB:
     Type: 'AWS::RDS::DBInstance'
@@ -61,9 +60,19 @@ Resources:
       AllocatedStorage: !Ref DBAllocatedStorage
       Engine: postgres
       EngineVersion: 12.4
-      MasterUsername: temp
-      MasterUserPassword: temp
+      MasterUsername: !Ref DBUsername
+      MasterUserPassword: !Ref DBPassword
+      #This creates the security group to allow us to access the database in DBeaver.
+  SecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: This Security Group allows us to connect to the RDS instance of the database above.
+      GroupName: rdsSecurityGroup
+      SecurityGroupEgress:
+        - Egress
+      SecurityGroupIngress:
+        - Ingress
 Outputs:
   Endpoint:
     Description: Generated endpoint address for database connection
-    Value: !GetAtt Database.Endpoint.Address
+    Value: !GetAtt MyDB.Endpoint.Address
