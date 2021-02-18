@@ -68,10 +68,6 @@ Resources:
     Properties:
       GroupDescription: This Security Group allows us to connect to the RDS instance of the database above.
       GroupName: rdsSecurityGroup
-      SecurityGroupEgress:
-        - Egress
-      SecurityGroupIngress:
-        - Ingress
 Outputs:
   Endpoint:
     Description: Generated endpoint address for database connection
