@@ -1,36 +1,21 @@
-import {Client} from 'pg';
+import createResponse from "../response";
+
+exports.handler = async (event: any) => {
+  const { Client } = require('pg');
+  const client = new Client();
+  client.connect();
 
 
+  let category = JSON.parse(event.body);
+  let week = event.path.substring(event.path.lastIndexOf('/') + 1, event.path.length);
 
-exports.handler = async (event:any)=>{
-
-    
-    
-let myConn = new Object({
-    user: process.env.user_env,
-    host: process.env.url_env, 
-    database: process.env.db_env,
-    password: process.env.pass_env,
-    port: process.env.port_env,
-  }); 
- 
-let retres;
-
-// 
-let client = new Client(myConn); 
-await client.query('delete from week-categories where week-categories_id = ($1::text)', [event.category_id]).then((response:any)=>{
-  retres = response; 
-});
-client.end(); 
-
-  return {
-    'statusCode': 200,
-    'headers': { 'Content-Type': 'application/json',
-    "Access-Control-Allow-Origin": "*"            
-    },
-    'body': JSON.stringify(retres),
-} 
-
- 
-
+  await client.query(`delete from week_categories where category_id = ${category} and qc_week_id =  ${week}`).then((response: any) => {
+    client.end();
+    if(response){
+      return createResponse('', 200);      
+    }else{
+      return createResponse('', 400)
+    }
+  });
+  
 }

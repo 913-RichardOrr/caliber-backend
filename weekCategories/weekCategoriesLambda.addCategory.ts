@@ -1,23 +1,24 @@
-import { Client } from "pg";
+
 import createResponse from "../response";
 
-interface MyEvent {
-    body: string;
-}
 
-export const handler = async (event: MyEvent) => {
-    let weekCategory = JSON.parse(event.body);
+
+exports.handler = async (event: any) => {
+    const {Client} = require('pg');
     const client = new Client();
-    await client.connect();
-    const query = `insert into catweek (category_id, qc_week_id) values ($1, $2)`;
-    const values = [ weekCategory.category_id, weekCategory.qc_week_id ] ;
+    client.connect();
+
+    let category = JSON.parse(event.body);
+    let week = event.path.substring(event.path.lastIndexOf('/')+ 1, event.path.length);
+   
+    const query = `insert into week_categories (category_id, qc_week_id) values ($1, $2)`;
+    const values = [ category, week ] ;
 
     let response = await client.query(query, values);
+    client.end();
     if (response) {
-        client.end();
         return createResponse(JSON.stringify(response.rows), 200);
     } else {
-        client.end();
         return createResponse('', 400);
     }  
 }
