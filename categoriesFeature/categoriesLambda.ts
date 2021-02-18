@@ -1,4 +1,4 @@
-import { getCategories, postCategories, putCategory } from './categoriesHelpers';
+import { getCategories, postCategories, putCategory } from './CategoriesHelpers';
 
 export const handler = async (event: any) => {
     const { Client } = require('pg');
