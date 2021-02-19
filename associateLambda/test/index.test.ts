@@ -46,7 +46,7 @@ describe('tests for getAssociate', () => {
       expect(mockConnect).toHaveBeenCalledTimes(1);
   
       expect(mockQuery.mock.calls[0][0]).toBe(
-        `select batchId,weekId,associateId from qc_notes where batchId = $1::text
+        `select batchId, weekId, associateId, qcNote, qcTechnicalStatus from qc_notes where batchId = $1::text
     && weekId = $2::integer && associateId = $3::text`);
   
       expect(mockQuery.mock.calls[0][1]).toEqual([
@@ -59,21 +59,15 @@ describe('tests for getAssociate', () => {
     });
 
   test('that getAssociate returns a promise with associate data.', async () => {
-    let client = new Client();
-    client.query = jest.fn().mockResolvedValueOnce(body);
     const mockResult = body;
-    let result = await associateLambda.getAssociate(
-      '/batches/batch1/1/associates/testAssociateId'
-    );
-
-    expect(result).toBeTruthy();
-    expect(
-      client.query
-    ).toBeCalledWith(
-      'select associate from associates where batchid = $1::text and weekid = $2::integer and associateid = $3::text',
-      [body.batchId, body.weekId, body.associateId]
-    );
-    expect(result).toEqual(mockResult);
+    mockQuery
+        .mockResolvedValueOnce({rows: [body]});
+  
+      const res = await associateLambda.getAssociate(
+        testPath
+      );
+    //expect(result).toBeTruthy();
+    expect(res).toEqual(mockResult);
   });
 
   test('that nonexistent path returns null.', async () => {

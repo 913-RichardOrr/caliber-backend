@@ -21,12 +21,12 @@ export async function getAssociate(path: string): Promise<QCFeedback | null> {
   const client = new Client();
   try {
     await client.connect();
-    const query = `select batchId,weekId,associateId from qc_notes where batchId = $1::text
+    const query = `select batchId, weekId, associateId, qcNote, qcTechnicalStatus from qc_notes where batchId = $1::text
     && weekId = $2::integer && associateId = $3::text`;
     const res = await client.query(query, [
     associateInfo.batchId,
     associateInfo.weekId,
-    associateInfo.associateId,
+    associateInfo.associateId
     ]);
     return res.rows[0] as QCFeedback;
   } catch (err) {
