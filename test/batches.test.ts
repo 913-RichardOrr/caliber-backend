@@ -140,7 +140,7 @@ describe('Batches Test Suite', () => {
 		expect(JSON.parse(returnValues.body)).toEqual(resp.data);
 		// test to make sure that all of the requests are called with the caliber api
 
-		expect(axios.get).toHaveBeenCalledWith(`${caliberURI}?year=2021`, {
+		expect(axios.get).toHaveBeenCalledWith(`${caliberURI}?year=2021&quarter=1`, {
 			httpsAgent: agent,
 		});
 	});
