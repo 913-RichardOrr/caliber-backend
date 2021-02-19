@@ -22,57 +22,58 @@ describe('Batches Test Suite', () => {
 	let caliberURI: string =
 		'https://caliber2-mock.revaturelabs.com:443/mock/training/batch';
 
+	class BatchProjection {
+		constructor(
+			public batchId: string, //"TR-1131",
+			public name: string, //"Mock Batch 65",
+			public startDate: string, //"2021-04-09",
+			public endDate: string, //"2021-06-18",
+			public skill: string, // "Java React",
+			public location: string, // "New York",
+			public type: string // "Revature"
+		) {
+			this.batchId = batchId;
+			this.name = name;
+			this.startDate = startDate;
+			this.endDate = endDate;
+			this.skill = skill;
+			this.location = location;
+			this.type = type;
+		}
+	}
+	const batch1 = new BatchProjection(
+		'TR-1131',
+		'Mock Batch 100',
+		'2019-01-01',
+		'2019-04-01',
+		'React',
+		'New York',
+		'Revature'
+	);
+	const batch2 = new BatchProjection(
+		'TR-1112',
+		'Mock Batch 2',
+		'2021-06-07',
+		'2021-08-06',
+		'COBOL',
+		'Tampa',
+		'Revature'
+	);
+	const batch3 = new BatchProjection(
+		'TR-1111',
+		'Mock Batch 3',
+		'2021-05-01',
+		'2021-08-01',
+		'Java',
+		'West Virginia',
+		'Corporate'
+	);
+	const batches = [batch1, batch2, batch3];
+
 	test('Get Batches By Trainer Lambda axios requests', async () => {
 		const batchIDs = ['TR-1111', 'TR-1112', 'TR-1113'];
-		// the response will be a list of a projection of batch objects
-		class BatchProjection {
-			constructor(
-				public batchId: string, //"TR-1131",
-				public name: string, //"Mock Batch 65",
-				public startDate: string, //"2021-04-09",
-				public endDate: string, //"2021-06-18",
-				public skill: string, // "Java React",
-				public location: string, // "New York",
-				public type: string // "Revature"
-			) {
-				this.batchId = batchId;
-				this.name = name;
-				this.startDate = startDate;
-				this.endDate = endDate;
-				this.skill = skill;
-				this.location = location;
-				this.type = type;
-			}
-		}
-		const batch1 = new BatchProjection(
-			'TR-1131',
-			'Mock Batch 100',
-			'2019-01-01',
-			'2019-04-01',
-			'React',
-			'New York',
-			'Revature'
-		);
-		const batch2 = new BatchProjection(
-			'TR-1112',
-			'Mock Batch 2',
-			'2021-06-07',
-			'2021-08-06',
-			'COBOL',
-			'Tampa',
-			'Revature'
-		);
-		const batch3 = new BatchProjection(
-			'TR-1111',
-			'Mock Batch 3',
-			'2021-05-01',
-			'2021-08-01',
-			'Java',
-			'West Virginia',
-			'Corporate'
-		);
-		const batches = [batch1, batch2, batch3];
 		const resp = { data: batches };
+		// the response will be a list of a projection of batch objects
 		let returnValues: any = [];
 		//mock axios request to the caliber api to get the list of batches based on the trainer
 		//mock axios request to the caliber api to get info about the batches based on the batchID
@@ -115,54 +116,6 @@ describe('Batches Test Suite', () => {
 		}
 	});
 	test('Get All Batches Lambda axios requests', async () => {
-		// the response will be a list of a projection of batch objects
-		class BatchProjection {
-			constructor(
-				public batchId: string, //"TR-1131",
-				public name: string, //"Mock Batch 65",
-				public startDate: string, //"2021-04-09",
-				public endDate: string, //"2021-06-18",
-				public skill: string, // "Java React",
-				public location: string, // "New York",
-				public type: string // "Revature"
-			) {
-				this.batchId = batchId;
-				this.name = name;
-				this.startDate = startDate;
-				this.endDate = endDate;
-				this.skill = skill;
-				this.location = location;
-				this.type = type;
-			}
-		}
-		const batch1 = new BatchProjection(
-			'TR-1131',
-			'Mock Batch 100',
-			'2021-01-01',
-			'2021-04-01',
-			'React',
-			'New York',
-			'Revature'
-		);
-		const batch2 = new BatchProjection(
-			'TR-1112',
-			'Mock Batch 2',
-			'2021-06-07',
-			'2021-08-06',
-			'COBOL',
-			'Tampa',
-			'Revature'
-		);
-		const batch3 = new BatchProjection(
-			'TR-1111',
-			'Mock Batch 3',
-			'2021-05-01',
-			'2021-08-01',
-			'Java',
-			'West Virginia',
-			'Corporate'
-		);
-		const batches = [batch1, batch2, batch3];
 		const resp = { data: batches };
 		let returnValues: any = [];
 		//mock axios request to the caliber api to get all batches
