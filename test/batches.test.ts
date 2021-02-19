@@ -2,6 +2,7 @@
 
 import axios from 'axios';
 import { handler, MyEvent, agent } from '../batches/getBatchesLambda';
+import allBatchesHandler from '../batches/getAllBatchesLambda';
 
 interface AllBatchesEvent {
 	queryStringParameters: {
