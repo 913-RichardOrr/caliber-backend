@@ -1,6 +1,4 @@
 import * as batchweek from '../index';
-<<<<<<< HEAD
-=======
 import { Client } from 'pg';
 
 const mockConnect = jest.fn();
@@ -13,7 +11,6 @@ jest.mock('pg', () => {
     Client: jest.fn(() => ({ connect: mockConnect, query: mockQuery, end: mockEnd }))
   }
 });
->>>>>>> e068456a6c351ed0601d0ed6151b91d9bba5410f
 
 let testEvent = {
   path: 'path',
@@ -70,10 +67,6 @@ describe('batch-week test for handler', () => {
       httpMethod: 'POST'
     };
 
-<<<<<<< HEAD
-
-=======
->>>>>>> e068456a6c351ed0601d0ed6151b91d9bba5410f
     await batchweek.handler(testEvent);
 
     let testAddNewWeek = batchweek.addNewWeek;
@@ -89,9 +82,6 @@ describe('batch-week test for handler', () => {
 });
 
 describe('batch-week test for getWeek', ()=> {
-<<<<<<< HEAD
-
-=======
   test('getWeek calls pg', async ()=> {
     expect(mockConnect).toHaveBeenCalledTimes(1);
     expect(mockQuery).toHaveBeenCalledTimes(1);
@@ -106,7 +96,6 @@ describe('batch-week test for getWeek', ()=> {
       expect(result).toHaveProperty('id');
     }
   });
->>>>>>> e068456a6c351ed0601d0ed6151b91d9bba5410f
 });
 
 describe('batch-week test for addNewWeek', ()=> {
@@ -126,14 +115,6 @@ describe('batch-week test for addNewWeek', ()=> {
 });
 
 describe('batch-week test for addNote', ()=> {
-<<<<<<< HEAD
-
-});
-
-//batches
-    //batchid ---> 7
-
-=======
   testEvent.path = '/batches/1/weeks/1';
   testEvent.body = JSON.stringify({
     batchId: '1',
@@ -148,4 +129,3 @@ describe('batch-week test for addNote', ()=> {
   });
 });
 
->>>>>>> e068456a6c351ed0601d0ed6151b91d9bba5410f
