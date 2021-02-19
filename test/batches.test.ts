@@ -6,6 +6,7 @@ import { handler, MyEvent, agent } from '../batches/getBatchesLambda';
 interface AllBatchesEvent {
 	queryStringParameters: {
 		year: number;
+		quarter: number;
 	};
 }
 
@@ -126,6 +127,7 @@ describe('Batches Test Suite', () => {
 		let allBatchesEvent: AllBatchesEvent = {
 			queryStringParameters: {
 				year: 2021,
+				quarter: 1,
 			},
 		};
 		await allBatchesHandler(allBatchesEvent).then(
