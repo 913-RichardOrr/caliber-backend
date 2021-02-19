@@ -24,18 +24,39 @@ afterEach(() => {
 });
 
 describe('tests for getAssociate', () => {
-  let body = {
-    batchId: 'batch1',
+  const body: associateLambda.QCFeedback = {
+    batchId: 'YYMM-mmmDD-Stuff',
     weekId: 1,
-    associateId: 'testAssociateId',
-    qcNote: 'test note',
+    associateId: 'example@example.net',
+    qcNote: 'blablabla',
     qcTechnicalStatus: 2,
   };
+  const testPath =
+    'blablabla/batches/YYMM-mmmDD-Stuff/weeks/1/associates/example@example.net';
   test('that getAssociate calls pg', async () => {
-    expect(mockConnect).toHaveBeenCalledTimes(1);
-    expect(mockQuery).toHaveBeenCalledTimes(1);
-    expect(mockEnd).toHaveBeenCalledTimes(1);
-  });
+      mockQuery
+        .mockResolvedValueOnce(body);
+  
+      const res = await associateLambda.getAssociate(
+        testPath
+      );
+      //expect(res).toBe(body);
+      expect(mockConnect).toHaveBeenCalledTimes(1);
+      expect(mockQuery).toHaveBeenCalledTimes(1);
+      expect(mockConnect).toHaveBeenCalledTimes(1);
+  
+      expect(mockQuery.mock.calls[0][0]).toBe(
+        `select batchId,weekId,associateId from qc_notes where batchId = $1::text
+    && weekId = $2::integer && associateId = $3::text`);
+  
+      expect(mockQuery.mock.calls[0][1]).toEqual([
+        body.batchId,
+        body.weekId,
+        body.associateId,
+      ]);
+  
+      expect(mockEnd).toHaveBeenCalledTimes(1);
+    });
 
   test('that getAssociate returns a promise with associate data.', async () => {
     let client = new Client();
@@ -45,14 +66,7 @@ describe('tests for getAssociate', () => {
       '/batches/batch1/1/associates/testAssociateId'
     );
 
-    expect(result).toBeTruthy(); //non-empty object
-    expect(associateLambda.getAssociate).toBeCalledTimes(1);
-    expect(associateLambda.getAssociate).toBeCalledWith(
-      'batch1',
-      1,
-      'testAssociateId'
-    );
-    //update qcnotes set note = $1::text where associateid = $2::text and weekid = $3::integer and batchid = $3::text'
+    expect(result).toBeTruthy();
     expect(
       client.query
     ).toBeCalledWith(
@@ -62,9 +76,19 @@ describe('tests for getAssociate', () => {
     expect(result).toEqual(mockResult);
   });
 
-  test('that invalid input returns an error and does not call anything.', async () => {
+  test('that nonexistent path returns null.', async () => {
     const result = await associateLambda.getAssociate(
       '/batches/fakeBatchId/12/associates/fakeAssociateId'
+    );
+    expect(result).toBe(null);
+    expect(mockConnect).toHaveBeenCalledTimes(1);
+    expect(mockQuery).toHaveBeenCalledTimes(1);
+    expect(mockEnd).toHaveBeenCalledTimes(1);
+  });
+  
+  test('that invalid input returns null and does not call anything.', async () => {
+    const result = await associateLambda.getAssociate(
+      'this is definitely not a path'
     );
     expect(result).toBe(null);
     expect(mockConnect).toHaveBeenCalledTimes(0);
