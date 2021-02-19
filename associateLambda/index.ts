@@ -14,21 +14,27 @@ export interface AssociateEvent {
  */
 export async function getAssociate(path: string): Promise<QCFeedback | null> {
   let associateInfo = parsePath(path);
-  const client = new Client();
-  client.connect();
-  const query = `select batchId,weekId,associateId from qc_notes where batchId = $1::text
-    && weekId = $2::integer && associateId = $3::integer`;
-  let res: any;
-  try {
-    res = await client.query(query, [
-      associateInfo.batchId,
-      associateInfo.weekId,
-      associateInfo.associateIds,
-    ]);
-  } catch (error) {
-    console.log(error);
+  //if any of these params are undefined, return null and do not call anything
+  if (!(associateInfo.batchId && associateInfo.weekId && associateInfo.associateId)) {
+    return null;
   }
-  return res;
+  const client = new Client();
+  try {
+    await client.connect();
+    const query = `select batchId, weekId, associateId, qcNote, qcTechnicalStatus from qc_notes where batchId = $1::text
+    && weekId = $2::integer && associateId = $3::text`;
+    const res = await client.query(query, [
+    associateInfo.batchId,
+    associateInfo.weekId,
+    associateInfo.associateId
+    ]);
+    return res.rows[0] as QCFeedback;
+  } catch (err) {
+    console.log(err);
+    return null;
+  } finally {
+    client.end();
+  }
 }
 /**
  * adds a new associate's note and technical status for the given week.

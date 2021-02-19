@@ -24,47 +24,65 @@ afterEach(() => {
 });
 
 describe('tests for getAssociate', () => {
-  let body = {
-    batchId: 'batch1',
+  const body: associateLambda.QCFeedback = {
+    batchId: 'YYMM-mmmDD-Stuff',
     weekId: 1,
-    associateId: 'testAssociateId',
-    qcNote: 'test note',
+    associateId: 'example@example.net',
+    qcNote: 'blablabla',
     qcTechnicalStatus: 2,
   };
+  const testPath =
+    'blablabla/batches/YYMM-mmmDD-Stuff/weeks/1/associates/example@example.net';
   test('that getAssociate calls pg', async () => {
+      mockQuery
+        .mockResolvedValueOnce(body);
+  
+      const res = await associateLambda.getAssociate(
+        testPath
+      );
+      //expect(res).toBe(body);
+      expect(mockConnect).toHaveBeenCalledTimes(1);
+      expect(mockQuery).toHaveBeenCalledTimes(1);
+      expect(mockConnect).toHaveBeenCalledTimes(1);
+  
+      expect(mockQuery.mock.calls[0][0]).toBe(
+        `select batchId, weekId, associateId, qcNote, qcTechnicalStatus from qc_notes where batchId = $1::text
+    && weekId = $2::integer && associateId = $3::text`);
+  
+      expect(mockQuery.mock.calls[0][1]).toEqual([
+        body.batchId,
+        body.weekId,
+        body.associateId,
+      ]);
+  
+      expect(mockEnd).toHaveBeenCalledTimes(1);
+    });
+
+  test('that getAssociate returns a promise with associate data.', async () => {
+    const mockResult = body;
+    mockQuery
+        .mockResolvedValueOnce({rows: [body]});
+  
+      const res = await associateLambda.getAssociate(
+        testPath
+      );
+    //expect(result).toBeTruthy();
+    expect(res).toEqual(mockResult);
+  });
+
+  test('that nonexistent path returns null.', async () => {
+    const result = await associateLambda.getAssociate(
+      '/batches/fakeBatchId/12/associates/fakeAssociateId'
+    );
+    expect(result).toBe(null);
     expect(mockConnect).toHaveBeenCalledTimes(1);
     expect(mockQuery).toHaveBeenCalledTimes(1);
     expect(mockEnd).toHaveBeenCalledTimes(1);
   });
-
-  test('that getAssociate returns a promise with associate data.', async () => {
-    let client = new Client();
-    client.query = jest.fn().mockResolvedValueOnce(body);
-    const mockResult = body;
-    let result = await associateLambda.getAssociate(
-      '/batches/batch1/1/associates/testAssociateId'
-    );
-
-    expect(result).toBeTruthy(); //non-empty object
-    expect(associateLambda.getAssociate).toBeCalledTimes(1);
-    expect(associateLambda.getAssociate).toBeCalledWith(
-      'batch1',
-      1,
-      'testAssociateId'
-    );
-    //update qcnotes set note = $1::text where associateid = $2::text and weekid = $3::integer and batchid = $3::text'
-    expect(
-      client.query
-    ).toBeCalledWith(
-      'select associate from associates where batchid = $1::text and weekid = $2::integer and associateid = $3::text',
-      [body.batchId, body.weekId, body.associateId]
-    );
-    expect(result).toEqual(mockResult);
-  });
-
-  test('that invalid input returns an error and does not call anything.', async () => {
+  
+  test('that invalid input returns null and does not call anything.', async () => {
     const result = await associateLambda.getAssociate(
-      '/batches/fakeBatchId/12/associates/fakeAssociateId'
+      'this is definitely not a path'
     );
     expect(result).toBe(null);
     expect(mockConnect).toHaveBeenCalledTimes(0);

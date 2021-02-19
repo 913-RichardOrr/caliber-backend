@@ -1,26 +1,30 @@
-interface responseType {
-    statusCode: number,
-    header: {},
-    body: {}
-}
+import { getCategories, postCategories, putCategory } from './categoriesHelpers';
 
 export const handler = async (event: any) => {
+    const { Client } = require('pg');
+    const client = new Client();
+    await client.connect();
 
-}
+    const method = event.httpMethod;
+    console.log(method);
 
-// function for /categories GET method (query params for inactive ? active = false)
-export const getCategories = async (params?: any) => {
-    let response: responseType = {statusCode: 0, header: {}, body: {}};
-    return response;
-}
-
-// function for /categories POST method (add a new category)
-export const postCategories = async (event: any) => {
-    let response: responseType = {statusCode: 0, header: {}, body: {}};
-    return response;
-}
-// function for /categories/{categoryId} PUT method (update a category to be active/inactive)
-export const putCategory = async (event: any) => {
-    let response: responseType = {statusCode: 0, header: {}, body: {}};
-    return response;
+    switch (method) {
+        case 'GET':
+            if (event.queryStringParameters) {
+                getCategories(client, event.queryStringParameters.active);
+            } else {
+                getCategories(client);
+            }
+            break;
+        case 'POST':
+            postCategories(client,event);
+            break;
+        case 'PUT':
+            putCategory(client, event);
+            break;
+        default:
+            console.log(`Does not support HTTP method ${method}`);
+            client.end();
+            break;
+    }
 }
