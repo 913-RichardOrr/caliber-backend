@@ -54,21 +54,23 @@ export default async function handler(event: AllBatchesEvent) {
 
 	if (batchInfo) {
 		resp.body = JSON.stringify(batchInfo);
-		return resp;
 	}
+	return resp;
 }
 
 const URI = 'https://caliber2-mock.revaturelabs.com:443/mock/training/batch';
-export const agent = new https.Agent({ rejectUnauthorized: false });
+export const allBatchesAgent = new https.Agent({ rejectUnauthorized: false });
 
 export async function getAllBatchesLambda(
 	year: number,
 	quarter: number
 ): Promise<any | null> {
+	let batchInfo: AllBatchInfo[] = [];
 	await axios
-		.get(`${URI}?year=${year}&quarter=${quarter}`, { httpsAgent: agent })
+		.get(`${URI}?year=${year}&quarter=${quarter}`, {
+			httpsAgent: allBatchesAgent,
+		})
 		.then((res) => {
-			let batchInfo: AllBatchInfo[] = [];
 			if (res.data) {
 				batchInfo = res.data.map((batch: any) => {
 					let batchData = {
@@ -83,13 +85,16 @@ export async function getAllBatchesLambda(
 						trainer: '',
 					};
 					let trainer: string;
-					if (batch.employeeAssignments[0].role === 'ROLE_LEAD_TRAINER') {
+					if (
+						batch.employeeAssignments &&
+						batch.employeeAssignments[0].role === 'ROLE_LEAD_TRAINER'
+					) {
 						trainer = `${batch.employeeAssignments[0].employee.firstName} ${batch.employeeAssignments[0].employee.lastName}`;
 						batchData.trainer = trainer;
 					}
 					return batchData;
 				});
 			}
-			return batchInfo;
 		});
+	return batchInfo;
 }
