@@ -1,5 +1,10 @@
 import { Client } from 'pg';
 
+/**
+ * Method is POST
+ * @param event 
+ */
+
 export function addOverallNote(event: any) {
     const client = new Client();
     const weekInfo = JSON.parse(event.body);
