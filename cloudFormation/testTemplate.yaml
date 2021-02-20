@@ -49,8 +49,6 @@ Resources:
   # POST method for /sessions (logging in)
   addSessionMethod:
     Type: AWS::ApiGateway::Method
-    DependsOn:
-      #login lambda
     Properties:
       AuthorizationType: NONE
       HttpMethod: POST
@@ -61,8 +59,6 @@ Resources:
   # DELETE method for /sessions (logging out)
   deleteSessionMethod:
     Type: AWS::ApiGateway::Method
-    DependsOn:
-      # login lambda
     Properties:
       AuthorizationType: NONE
       HttpMethod: DELETE
@@ -111,8 +107,6 @@ Resources:
   # GET method for /categories
   getCategoriesMethod:
     Type: AWS::ApiGateway::Method
-    DependsOn:
-      # categoriesLambda
     Properties:
       AuthorizationType: NONE
       HttpMethod: GET
@@ -123,8 +117,6 @@ Resources:
   # POST method for /categories
   addCategoryMethod:
     Type: AWS::ApiGateway::Method
-    DependsOn:
-      # categoriesLambda
     Properties:
       AuthorizationType: NONE
       HttpMethod: POST
@@ -137,8 +129,8 @@ Resources:
     Type: AWS::ApiGateway::Resource
     Properties:
       RestApiId: !Ref apiGateway
-      ParentId: !GetAtt categoriesResource
-      PathPart: {categoryId}
+      ParentId: !Ref categoriesResource
+      PathPart: categoryId
   # CORS for /categories/{categories}
   categoryOptionsMethod:
     Type: AWS::ApiGateway::Method
@@ -173,8 +165,6 @@ Resources:
   # PUT method for /categories/{categoryId}
   updateCategoryMethod:
     Type: AWS::ApiGateway::Method
-    DependsOn:
-      # categoriesLambda
     Properties:
       AuthorizationType: NONE
       HttpMethod: PUT
@@ -223,8 +213,6 @@ Resources:
   # GET method for /batches
   getBatchesMethod:
     Type: AWS::ApiGateway::Method
-    DependsOn:
-      # batches lambda
     Properties:
       AuthorizationType: NONE
       HttpMethod: GET
@@ -244,15 +232,15 @@ Resources:
     Type: AWS::ApiGateway::Resource
     Properties:
       RestApiId: !Ref apiGateway
-      ParentId: !GetAtt qcResource
+      ParentId: !Ref qcResource
       PathPart: batches
   # API Gateway Resource - /qc/batches/{batchId}
   qcBatchResource:
     Type: AWS::ApiGateway::Resource
     Properties:
       RestApiId: !Ref apiGateway
-      ParentId: !GetAtt qcBatchesResource
-      PathPart: {batchId}
+      ParentId: !Ref qcBatchesResource
+      PathPart: batchId
   # CORS for /qc/batches/{batchId}
   qcBatchOptionsMethod:
     Type: AWS::ApiGateway::Method
@@ -287,8 +275,6 @@ Resources:
   # GET method for qc/batches/{batchId}
   getBatchMethod:
     Type: AWS::ApiGateway::Method
-    DependsOn:
-      # batch lambda
     Properties:
       AuthorizationType: NONE
       HttpMethod: GET
@@ -301,7 +287,7 @@ Resources:
     Type: AWS::ApiGateway::Resource
     Properties:
       RestApiId: !Ref apiGateway
-      ParentId: !GetAtt qcBatchResource
+      ParentId: !Ref qcBatchResource
       PathPart: weeks
   # CORS for /qc/batches/{batchId}/weeks
   qcWeeksOptionsMethod:
@@ -337,8 +323,6 @@ Resources:
   # POST method for /qc/batches/{batchId}/weeks
   addWeekMethod:
     Type: AWS::ApiGateway::Method
-    DependsOn:
-      # qc weeks lambda
     Properties:
       AuthorizationType: NONE
       HttpMethod: POST
@@ -351,8 +335,8 @@ Resources:
     Type: AWS::ApiGateway::Resource
     Properties:
       RestApiId: !Ref apiGateway
-      ParentId: !GetAtt qcWeeksResource
-      PathPart: {week}
+      ParentId: !Ref qcWeeksResource
+      PathPart: week
   # CORS for /qc/batches/{batchId}/weeks/{week}
   qcWeekOptionsMethod:
     Type: AWS::ApiGateway::Method
@@ -387,8 +371,6 @@ Resources:
   # GET method for qc/batches/{batchId}/weeks/{week}
   getWeekInfoMethod:
     Type: AWS::ApiGateway::Method
-    DependsOn:
-      # qc week lambda
     Properties:
       AuthorizationType: NONE
       HttpMethod: GET
@@ -399,8 +381,6 @@ Resources:
   # POST method for qc/batches/{batchId}/weeks/{week}
   addWeekNoteMethod:
     Type: AWS::ApiGateway::Method
-    DependsOn:
-      # qc week lambda
     Properties:
       AuthorizationType: NONE
       HttpMethod: POST
@@ -413,7 +393,7 @@ Resources:
     Type: AWS::ApiGateway::Resource
     Properties:
       RestApiId: !Ref apiGateway
-      ParentId: !GetAtt qcWeekResource
+      ParentId: !Ref qcWeekResource
       PathPart: categories
   # CORS for /qc/batches/{batchId}/weeks/{week}/categories
   qcCategoriesOptionsMethod:
@@ -449,8 +429,6 @@ Resources:
   # GET method for qc/batches/{batchId}/weeks/{week}/categories
   getQcCategoriesMethod:
     Type: AWS::ApiGateway::Method
-    DependsOn:
-      # qc categories lambda
     Properties:
       AuthorizationType: NONE
       HttpMethod: GET
@@ -461,8 +439,6 @@ Resources:
   # POST method for qc/batches/{batchId}/weeks/{week}/categories
   addQcCategoryMethod:
     Type: AWS::ApiGateway::Method
-    DependsOn:
-      # qc categories lambda
     Properties:
       AuthorizationType: NONE
       HttpMethod: POST
@@ -475,8 +451,8 @@ Resources:
     Type: AWS::ApiGateway::Resource
     Properties:
       RestApiId: !Ref apiGateway
-      ParentId: !GetAtt qcCategoriesResource
-      PathPart: {categoryId}
+      ParentId: !Ref qcCategoriesResource
+      PathPart: categoryId
   # CORS for /qc/batches/{batchId}/weeks/{week}/categories/{categoryId}
   qcCategoryOptionsMethod:
     Type: AWS::ApiGateway::Method
@@ -511,17 +487,11 @@ Resources:
   # DELETE method for /qc/batches/{batchId}/weeks/{week}/categories/{categoryId}
   deleteQcCategoryMethod:
     Type: AWS::ApiGateway::Method
-    DependsOn:
-      #qc category lambda
     Properties:
       AuthorizationType: NONE
       HttpMethod: DELETE
       Integration:
-        Type: AWS_PROXY
-        IntegrationHttpMethod: POST
-        Uri: !Sub
-          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
-          - lambdaArn: !GetAtt # qc category lambda arn
+        Type: MOCK
       ResourceId: !Ref qcCategoryResource
       RestApiId: !Ref apiGateway
   # API Gateway Resource - /qc/batches/{batchId}/weeks/{week}/associates
@@ -529,15 +499,15 @@ Resources:
     Type: AWS::ApiGateway::Resource
     Properties:
         RestApiId: !Ref apiGateway
-        ParentId: !GetAtt qcWeekResource
+        ParentId: !Ref qcWeekResource
         PathPart: associates
   # API Gateway Resource - /qc/batches/{batchId}/weeks/{week}/associates/{associateId}
   qcAssociateResource:
     Type: AWS::ApiGateway::Resource
     Properties:
         RestApiId: !Ref apiGateway
-        ParentId: !GetAtt qcAssociatesResource
-        PathPart: {associateId}
+        ParentId: !Ref qcAssociatesResource
+        PathPart: associateId
   # CORS for /qc/batches/{batchId}/weeks/{week}/associates/{associateId}
   qcAssociatesOptionsMethod:
     Type: AWS::ApiGateway::Method
@@ -572,8 +542,6 @@ Resources:
   # GET method for /qc/batches/{batchId}/weeks/{week}/associates/{associateId}
   getAssociateInfoMethod:
     Type: AWS::ApiGateway::Method
-    DependsOn:
-      # qc associates lambda
     Properties:
       AuthorizationType: NONE
       HttpMethod: GET
@@ -584,8 +552,6 @@ Resources:
   # PUT method for /qc/batches/{batchId}/weeks/{week}/associates/{associateId}
   updateAssociateInfoMethod:
     Type: AWS::ApiGateway::Method
-    DependsOn:
-      # qc associates lambda
     Properties:
       AuthorizationType: NONE
       HttpMethod: PUT
@@ -596,8 +562,6 @@ Resources:
   # PATCH method for /qc/batches/{batchId}/weeks/{week}/associates/{associateId}
   updateNoteOrStatusMethod:
     Type: AWS::ApiGateway::Method
-    DependsOn:
-      # qc associates lambda
     Properties:
       AuthorizationType: NONE
       HttpMethod: PATCH
@@ -607,6 +571,7 @@ Resources:
       RestApiId: !Ref apiGateway
   # API Gateway Deployment
   apiGatewayDefaultDeployment:
+    Type: AWS::ApiGateway::Deployment
     DependsOn:
       - addSessionMethod
       - deleteSessionMethod
@@ -627,40 +592,6 @@ Resources:
     Properties:
       RestApiId: !Ref apiGateway
       StageName: default
-  # Give API Gateway permission to invoke Lambdas
-  apiGatewayInvokeTHISLAMBDA:
-    Type: AWS::Lambda::Permission
-  # Give api gateway some IAM roles for lamda
-  lambdaIAMRole:
-    Type: AWS::IAM::Role
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: 2012-10-17
-        Statement:
-          - Action:
-              - sts:AssumeRole
-            Effect: Allow
-            Principal:
-              Service:
-                - lambda.amazonaws.com
-      Policies:
-        - PolicyDocument:
-            Version: 2012-10-17
-            Statement:
-              - Action:
-                  - logs:CreateLogGroup
-                  - logs:CreateLogStream
-                  - logs:PutLogEvents
-                Effect: Allow
-                Resource:
-                  - !Sub arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/ #getRestaurants-cf:*
-          PolicyName: lambda-cf
-  # Create our log group
-  lambdaLogGroup:
-    Type: AWS::Logs::LogGroup
-    Properties:
-      LogGroupName: #/aws/lambda/getRestaurants-cf-2
-      RetentionInDays: 90
 Outputs:
   apiGatewayInvokeUrl:
     Value: !Sub https://${apiGateway}.execute-api.${AWS::Region}.amazonaws.com/default
