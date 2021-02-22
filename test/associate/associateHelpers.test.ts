@@ -23,10 +23,10 @@ afterEach(() => {
 describe('tests for getAssociate', () => {
   const body: associateLambda.QCFeedback = {
     batchId: 'YYMM-mmmDD-Stuff',
-    weekId: 1,
+    weekNumber: 1,
     associateId: 'example@example.net',
-    qcNote: 'blablabla',
-    qcTechnicalStatus: 2,
+    noteContent: 'blablabla',
+    technicalStatus: 2,
   };
   const testPath =
     'blablabla/batches/YYMM-mmmDD-Stuff/weeks/1/associates/example@example.net';
@@ -43,12 +43,12 @@ describe('tests for getAssociate', () => {
       expect(mockConnect).toHaveBeenCalledTimes(1);
   
       expect(mockQuery.mock.calls[0][0]).toBe(
-        `select batchId, weekId, associateId, qcNote, qcTechnicalStatus from qc_notes where batchId = $1::text
-    && weekId = $2::integer && associateId = $3::text`);
+        `select "batchId", "weekNumber", "associateId", "noteContent", "technicalStatus" from "qcNotes" where "batchId" = $1::text
+        && "weekNumber" = $2::integer && "associateId" = $3::text`);
   
       expect(mockQuery.mock.calls[0][1]).toEqual([
         body.batchId,
-        body.weekId,
+        body.weekNumber,
         body.associateId,
       ]);
   
@@ -90,7 +90,7 @@ describe('tests for getAssociate', () => {
 
 describe('tests for putAssociate', () => {
   let path = '/batches/batch1/weeks/1/associates/testAssociateId';
-  let body = '{"qcNote":"test note","qcTechnicalStatus":2}';
+  let body = '{"noteContent":"test note","technicalStatus":2}';
 
   test('that an incorrect input does not break anything', async () => {
     let response = await associateLambda.putAssociate(
@@ -107,10 +107,10 @@ describe('tests for putAssociate', () => {
     let response = await associateLambda.putAssociate(body, path);
     let expectedResponse = {
       batchId: 'batch1',
-      weekId: 1,
+      weekNumber: 1,
       associateId: 'testAssociateId',
-      qcNote: 'test note',
-      qcTechnicalStatus: 2,
+      noteContent: 'test note',
+      technicalStatus: 2,
     };
 
     expect(response).toStrictEqual(expectedResponse);
@@ -123,19 +123,19 @@ describe('tests for putAssociate', () => {
 describe('tests for patchAssociate', () => {
   const original: associateLambda.QCFeedback = {
     batchId: 'YYMM-mmmDD-Stuff',
-    weekId: 1,
+    weekNumber: 1,
     associateId: 'example@example.net',
-    qcNote: 'blablabla',
-    qcTechnicalStatus: 2,
+    noteContent: 'blablabla',
+    technicalStatus: 2,
   };
   const testPath =
     'blablabla/batches/YYMM-mmmDD-Stuff/weeks/1/associates/example@example.net';
 
   test("That updating an associate's note calls pg with correct query", async () => {
-    const testUpdateObject = { qcNote: 'Updated blablabla' };
+    const testUpdateObject = { noteContent: 'Updated blablabla' };
 
     const updatedObject = original;
-    updatedObject.qcNote = testUpdateObject.qcNote;
+    updatedObject.noteContent = testUpdateObject.noteContent;
 
     mockQuery
       .mockResolvedValueOnce(1)
@@ -151,24 +151,24 @@ describe('tests for patchAssociate', () => {
     expect(mockConnect).toHaveBeenCalledTimes(1);
 
     expect(mockQuery.mock.calls[0][0]).toBe(
-      'update qcnotes set qcNote = $1::text where associateid = $2::text and weekid = $3::integer and batchid = $4::text'
+      'update "qcNotes" set "noteContent" = $1::text where "associateId" = $2::text and "weekNumber" = $3::integer and "batchId" = $4::text'
     );
 
     expect(mockQuery.mock.calls[0][1]).toEqual([
-      testUpdateObject.qcNote,
+      testUpdateObject.noteContent,
       original.associateId,
-      original.weekId,
+      original.weekNumber,
       original.batchId,
     ]);
 
     expect(mockQuery.mock.calls[1][0]).toBe(
-      'select q.batchId, q.weekId, q.associateId, q.qcNote, q.qcTechnicalStatus from qcNotes q where associateid = $2::text and weekid = $3::integer and batchid = $4::text'
+      'select "batchId", "weekNumber", "associateId", "noteContent", "technicalStatus" from "qcNotes" where "associateId" = $2::text and "weekNumber" = $3::integer and "batchId" = $4::text'
     );
 
     expect(mockQuery.mock.calls[1][1]).toEqual([
-      testUpdateObject.qcNote,
+      testUpdateObject.noteContent,
       original.associateId,
-      original.weekId,
+      original.weekNumber,
       original.batchId,
     ]);
 
@@ -176,10 +176,10 @@ describe('tests for patchAssociate', () => {
   });
 
   test("That updating an associate's status calls pg with correct query", async () => {
-    const testUpdateObject = { qcTechnicalStatus: 3 };
+    const testUpdateObject = { technicalStatus: 3 };
 
     const updatedObject = original;
-    updatedObject.qcTechnicalStatus = testUpdateObject.qcTechnicalStatus;
+    updatedObject.technicalStatus = testUpdateObject.technicalStatus;
 
     mockQuery
       .mockResolvedValueOnce(1)
@@ -194,24 +194,24 @@ describe('tests for patchAssociate', () => {
     expect(mockQuery).toHaveBeenCalledTimes(2);
 
     expect(mockQuery.mock.calls[0][0]).toBe(
-      'update qcnotes set qcTechnicalStatus = $1::integer where associateid = $2::text and weekid = $3::integer and batchid = $4::text'
+      'update "qcNotes" set "technicalStatus" = $1::integer where "associateId" = $2::text and "weekNumber" = $3::integer and "batchId" = $4::text'
     );
 
     expect(mockQuery.mock.calls[0][1]).toEqual([
-      testUpdateObject.qcTechnicalStatus,
+      testUpdateObject.technicalStatus,
       original.associateId,
-      original.weekId,
+      original.weekNumber,
       original.batchId,
     ]);
 
     expect(mockQuery.mock.calls[1][0]).toBe(
-      'select q.batchId, q.weekId, q.associateId, q.qcNote, q.qcTechnicalStatus from qcNotes q where associateid = $2::text and weekid = $3::integer and batchid = $4::text'
+      'select "batchId", "weekNumber", "associateId", "noteContent", "technicalStatus" from "qcNotes" where "associateId" = $2::text and "weekNumber" = $3::integer and "batchId" = $4::text'
     );
 
     expect(mockQuery.mock.calls[1][1]).toEqual([
-      testUpdateObject.qcTechnicalStatus,
+      testUpdateObject.technicalStatus,
       original.associateId,
-      original.weekId,
+      original.weekNumber,
       original.batchId,
     ]);
 
