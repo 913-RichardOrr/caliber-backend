@@ -7,4 +7,4 @@ RUN npm install
 RUN npm install typescript @types/node
 RUN npx tsc
 RUN ls
-CMD ["index.handler"]
+CMD ["build/index.handler"]

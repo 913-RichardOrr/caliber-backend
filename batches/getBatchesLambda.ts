@@ -18,7 +18,7 @@ interface BatchInfo {
   type: string;
 }
 
-export const handler = async (event: MyEvent) => {
+export async function handler(event: MyEvent) {
   const resp = {
     statusCode: 200,
     headers: {
