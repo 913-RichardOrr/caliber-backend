@@ -1,5 +1,3 @@
-import * as indexModule from './index';
-import createResponse from './createResponse';
 import { Client } from 'pg';
 
 export interface AssociateEvent {

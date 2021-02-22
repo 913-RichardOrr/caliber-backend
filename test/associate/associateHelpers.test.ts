@@ -1,10 +1,7 @@
 //Tests for associate lambda handler and helpers
 
-import * as associateLambda from '../index';
-import { handler } from '../handler';
+import * as associateLambda from '../../associateLambda/associateHelpers';
 import { Client } from 'pg';
-
-let testEvent: associateLambda.AssociateEvent;
 
 const mockConnect = jest.fn();
 const mockQuery = jest.fn();

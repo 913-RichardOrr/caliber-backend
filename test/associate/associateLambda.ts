@@ -1,5 +1,5 @@
-import { handler } from '../handler';
-import * as associateLambda from '../index';
+import { handler } from '../../associateLambda/associateLambda';
+import * as associateLambda from '../../associateLambda/associateHelpers';
 
 let testEvent: associateLambda.AssociateEvent;
 
