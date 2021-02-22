@@ -6,8 +6,8 @@ Resources:
       CompatibleRuntimes:
         - nodejs14.x
       Content:
-        S3Bucket: caliber-batches
-        S3Key: BatchesLayersCode
+        S3Bucket: caliber-batches # need to update this to S3 bucket holding the lambdas
+        S3Key: BatchesLayersCode # need to update this to key for the file holding layers zip file
       Description: BatchesLayersCode
       LayerName: batches-layers
   Batches:
@@ -22,8 +22,8 @@ Resources:
           - BatchesRole
           - Arn
       Code:
-        S3Bucket: caliber-batches
-        S3Key: BatchesCode
+        S3Bucket: caliber-batches # need to update this to S3 bucket holding the lambdas
+        S3Key: BatchesCode # need to update this to key for the file holding lambda zip file
       Runtime: nodejs14.x
       Timeout: 5
   BatchesRole:
