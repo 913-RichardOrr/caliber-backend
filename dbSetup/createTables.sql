@@ -9,6 +9,9 @@ create table categories
 	active boolean
 );
 
+
+create type STATUS as enum ('Undefined', 'Poor', 'Average', 'Good', 'Superstar');
+
 create table qcWeeks
 (
 	qcWeekId serial primary key,
@@ -25,8 +28,6 @@ create table weekCategories
 	qcWeekId int,
 	primary key(categoryId, qcWeekId)
 );
-
-create type STATUS as enum ('Undefined', 'Poor', 'Good', 'Superstar');
 
 create table qcNotes
 (
