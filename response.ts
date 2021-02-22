@@ -1,4 +1,4 @@
-export function createResponse(body: any = {}, statusCode: number = 200, headers: any = {}) {
+export default function createResponse(body: any = {}, statusCode: number = 200, headers: any = {}) {
     const baseHeader: any = {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
@@ -13,5 +13,3 @@ export function createResponse(body: any = {}, statusCode: number = 200, headers
         headers: baseHeader
     };
 }
-
-export default createResponse();
