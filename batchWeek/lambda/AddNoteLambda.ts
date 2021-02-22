@@ -2,7 +2,8 @@ import { Client } from 'pg';
 
 /**
  * Method is POST
- * @param event 
+ * add an overall note for that batch in this specific week
+ * @param event - the event that triggers the API gateway which contains the information for that week.
  */
 
 export function addOverallNote(event: any) {
