@@ -3,7 +3,7 @@ import * as associateLambda from '../../associateLambda/associateHelpers';
 
 let testEvent: associateLambda.AssociateEvent;
 
-jest.mock('../index', () => {
+jest.mock('../../associateLambda/associateHelpers', () => {
   const mockget = jest.fn();
   const mockput = jest.fn();
   const mockpatch = jest.fn();
@@ -16,6 +16,11 @@ jest.mock('../index', () => {
 });
 
 describe('tests for handler', () => {
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   test('test handler can differentiate between put', async () => {
     testEvent = {
       path: '/something',

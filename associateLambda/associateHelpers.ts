@@ -19,8 +19,7 @@ export async function getAssociate(path: string): Promise<QCFeedback | null> {
   const client = new Client();
   try {
     await client.connect();
-    const query = `select "batchId", "weekNumber", "associateId", "noteContent", "technicalStatus" from "qcNotes" where "batchId" = $1::text
-    && "weekNumber" = $2::integer && "associateId" = $3::text`;
+    const query = `select "batchId", "weekNumber", "associateId", "noteContent", "technicalStatus" from "qcNotes" where "batchId" = $1::text && "weekNumber" = $2::integer && "associateId" = $3::text`;
     const res = await client.query(query, [
     associateInfo.batchId,
     associateInfo.weekNumber,
