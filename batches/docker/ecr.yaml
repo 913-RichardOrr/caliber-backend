@@ -1,0 +1,13 @@
+
+AWSTemplateFormatVersion: 2010-09-09
+Description: ECR repo for batches lambda
+Resources:
+  BatchesECR:
+    Type: AWS::ECR::Repository
+    Properties:
+      RepositoryName: "batches-lambda"
+Outputs:
+  BatchesECRArn:
+    Value: !GetAtt BatchesECR.Arn
+    Export:
+      Name: BatchesECRArn
