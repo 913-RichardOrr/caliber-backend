@@ -5,6 +5,8 @@ FROM public.ecr.aws/lambda/nodejs:12
 # The Lambda base image expects your code to be placed in the /var/task/ folder
 COPY *.ts ../package.json ../tsconfig.json /var/task/
 
+#ENV: will need details for accessing database
+
 # Install npm dependencies
 RUN npm install
 # Transpile
@@ -14,4 +16,4 @@ RUN npx tsc
 RUN ls
 
 # Tell lambda what to call
-CMD ["handler.handler"]
+CMD ["associateLambda.handler"]
