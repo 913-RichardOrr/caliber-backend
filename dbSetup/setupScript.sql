@@ -14,12 +14,16 @@ create table categories
 	active boolean
 );
 
-create table qcWeeks
+create type STATUS as enum ('Undefined', 'Poor', 'Average', 'Good', 'Superstar');
+
+create table "qcWeeks"
 (
-	qcWeekId serial primary key,
-	weekNumber int not null,
-	note text,
-	batchId int not null
+	"qcWeekId" serial primary key,
+	"weekNumber" int not null,
+	"note" text,
+	"overallStatus" STATUS,
+	"batchId" text not null,
+	unique ("batchId","weekNumber")
 );
 
 -- join  table
@@ -29,8 +33,6 @@ create table weekCategories
 	qcWeekId int,
 	primary key(categoryId, qcWeekId)
 );
-
-create type STATUS as enum ('Undefined', 'Poor', 'Average', 'Good', 'Superstar');
 
 create table qcNotes
 (
