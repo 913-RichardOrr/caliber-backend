@@ -1,3 +1,8 @@
+drop table if exists categories cascade;
+drop table if exists qcWeeks cascade;
+drop table if exists weekCategories cascade;
+drop table if exists qcNotes cascade;
+
 /******************************************************
    Create Tables
 ******************************************************/
@@ -34,7 +39,8 @@ create table qcNotes
 	batchId text not null, 
 	associateId int not null,
 	technicalStatus STATUS,
-	noteContent text
+	noteContent text,
+	unique (weekNumber, batchId, associateId)
 );
 
 /******************************************************
