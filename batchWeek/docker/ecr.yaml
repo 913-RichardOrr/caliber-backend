@@ -1,0 +1,30 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: ECR repo for batch-week lambda
+Resources:
+  BatchWeekECR:
+    Type: AWS::ECR::Repository
+    Properties:
+      RepositoryName: "batchWeek-lambda"
+      LifecyclePolicy:
+        LifecyclePolicyText: |
+          {
+            "rules": [
+              {
+                "rulePriority": 1,
+                "description": "Keep only two untagged images, expire all others",
+                "selection": {
+                  "tagStatus": "untagged",
+                  "countType": "imageCountMoreThan",
+                  "countNumber": 2
+                },
+                "action": {
+                  "type": "expire"
+                }
+              }
+            ]
+          }
+Outputs:
+  BatchWeekECRArn:
+    Value: !GetAtt BatchWeekECR.Arn
+    Export:
+      Name: BatchWeekECRArn

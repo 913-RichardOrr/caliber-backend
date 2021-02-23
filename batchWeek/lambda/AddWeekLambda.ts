@@ -1,6 +1,6 @@
 import { Client } from 'pg';
 
-export async function addWeek(event:any) {
+export default async function addWeek(event:any) {
     const client = new Client();
     const week = JSON.parse(event.body);
     client.connect();
