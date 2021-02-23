@@ -11,14 +11,14 @@ create table categories
 
 create type STATUS as enum ('Undefined', 'Poor', 'Average', 'Good', 'Superstar');
 
-create table qcWeeks
+create table "qcWeeks"
 (
-	qcWeekId serial primary key,
-	weekNumber int not null,
-	note text,
-	overallStatus STATUS,
-	batchId text not null,
-	unique (batchId,weekNumber)
+	"qcWeekId" serial primary key,
+	"weekNumber" int not null,
+	"note" text,
+	"overallStatus" STATUS,
+	"batchId" text not null,
+	unique ("batchId","weekNumber")
 );
 
 -- join  table
