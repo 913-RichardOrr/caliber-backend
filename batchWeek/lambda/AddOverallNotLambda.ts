@@ -6,13 +6,13 @@ import { Client } from 'pg';
  * @param event - the event that triggers the API gateway which contains the information for that week.
  */
 
-export function addOverallNote(event: any) {
+export default function AddOverallNoteLambda(event: any) {
     const client = new Client();
     const weekInfo = JSON.parse(event.body);
     client.connect();
 
-    const query = `update qc_week set overall_note = $1::text where week_id = $2::number`;
-    const values = [weekInfo.overall_note, weekInfo.week];
+    const query = `update qc_week set note = $1::text where weekNumber = $2::number`;
+    const values = [weekInfo.note, weekInfo.weekNumber];
 
     let response = client.query(query, values);
 

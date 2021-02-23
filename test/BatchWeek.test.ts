@@ -1,4 +1,4 @@
-import * as batchweek from '../batchWeek/index';
+import * as batchweek from '../batchWeek/lambda/index';
 import getWeeksByBatchId from '../batchWeek/lambda/GetWeeksByBatchId';
 import { Client } from 'pg';
 
