@@ -1,4 +1,3 @@
-
 AWSTemplateFormatVersion: 2010-09-09
 Description: ECR repo for batches lambda
 Resources:
@@ -6,6 +5,24 @@ Resources:
     Type: AWS::ECR::Repository
     Properties:
       RepositoryName: "batches-lambda"
+      LifecyclePolicy:
+        LifecyclePolicyText: |
+          {
+            "rules": [
+              {
+                "rulePriority": 1,
+                "description": "Keep only two untagged images, expire all others",
+                "selection": {
+                  "tagStatus": "untagged",
+                  "countType": "imageCountMoreThan",
+                  "countNumber": 2
+                },
+                "action": {
+                  "type": "expire"
+                }
+              }
+            ]
+          }
 Outputs:
   BatchesECRArn:
     Value: !GetAtt BatchesECR.Arn
