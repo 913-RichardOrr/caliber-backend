@@ -5,169 +5,76 @@ import * as categoriesHelpers from '../../categoriesFeature/CategoriesHelpers';
 // mocked client
 jest.mock('pg', () => {
     const mClient = {
-      connect: jest.fn(),
-      query: jest.fn(),
-      end: jest.fn(),
+        connect: jest.fn(),
+        query: jest.fn(),
+        end: jest.fn(),
     };
     return { Client: jest.fn(() => mClient) };
-  });
+});
 
-describe('Given an event, the handler can determine the correct method', () => {
-    // mocked event
-    const mEvent = {
-        path: '',
-        body: {},
-        method: '',
-        queryStringParameters: {},
-    }
+// mocked helper functions
+jest.mock('../categoriesFeature/categoriesHelpers', () => {
+    const mockget = jest.fn();
+    const mockpost = jest.fn();
+    const mockput = jest.fn();
 
-    // mock functions needed
-    beforeAll(() => {
-        handler.getCategories = jest.fn();
-        categoriesLambda.postCategories = jest.fn();;
-        categoriesLambda.putCategory = jest.fn();
+    return {
+        getCategories: mockget,
+        postCategories: mockpost,
+        putCategory: mockput,
+    };
+});
+
+let mEvent = {
+    path: '',
+    body: {},
+    httpMethod: '',
+    queryStringParameters: {},
+}
+
+describe('tests for handler', () => {
+
+    afterEach(() => {
+        jest.clearAllMocks();
     });
 
     test('that method is GET', async () => {
-        mEvent.method = 'GET';
+        mEvent = {
+            path: '/something',
+            body: '{1:1}',
+            httpMethod: 'GET',
+            queryStringParameters: {active: 'true'}
+        };
+        await handler(mEvent);
 
-        await categoriesLambda.handler(mEvent);
-
-        expect(categoriesLambda.getCategories).toBeCalledTimes(1);
-        expect(categoriesLambda.postCategories).toBeCalledTimes(0);
-        expect(categoriesLambda.putCategory).toBeCalledTimes(0);
-    });
-
+        expect(categoriesHelpers.getCategories).toHaveBeenCalledTimes(1);
+        expect(categoriesHelpers.postCategories).toHaveBeenCalledTimes(0);
+        expect(categoriesHelpers.putCategory).toHaveBeenCalledTimes(0);
+    })
     test('that method is POST', async () => {
-        mEvent.method = 'POST';
+        mEvent = {
+            path: '/something',
+            body: '{1:1}',
+            httpMethod: 'POST',
+            queryStringParameters: {active: 'true'}
+        };
+        await handler(mEvent);
 
-        await categoriesLambda.handler(mEvent);
-        
-        expect(categoriesLambda.postCategories).toBeCalledTimes(1);
-        expect(categoriesLambda.getCategories).toBeCalledTimes(0);
-        expect(categoriesLambda.putCategory).toBeCalledTimes(0);
-        
-    });
-
+        expect(categoriesHelpers.postCategories).toHaveBeenCalledTimes(1);
+        expect(categoriesHelpers.getCategories).toHaveBeenCalledTimes(0);
+        expect(categoriesHelpers.putCategory).toHaveBeenCalledTimes(0);
+    })
     test('that method is PUT', async () => {
-        mEvent.method = 'PUT';
-        
-        await categoriesLambda.handler(mEvent);
-        
-        expect(categoriesLambda.putCategory).toBeCalledTimes(1);
-        expect(categoriesLambda.getCategories).toBeCalledTimes(0);
-        expect(categoriesLambda.postCategories).toBeCalledTimes(0);
-    });
-});
-
-
-describe('getCategories', () => {
-    
-    let client: any;
-    let mEvent: any;
-
-    // create mocks
-    beforeEach(() => {
-        client = new Client();
         mEvent = {
-            path: '/test',
-            body: {},
-            method: 'GET',
-            queryStringParameters: {}
-        }
-    });
+            path: '/something',
+            body: '{1:1}',
+            httpMethod: 'PUT',
+            queryStringParameters: {active: 'true'}
+        };
+        await handler(mEvent);
 
-    // clear all mocks
-    afterEach(() => {
-        jest.clearAllMocks();
-    });
-
-    test('GET request should succeed', async () => {
-        mEvent.queryStringParameters = {param1: 'active?active=true'};
-        const res = await categoriesLambda.getCategories(mEvent.queryStringParameters);
-        expect(client.connect).toBeCalledTimes(1);
-        expect(res.statusCode).toBe(200);
-        expect(client.query).toBeCalledWith('select * from categories where active=true');
-        expect(client.end).toBeCalledTimes(1);
-    });
-});
-
-describe('postCategories', () => {
-
-    let client: any;
-    let mEvent: any;
-
-    // create mocks
-    beforeEach(() => {
-        client = new Client();
-        mEvent = {
-            path: '',
-            body: {},
-            method: '',
-            queryStringParameters: {}
-        }
-    });
-
-    // clear all mocks
-    afterEach(() => {
-        jest.clearAllMocks();
-    });
-    
-    test('POST request should succeed', async () => {
-        mEvent.body = {skill: 'testskill', active: true};
-        const res = await categoriesLambda.postCategories(mEvent.body);
-        expect(client.connect).toBeCalledTimes(1);
-        expect(res.statusCode).toBe(200);
-        expect(client.query).toBeCalledWith(`insert into categories (skill,active) values(${mEvent.body.skill},${mEvent.body.active})`);
-        expect(client.end).toBeCalledTimes(1);
-    });
-
-    test('POST request should fail', async () => {
-        mEvent.body = {skill: 'testskill'};
-        const res = await categoriesLambda.postCategories(mEvent.body);
-        expect(client.connect).toBeCalledTimes(1);
-        expect(res.statusCode).not.toBe(200);
-        expect(client.query).toBeCalledWith(`insert into categories (skill,active) values(${mEvent.body.skill},${mEvent.body.active})`);
-        expect(client.end).toBeCalledTimes(1);
-    });
-});
-
-describe('putCategory', () => {
-    
-    let client: any;
-    let mEvent: any;
-
-    // create a mocked client
-    beforeEach(() => {
-        client = new Client();
-        mEvent = {
-            path: '',
-            body: {},
-            method: '',
-            queryStringParameters: {}
-        }
-    });
-
-    // clear all mocks
-    afterEach(() => {
-        jest.clearAllMocks();
-    });
-    
-    test('PUT request should succeed', async() => {
-        mEvent.body = {id: 1, skill: 'skill', active: true};
-        const res = await categoriesLambda.putCategory(mEvent.body);
-        expect(client.connect).toBeCalledTimes(1);
-        expect(res.statusCode).toBe(200);
-        expect(client.query).toBeCalledWith(`update categories set skill=${mEvent.body.skill}, active=${mEvent.body.active} where id=${mEvent.body.id}`);
-        expect(client.end).toBeCalledTimes(1);
-    });
-
-    test('PUT request should fail', async () => {
-        mEvent.body = {skill: 'testskill'};
-        const res = await categoriesLambda.postCategories(mEvent.body);
-        expect(client.connect).toBeCalledTimes(1);
-        expect(res.statusCode).not.toBe(200);
-        expect(client.query).toBeCalledWith(`update categories set skill=${mEvent.body.skill}, active=${mEvent.body.active} where id=${mEvent.body.id}`);
-        expect(client.end).toBeCalledTimes(1);
-    });
+        expect(categoriesHelpers.putCategory).toHaveBeenCalledTimes(1);
+        expect(categoriesHelpers.getCategories).toHaveBeenCalledTimes(0);
+        expect(categoriesHelpers.postCategories).toHaveBeenCalledTimes(0);
+    })
 });
