@@ -1,6 +1,6 @@
 import { Client } from 'pg';
-import { handler } from '../categoriesFeature/categoriesLambda';
-import * as categoriesHelpers from '../categoriesFeature/categoriesHelpers';
+import { handler } from '../../categoriesFeature/CategoriesLambda';
+import * as categoriesHelpers from '../../categoriesFeature/CategoriesHelpers';
 
 // mocked client
 jest.mock('pg', () => {
