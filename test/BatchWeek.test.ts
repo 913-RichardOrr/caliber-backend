@@ -1,4 +1,5 @@
-import * as batchweek from '../index';
+import * as batchweek from '../batchWeek/lambda/index';
+import getWeeksByBatchId from '../batchWeek/lambda/GetWeeksByBatchId';
 import { Client } from 'pg';
 
 const mockConnect = jest.fn();
@@ -67,7 +68,6 @@ describe('batch-week test for handler', () => {
       httpMethod: 'POST'
     };
 
-
     await batchweek.handler(testEvent);
 
     let testAddNewWeek = batchweek.addNewWeek;
@@ -82,19 +82,30 @@ describe('batch-week test for handler', () => {
   });
 });
 
-describe('batch-week test for getWeek', ()=> {
-  test('getWeek calls pg', async ()=> {
+describe('batch-week test for getWeeksByBatchId', ()=> {
+  test('getWeeksByBatchId calls pg', async ()=> {
+    await getWeeksByBatchId('someBatchId');
     expect(mockConnect).toHaveBeenCalledTimes(1);
     expect(mockQuery).toHaveBeenCalledTimes(1);
     expect(mockEnd).toHaveBeenCalledTimes(1);
   })
 
-  test('getWeek returns a non-empty object in it/`s promise', async ()=> {
-    let result = await batchweek.getWeek();
-    // Make sure it's not an empty object
+  test('getWeeksByBatchId returns a proper HTTP response', async ()=> {
+    let result = await getWeeksByBatchId('someBatchId');
     expect(result).toBeTruthy();
     if(result) {
-      expect(result).toHaveProperty('id');
+      expect(result).toHaveProperty('statusCode');
+    }
+  });
+
+  test('getWeeksByBatchId returns the mocked query result in it\'s body', async ()=> {
+    let result = await getWeeksByBatchId('someBatchId');
+    expect(result).toBeTruthy();
+    if(result) {
+      expect(result).toHaveProperty('body');
+      if(result.body) {
+        expect(JSON.parse(result.body)).toHaveProperty('id');
+      }
     }
   });
 });
@@ -116,9 +127,17 @@ describe('batch-week test for addNewWeek', ()=> {
 });
 
 describe('batch-week test for addNote', ()=> {
+  testEvent.path = '/batches/1/weeks/1';
+  testEvent.body = JSON.stringify({
+    batchId: '1',
+    weekId: 1,
+    overallNote: 'yey'
+  });
 
+  test('that addNote has been called', () => {
+    let testAddNote = batchweek.addNote;
+    testAddNote = jest.fn().mockImplementation();
+    expect(testAddNote).toBeCalledTimes(1);
+  });
 });
-
-//batches
-    //batchid ---> 7
 
