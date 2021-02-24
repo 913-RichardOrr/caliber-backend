@@ -1,0 +1,24 @@
+# Make the associate lambda from an existingimage
+AWSTemplateFormatVersion: 2010-09-09
+Description: ECR repo, image, lambda for associate lambda
+Parameters:
+  RepoName: "associate-lambda"
+Resources:
+  AssociateLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        ImageUri: !Join [".",[!Sub "${AWS::AccountId}", "dkr", "ecr", !Sub "${AWS::Region}", "amazonaws", "com", "/", !Ref RepoName]]
+      Role: arn:aws:iam::855430746673:role/caliber-mobile-cf
+      Runtime: nodejs12.x
+      VpcConfig:
+        SecurityGroupIds:
+          - sg-67ed824f
+        SubnetIds:
+          - subnet-75cb6738
+          - subnet-956972bb
+# Outputs:
+#   AssociateECRArn:
+#     Value: !GetAtt AssociateECR.Arn
+#     Export:
+#       Name: AssociateECRArn
