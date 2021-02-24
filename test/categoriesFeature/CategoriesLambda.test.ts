@@ -1,5 +1,6 @@
 import { Client } from 'pg';
-import * as categoriesLambda from '../categoriesFeature/categoriesLambda';
+import { handler } from '../../categoriesFeature/CategoriesLambda';
+import * as categoriesHelpers from '../../categoriesFeature/CategoriesHelpers';
 
 // mocked client
 jest.mock('pg', () => {
@@ -22,7 +23,7 @@ describe('Given an event, the handler can determine the correct method', () => {
 
     // mock functions needed
     beforeAll(() => {
-        categoriesLambda.getCategories = jest.fn();
+        handler.getCategories = jest.fn();
         categoriesLambda.postCategories = jest.fn();;
         categoriesLambda.putCategory = jest.fn();
     });

@@ -60,8 +60,9 @@ export const getCategories = async (client: any, params?: any) => {
 
 // function for /categories POST method (add a new category)
 export const postCategories = async (client: any, event: any) => {
-    const q = 'insert into category (skill,active) values ($1,$2)';
-    const params = [event.body.skill, event.body.active];
+    const q = 'insert into category (skill,active) values ($1,true) returning categoryid, skill, active';
+    // might need to change to event.body
+    const params = [event.body.skill];
     const resp = await client.query(q, params);
     await client.end();
     if (resp) {
