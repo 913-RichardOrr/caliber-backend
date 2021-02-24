@@ -11,4 +11,4 @@ RUN npx tsc
 
 RUN ls
 
-CMD ["build/weekCategoriesLambda.handler"]
+CMD ["build/WeekCategoriesLambda.handler"]
