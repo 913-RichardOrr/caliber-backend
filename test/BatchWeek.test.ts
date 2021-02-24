@@ -129,7 +129,7 @@ describe('batch-week test for addNewWeek', ()=> {
     })
 });
 
-describe('batch-week test for addNote', ()=> {
+describe('batch-week test for addOverallNote', ()=> {
   testEvent.path = '/batches/1/weeks/1';
   testEvent.body = JSON.stringify({
     batchId: '1',
