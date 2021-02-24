@@ -1,5 +1,6 @@
 import * as batchweek from '../batchWeek/lambda/index';
 import getWeeksByBatchId from '../batchWeek/lambda/GetWeeksByBatchId';
+import AddOverallNote from '../batchWeek/lambda/AddOverallNoteLambda';
 import { Client } from 'pg';
 
 const mockConnect = jest.fn();
@@ -32,10 +33,12 @@ describe('batch-week test for handler', () => {
 
     let testAddNewWeek = batchweek.addNewWeek;
     let testGetWeek = batchweek.getWeek;
-    let testAddNote = batchweek.addNote;
+    let testAddNote = AddOverallNote(testEvent);
+
     testAddNewWeek = jest.fn().mockImplementation();
     testGetWeek = jest.fn().mockImplementation();
     testAddNote = jest.fn().mockImplementation();
+
     expect(testAddNewWeek).toHaveBeenCalledTimes(0);
     expect(testAddNote).toHaveBeenCalledTimes(0);
     expect(testGetWeek).toHaveBeenCalledTimes(1);
@@ -135,7 +138,7 @@ describe('batch-week test for addNote', ()=> {
   });
 
   test('that addNote has been called', () => {
-    let testAddNote = batchweek.addNote;
+    let testAddNote = AddOverallNote;
     testAddNote = jest.fn().mockImplementation();
     expect(testAddNote).toBeCalledTimes(1);
   });
