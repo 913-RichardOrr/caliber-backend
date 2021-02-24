@@ -6,7 +6,6 @@ Resources:
     Type: AWS::ApiGateway::RestApi
     Properties:
         Description: Root endpoint for the Caliber Mobile application
-        # EndpointConfiguration: # TO-DO
         Name: caliber-mobile-api-cf
   # categoriesResource - /categories
   categoriesResource:
@@ -53,7 +52,11 @@ Resources:
       AuthorizationType: NONE
       HttpMethod: GET
       Integration:
-        Type: MOCK
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Sub
+          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
+          - lambdaArn: arn:aws:lambda:us-east-1:640280721521:function:categoriesLambda
       ResourceId: !Ref categoriesResource
       RestApiId: !Ref apiGateway
   # POST method for /categories
@@ -63,7 +66,11 @@ Resources:
       AuthorizationType: NONE
       HttpMethod: POST
       Integration:
-        Type: MOCK
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Sub
+          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
+          - lambdaArn: arn:aws:lambda:us-east-1:640280721521:function:categoriesLambda
       ResourceId: !Ref categoriesResource
       RestApiId: !Ref apiGateway
   # API Gateway Resource - /categories/{categoryId}
@@ -111,7 +118,11 @@ Resources:
       AuthorizationType: NONE
       HttpMethod: PUT
       Integration:
-        Type: MOCK
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Sub
+          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
+          - lambdaArn: arn:aws:lambda:us-east-1:640280721521:function:categoriesLambda
       ResourceId: !Ref categoryIdResource
       RestApiId: !Ref apiGateway
   apiGatewayDefaultDeployment:

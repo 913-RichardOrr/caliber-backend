@@ -1,7 +1,7 @@
 
 FROM public.ecr.aws/lambda/nodejs:14
 
-COPY categoriesLambda.ts categoriesHelper.ts package.json tsconfig.json /var/task/
+COPY CategoriesLambda.ts CategoriesHelpers.ts package.json tsconfig.json /var/task/
 
 ENV PGUSER=calibermobile PGHOST=calibermobile.cvtq9j4axrge.us-east-1.rds.amazonaws.com PGPASSWORD=C3EsJGj6kcRtnAN PGDATABASE=calibermobile PGPORT=5432
 
