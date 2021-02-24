@@ -7,3 +7,4 @@
 **/.eslintcache
 .vscode/
 **/*.js
+*.csv
