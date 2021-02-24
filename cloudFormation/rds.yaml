@@ -48,7 +48,7 @@ Parameters:
     MinLength: '8'
     MaxLength: '41'
     AllowedPattern: '[a-zA-Z0-9]*'
-    ConstraintDescription: must contain only alphanumeric characters.
+    ConstraintDescription: must contain only alphanumeric characters and be longer than 8 characters.
 
 Resources:
   MyDB:
@@ -62,13 +62,12 @@ Resources:
       EngineVersion: 12.4
       MasterUsername: !Ref DBUsername
       MasterUserPassword: !Ref DBPassword
+    DeletionPolicy:
+      Delete
       #This creates the security group to allow us to access the database in DBeaver.
   SecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: This Security Group allows us to connect to the RDS instance of the database above.
       GroupName: rdsSecurityGroup
-Outputs:
-  Endpoint:
-    Description: Generated endpoint address for database connection
-    Value: !GetAtt MyDB.Endpoint.Address
+    DeletionPolicy: Delete
