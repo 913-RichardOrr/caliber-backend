@@ -1,4 +1,4 @@
-import createResponse from "../response";
+import createResponse from "../Response";
 
 /**
  * Given week id, retrieve all categories for that week

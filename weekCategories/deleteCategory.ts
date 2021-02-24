@@ -1,4 +1,4 @@
-import createResponse from "../response";
+import createResponse from "../Response";
 
 /**
  * Given a category and week id, delete the item from the database
