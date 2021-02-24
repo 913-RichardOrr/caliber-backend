@@ -43,7 +43,7 @@ describe('tests for getAssociate', () => {
       expect(mockConnect).toHaveBeenCalledTimes(1);
   
       expect(mockQuery.mock.calls[0][0]).toBe(
-        `select batchid, weeknumber, associateid, notecontent, technicalstatus from qcnotes where batchid = $1::text && weeknumber = $2::integer && associateid = $3::text`);
+        `select batchid, weeknumber, associateid, notecontent, technicalstatus from qcnotes where batchid = $1::text and weeknumber = $2::integer and associateid = $3::text`);
   
       expect(mockQuery.mock.calls[0][1]).toEqual([
         body.batchId,
