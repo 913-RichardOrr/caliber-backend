@@ -1,6 +1,6 @@
 import { Client } from 'pg';
 
-export default async function addWeek(event:any) {
+export default async function AddWeekLambda(event:any) {
     const client = new Client();
     const week = JSON.parse(event.body);
     client.connect();
@@ -32,3 +32,4 @@ export default async function addWeek(event:any) {
         };
     }
 }
+

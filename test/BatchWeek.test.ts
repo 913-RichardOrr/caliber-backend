@@ -1,4 +1,12 @@
+<<<<<<< HEAD:test/BatchWeek.test.ts
 import * as batchweek from '../batchWeek/lambda/index';
+=======
+<<<<<<< HEAD:test/BatchWeek.test.ts
+import * as batchweek from '../batchWeek/lambda/index';
+=======
+import * as batchweek from '../batchWeek/index';
+>>>>>>> e039ce54ab66a80629ca33e7312eb6db5b467746:batchWeek/test/index.test.ts
+>>>>>>> 08aaaabbfa5e7d60783ec60688d459e7f83a7214:test/BatchWeek.test.ts
 import getWeeksByBatchId from '../batchWeek/lambda/GetWeeksByBatchId';
 import { Client } from 'pg';
 
@@ -21,7 +29,7 @@ let testEvent = {
 
 describe('batch-week test for handler', () => {
 
-  test('handler routes correctly to getWeek function', async () => {
+  test.only('handler routes correctly to getWeek function', async () => {
     testEvent = {
       path: '/batches/1/weeks/1',
       body: '1',
@@ -92,6 +100,7 @@ describe('batch-week test for getWeeksByBatchId', ()=> {
 
   test('getWeeksByBatchId returns a proper HTTP response', async ()=> {
     let result = await getWeeksByBatchId('someBatchId');
+<<<<<<< HEAD:test/BatchWeek.test.ts
     expect(result).toBeTruthy();
     if(result) {
       expect(result).toHaveProperty('statusCode');
@@ -102,6 +111,18 @@ describe('batch-week test for getWeeksByBatchId', ()=> {
     let result = await getWeeksByBatchId('someBatchId');
     expect(result).toBeTruthy();
     if(result) {
+=======
+    expect(result).toBeTruthy();
+    if(result) {
+      expect(result).toHaveProperty('statusCode');
+    }
+  });
+
+  test('getWeeksByBatchId returns the mocked query result in it\'s body', async ()=> {
+    let result = await getWeeksByBatchId('someBatchId');
+    expect(result).toBeTruthy();
+    if(result) {
+>>>>>>> 08aaaabbfa5e7d60783ec60688d459e7f83a7214:test/BatchWeek.test.ts
       expect(result).toHaveProperty('body');
       if(result.body) {
         expect(JSON.parse(result.body)).toHaveProperty('id');
