@@ -31,26 +31,8 @@ export default async function handler(event: AllBatchesEvent) {
 		body: '',
 	};
 
-	let year: number;
-	let quarter: number;
-
-	if (event.queryStringParameters.year) {
-		year = event.queryStringParameters.year;
-	} else {
-		resp.statusCode = 400;
-		resp.body = 'Bad request.';
-		return resp;
-	}
-
-	if (event.queryStringParameters.quarter) {
-		quarter = event.queryStringParameters.quarter;
-	} else {
-		resp.statusCode = 400;
-		resp.body = 'Bad request.';
-		return resp;
-	}
-
-	const batchInfo = await getAllBatchesLambda(year, quarter);
+	
+	const batchInfo = await getAllBatchesLambda();
 
 	if (batchInfo) {
 		resp.body = JSON.stringify(batchInfo);
@@ -61,13 +43,10 @@ export default async function handler(event: AllBatchesEvent) {
 const URI = 'https://caliber2-mock.revaturelabs.com:443/mock/training/batch';
 export const allBatchesAgent = new https.Agent({ rejectUnauthorized: false });
 
-export async function getAllBatchesLambda(
-	year: number,
-	quarter: number
-): Promise<any | null> {
+export async function getAllBatchesLambda(): Promise<AllBatchInfo[] | null> {
 	let batchInfo: AllBatchInfo[] = [];
 	await axios
-		.get(`${URI}?year=${year}&quarter=${quarter}`, {
+		.get(`${URI}`, {
 			httpsAgent: allBatchesAgent,
 		})
 		.then((res) => {

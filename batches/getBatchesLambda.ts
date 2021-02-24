@@ -7,7 +7,7 @@ export interface MyEvent {
   };
 }
 
-interface BatchInfo {
+export interface BatchInfo {
   id: string;
   batchId: string;
   name: string;
