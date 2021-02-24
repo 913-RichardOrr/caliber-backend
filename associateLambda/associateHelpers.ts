@@ -19,7 +19,7 @@ export async function getAssociate(path: string): Promise<QCFeedback | null> {
   const client = new Client();
   try {
     await client.connect();
-    const query = `select "batchId", "weekNumber", "associateId", "noteContent", "technicalStatus" from "qcNotes" where "batchId" = $1::text && "weekNumber" = $2::integer && "associateId" = $3::text`;
+    const query = `select batchid, weeknumber, associateid, notecontent, technicalstatus from qcnotes where batchid = $1::text && weeknumber = $2::integer && associateid = $3::text`;
     const res = await client.query(query, [
     associateInfo.batchId,
     associateInfo.weekNumber,
@@ -58,7 +58,7 @@ export async function putAssociate(
     const client = new Client();
     await client.connect();
     const res = await client.query(
-      'insert into "qcNotes"("batchId", "weekNumber", "associateId", "noteContent", "technicalStatus") values ($1::text, $2::integer, $3::integer, $4::text, $5::integer) returning *',
+      'insert into qcnotes(batchid, weeknumber, associateid, notecontent, technicalstatus) values ($1::text, $2::integer, $3::integer, $4::text, $5::integer) returning *',
       [
         response.batchId,
         response.weekNumber,
@@ -93,11 +93,11 @@ export const patchAssociate = async (
   const obj = JSON.parse(updateObject);
   if (obj.noteContent) {
     q =
-      'update "qcNotes" set "noteContent" = $1::text where "associateId" = $2::text and "weekNumber" = $3::integer and "batchId" = $4::text';
+      'update qcnotes set notecontent = $1::text where associateid = $2::text and weeknumber = $3::integer and batchid = $4::text';
     args[0] = obj.noteContent;
   } else if (obj.technicalStatus) {
     q =
-      'update "qcNotes" set "technicalStatus" = $1::integer where "associateId" = $2::text and "weekNumber" = $3::integer and "batchId" = $4::text';
+      'update qcnotes set technicalstatus = $1::integer where associateid = $2::text and weeknumber = $3::integer and batchid = $4::text';
     args[0] = obj.technicalStatus;
   } else {
     return null;
@@ -109,7 +109,7 @@ export const patchAssociate = async (
     await client.query(q, args);
 
     const q_check =
-      'select "batchId", "weekNumber", "associateId", "noteContent", "technicalStatus" from "qcNotes" where "associateId" = $2::text and "weekNumber" = $3::integer and "batchId" = $4::text';
+      'select batchid, weeknumber, associateid, notecontent, technicalstatus from qcnotes where associateid = $2::text and weeknumber = $3::integer and batchid = $4::text';
     const res = await client.query(q_check, args);
 
     return res.rows[0] as QCFeedback;

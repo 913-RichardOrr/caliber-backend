@@ -43,7 +43,7 @@ describe('tests for getAssociate', () => {
       expect(mockConnect).toHaveBeenCalledTimes(1);
   
       expect(mockQuery.mock.calls[0][0]).toBe(
-        `select "batchId", "weekNumber", "associateId", "noteContent", "technicalStatus" from "qcNotes" where "batchId" = $1::text && "weekNumber" = $2::integer && "associateId" = $3::text`);
+        `select batchid, weeknumber, associateid, notecontent, technicalstatus from qcnotes where batchid = $1::text && weeknumber = $2::integer && associateid = $3::text`);
   
       expect(mockQuery.mock.calls[0][1]).toEqual([
         body.batchId,
@@ -150,7 +150,7 @@ describe('tests for patchAssociate', () => {
     expect(mockConnect).toHaveBeenCalledTimes(1);
 
     expect(mockQuery.mock.calls[0][0]).toBe(
-      'update "qcNotes" set "noteContent" = $1::text where "associateId" = $2::text and "weekNumber" = $3::integer and "batchId" = $4::text'
+      'update qcnotes set notecontent = $1::text where associateid = $2::text and weeknumber = $3::integer and batchid = $4::text'
     );
 
     expect(mockQuery.mock.calls[0][1]).toEqual([
@@ -161,7 +161,7 @@ describe('tests for patchAssociate', () => {
     ]);
 
     expect(mockQuery.mock.calls[1][0]).toBe(
-      'select "batchId", "weekNumber", "associateId", "noteContent", "technicalStatus" from "qcNotes" where "associateId" = $2::text and "weekNumber" = $3::integer and "batchId" = $4::text'
+      'select batchid, weeknumber, associateid, notecontent, technicalstatus from qcnotes where associateid = $2::text and weeknumber = $3::integer and batchid = $4::text'
     );
 
     expect(mockQuery.mock.calls[1][1]).toEqual([
@@ -193,7 +193,7 @@ describe('tests for patchAssociate', () => {
     expect(mockQuery).toHaveBeenCalledTimes(2);
 
     expect(mockQuery.mock.calls[0][0]).toBe(
-      'update "qcNotes" set "technicalStatus" = $1::integer where "associateId" = $2::text and "weekNumber" = $3::integer and "batchId" = $4::text'
+      'update qcnotes set technicalstatus = $1::integer where associateid = $2::text and weeknumber = $3::integer and batchid = $4::text'
     );
 
     expect(mockQuery.mock.calls[0][1]).toEqual([
@@ -204,7 +204,7 @@ describe('tests for patchAssociate', () => {
     ]);
 
     expect(mockQuery.mock.calls[1][0]).toBe(
-      'select "batchId", "weekNumber", "associateId", "noteContent", "technicalStatus" from "qcNotes" where "associateId" = $2::text and "weekNumber" = $3::integer and "batchId" = $4::text'
+      'select batchid, weeknumber, associateid, notecontent, technicalstatus from qcnotes where associateid = $2::text and weeknumber = $3::integer and batchid = $4::text'
     );
 
     expect(mockQuery.mock.calls[1][1]).toEqual([
