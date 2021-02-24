@@ -1,6 +1,7 @@
 # Run this Dockerfile from the caliber-backend directory
 # using the command:
-# docker build -t associatelambda -f associateLambda/Dockerfile .
+# docker build -t associatelambda -f associateLambda/Dockerfile
+#      --build-arg PGUSER=<username> PGHOST=<host> PGPASSWORD=<password> PGDATABASE=<database> .
 
 # Retrieiving a public image from Amazon's Elastic Container Registry
 FROM public.ecr.aws/lambda/nodejs:12
@@ -10,7 +11,11 @@ FROM public.ecr.aws/lambda/nodejs:12
 COPY package.json tsconfig.json /var/task/
 COPY ./associateLambda/*.ts /var/task/
 
-#TODO ENV: will need details for accessing database
+ENV PGUSER=${PGUSER}
+ENV PGHOST=${PGHOST}
+ENV PGPASSWORD=${PGPASSWORD}
+ENV PGDATABASE=${PGDATABASE}
+ENV PGPORT=5432
 
 # Install npm dependencies
 RUN npm install
