@@ -1,11 +1,16 @@
+# Run this Dockerfile from the caliber-backend directory
+# using the command:
+# docker build -t associatelambda -f associateLambda/Dockerfile .
+
 # Retrieiving a public image from Amazon's Elastic Container Registry
 FROM public.ecr.aws/lambda/nodejs:12
 # also available from amazon/aws-lambda-nodejs:12 on docker hub
 
 # The Lambda base image expects your code to be placed in the /var/task/ folder
-COPY ../package.json ../tsconfig.json *.ts /var/task/
+COPY package.json tsconfig.json /var/task/
+COPY ./associateLambda/*.ts /var/task/
 
-#ENV: will need details for accessing database
+#TODO ENV: will need details for accessing database
 
 # Install npm dependencies
 RUN npm install
