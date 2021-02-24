@@ -1,0 +1,34 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: ECR repo for lambda containers
+Parameters:
+  PolicyTemplate:
+    Type: String
+    Default: |
+        {
+          "rules": [
+            {
+              "rulePriority": 1,
+              "description": "Keep only two untagged images, expire all others",
+              "selection": {
+                "tagStatus": "untagged",
+                "countType": "imageCountMoreThan",
+                "countNumber": 2
+              },
+              "action": {
+                "type": "expire"
+              }
+            }
+          ]
+        }
+Resources:
+  CategoriesECR:
+    Type: AWS::ECR::Repository
+    Properties:
+      RepositoryName: categories-lambda
+      LifecyclePolicy:
+        LifecyclePolicyText: !Ref PolicyTemplate
+Outputs:
+  CategoriesECRArn:
+    Value: !GetAtt CategoriesECR.Arn
+    Export:
+      Name: CategoriesECRArn

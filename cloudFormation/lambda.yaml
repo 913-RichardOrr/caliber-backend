@@ -1,0 +1,25 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description:
+Resources:
+  # Lambda function
+  categoriesLambdaFunction:
+    Type: AWS::Lambda::Function
+      Properties: 
+        Code: 
+          ImageUri: String
+        Description: lambda function for GETting POSTing and PUTing categories
+        FunctionName: !Ref categoriesLambda
+        Handler: categoriesLambda.handler
+        PackageType: Image
+        Role: arn:aws:iam::855430746673:role/caliber-mobile-cf
+        Runtime: nodejs14.x
+        VpcConfig:
+          # TO-DO:
+          SecurityGroupIds:
+            - String
+          SubnetIds:
+            - String
+  # Create our log group
+  lambdaLogGroup:
+Outputs:
+  LAMBDAFUNCTIONArn:
