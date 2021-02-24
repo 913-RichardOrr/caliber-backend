@@ -91,7 +91,7 @@ describe('batch-week test for getWeeksByBatchId', ()=> {
     expect(mockConnect).toHaveBeenCalledTimes(1);
     expect(mockQuery).toHaveBeenCalledTimes(1);
     expect(mockEnd).toHaveBeenCalledTimes(1);
-  })
+  });
 
   test('getWeeksByBatchId returns a proper HTTP response', async ()=> {
     let result = await getWeeksByBatchId('someBatchId');
@@ -130,17 +130,22 @@ describe('batch-week test for addNewWeek', ()=> {
 });
 
 describe('batch-week test for addOverallNote', ()=> {
-  testEvent.path = '/batches/1/weeks/1';
-  testEvent.body = JSON.stringify({
-    batchId: '1',
-    weekId: 1,
-    overallNote: 'yey'
+  testEvent = {
+    path: '/batches/1/weeks/1',
+    body: "{'note': 'yey'}",
+    httpMethod: 'POST'
+  }
+
+  test('that addOverallNote connects to pg', () => {
+    AddOverallNote(testEvent);
+    expect(mockConnect).toHaveBeenCalled();
+    expect(mockQuery).toHaveBeenCalled();
+    expect(mockEnd).toHaveBeenCalled();
   });
 
-  test('that addNote has been called', () => {
-    let testAddNote = AddOverallNote;
-    testAddNote = jest.fn().mockImplementation();
-    expect(testAddNote).toBeCalledTimes(1);
+  test('that addOverallNote has been called', () => {
+    AddOverallNote(testEvent.body);
+    expect(AddOverallNote).toBeCalledTimes(1);
   });
 });
 
