@@ -111,8 +111,24 @@ Resources:
           method.response.header.Access-Control-Allow-Headers: false
           method.response.header.Access-Control-Allow-Methods: false
           method.response.header.Access-Control-Allow-Origin: false
+
+  RootMethod:
+    Type: 'AWS::ApiGateway::Method'
+    Properties:
+      HttpMethod: ANY
+      ResourceId: !GetAtt apiGateway.RootResourceId
+      RestApiId: !Ref apiGateway
+      AuthorizationType: NONE
+      Integration:
+        IntegrationHttpMethod: ANY
+        Type: HTTP_PROXY
+        Uri: !Sub
+          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
+          - lambdaArn: arn:aws:lambda:us-east-1:640280721521:function:categoriesLambda
+        IntegrationResponses:
+          - StatusCode: 200
   # PUT method for /categories/{categoryId}
-  updateCategoryMethod:
+  proxyMethod:
     Type: AWS::ApiGateway::Method
     Properties:
       AuthorizationType: NONE
@@ -134,12 +150,15 @@ Resources:
         PassthroughBehavior: WHEN_NO_MATCH
         IntegrationResponses:
           - StatusCode: 200
+
   apiGatewayDefaultDeployment:
     Type: AWS::ApiGateway::Deployment
     DependsOn:
       - getCategoriesMethod
       - addCategoryMethod
-      - updateCategoryMethod
+      - RootMethod
+      - proxyMethod
+      - categoriesOptionsMethod
     Properties:
       RestApiId: !Ref apiGateway
       StageName: default

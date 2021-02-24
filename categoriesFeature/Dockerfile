@@ -1,9 +1,17 @@
 
 FROM public.ecr.aws/lambda/nodejs:14
 
-COPY CategoriesLambda.ts CategoriesHelpers.ts package.json tsconfig.json /var/task/
+COPY ./categoriesFeature/*.ts package.json tsconfig.json /var/task/
 
-ENV PGUSER=calibermobile PGHOST=calibermobile.cvtq9j4axrge.us-east-1.rds.amazonaws.com PGPASSWORD=C3EsJGj6kcRtnAN PGDATABASE=calibermobile PGPORT=5432
+ARG v1
+ARG v2
+ARG v3
+ARG v4
+
+ENV PGUSER=${v1}
+ENV PGHOST=${v2}
+ENV PGPASSWORD=${v3}
+ENV PGDATABASE=${v4}
 
 RUN npm install
 
@@ -11,4 +19,4 @@ RUN npx tsc
 
 RUN ls
 
-CMD ["build/categoriesLambda.handler"]
+CMD ["categoriesLambda.handler"]
