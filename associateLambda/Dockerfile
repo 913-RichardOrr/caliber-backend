@@ -9,10 +9,13 @@ FROM public.ecr.aws/lambda/nodejs:12
 
 # The Lambda base image expects your code to be placed in the /var/task/ folder
 COPY package.json tsconfig.json /var/task/
-COPY ./associateLambda/*.ts /var/task/
 
 # Install npm dependencies
 RUN npm install
+
+# Do this after the npm install to save time on future builds
+COPY ./associateLambda/*.ts /var/task/
+
 # Transpile
 RUN npx tsc
 

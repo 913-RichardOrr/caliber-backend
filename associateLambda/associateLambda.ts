@@ -18,9 +18,8 @@ export async function handler(event: AssociateEvent): Promise<any> {
       const associate = await getAssociate(event.path);
       if (associate) {
         return createResponse(JSON.stringify(associate), 200);
-      } else {
-        return createResponse('', 404);
       }
+      return createResponse('', 404);
     }
     case ('PUT'): {
       if (event.body) {
@@ -28,9 +27,8 @@ export async function handler(event: AssociateEvent): Promise<any> {
         if (associate) {
           return createResponse(JSON.stringify(associate), 200);
         }
-      } else {
-        return createResponse('', 404);
       }
+      return createResponse('', 404);
     }
     case ('PATCH'): {
       if (event.body) {
@@ -38,13 +36,12 @@ export async function handler(event: AssociateEvent): Promise<any> {
         if (associate) {
           return createResponse(JSON.stringify(associate), 200);
         }
-      } else {
-        return createResponse('', 404);
       }
+      return createResponse('', 404);
     }
     default: {
       console.log("Something went wrong in handler");
-      break;
+      return createResponse('', 404);
     }
   }
 };

@@ -21,9 +21,9 @@ export async function getAssociate(path: string): Promise<QCFeedback | null> {
     await client.connect();
     const query = `select batchid, weeknumber, associateid, notecontent, technicalstatus from qcnotes where batchid = $1::text and weeknumber = $2::integer and associateid = $3::text`;
     const res = await client.query(query, [
-    associateInfo.batchId,
-    associateInfo.weekNumber,
-    associateInfo.associateId
+      associateInfo.batchId,
+      associateInfo.weekNumber,
+      associateInfo.associateId
     ]);
     return res.rows[0] as QCFeedback;
   } catch (err) {
@@ -56,19 +56,25 @@ export async function putAssociate(
     return null;
   } else {
     const client = new Client();
-    await client.connect();
-    const res = await client.query(
-      'insert into qcnotes(batchid, weeknumber, associateid, notecontent, technicalstatus) values ($1::text, $2::integer, $3::integer, $4::text, $5::integer) returning *',
-      [
-        response.batchId,
-        response.weekNumber,
-        response.associateId,
-        response.noteContent,
-        response.technicalStatus,
-      ]
-    );
-    client.end();
-    return response;
+    try {
+      await client.connect();
+      const res = await client.query(
+        'insert into qcnotes(batchid, weeknumber, associateid, notecontent, technicalstatus) values ($1::text, $2::integer, $3::integer, $4::text, $5::integer) returning *',
+        [
+          response.batchId,
+          response.weekNumber,
+          response.associateId,
+          response.noteContent,
+          response.technicalStatus,
+        ]
+      );
+      return response;
+    } catch (err) {
+      console.log(err);
+      return null;
+    } finally {
+      client.end();
+    }
   }
 }
 
