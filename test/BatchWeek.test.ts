@@ -21,7 +21,7 @@ let testEvent = {
 
 describe('batch-week test for handler', () => {
 
-  test('handler routes correctly to getWeek function', async () => {
+  test.only('handler routes correctly to getWeek function', async () => {
     testEvent = {
       path: '/batches/1/weeks/1',
       body: '1',

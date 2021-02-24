@@ -6,7 +6,7 @@
 
 import GetWeeksByBatchId from './GetWeeksByBatchId';
 import AddWeekLambda from './AddWeekLambda';
-import AddOverallNoteLambda from './AddOverallNotLambda';
+import AddOverallNoteLambda from './AddOverallNoteLambda';
 
 export interface BatchWeekEvent {
     path: string;
