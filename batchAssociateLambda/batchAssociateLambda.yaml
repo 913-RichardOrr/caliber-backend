@@ -1,0 +1,13 @@
+# Make the associate lambda from an existingimage
+AWSTemplateFormatVersion: 2010-09-09
+Description: lambda for associate lambda
+Resources:
+  AssociateLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        ImageUri: !Join ["/",[!Join [".",[!Sub "${AWS::AccountId}", "dkr", "ecr", !Sub "${AWS::Region}", "amazonaws", "com"]], "associatelambda:latest"]]
+      Role: arn:aws:iam::169748077841:role/service-role/getApprovedBooks-role-635ptj5r
+      # Role: arn:aws:iam::855430746673:role/caliber-mobile-cf
+      FunctionName: "assoc"
+      PackageType: "Image"
