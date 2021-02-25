@@ -6,7 +6,7 @@ export default async function AddWeekLambda(event:any) {
     client.connect();
 
     const query = `insert into qcweeks (weeknumber, note, overallstatus, batchid)
-                    values ($2::number, $3::text, $4::STATUS, $5::number)`;
+                    values ($1::int, $2::text, $3::STATUS, $4::text)`;
     const values = [week.weeknumber, week.note, week.overallstatus, week.batchid];
 
     let response = await client.query(query, values);

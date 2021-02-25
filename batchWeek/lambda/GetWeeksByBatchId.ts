@@ -7,7 +7,11 @@ import { Client } from 'pg';
  * @param {string} batchId - The batch's id we want to get the weeks for (this id comes from the mock api)
  * @returns {object} An HTTP resopnse with an array of weeks in the body
  */
-export default async function getWeeksByBatchId(batchId: string) {
+export async function handler(event: any) {
+    let eventSubstr = event.path.split('/batches/')[1];
+    // contains batchId
+    let sub = eventSubstr.split('/');
+    let batchId : string = sub[0];
     const client = new Client();
     try {
         await client.connect();
