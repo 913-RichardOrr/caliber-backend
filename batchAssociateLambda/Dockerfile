@@ -35,4 +35,4 @@ ENV PGPORT=5432
 RUN ls
 
 # Tell lambda what to call
-CMD ["associateLambda.handler"]
+CMD ["batchAssociateLambda.handler"]
