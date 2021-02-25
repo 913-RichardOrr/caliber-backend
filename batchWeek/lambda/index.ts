@@ -29,13 +29,13 @@ export const handler = async (event: BatchWeekEvent) => {
         // check if HTTP method is POST
         } else if (event.method === 'POST'){
             return AddWeekLambda(event);
-        } 
+        }
     } else if (sub.length === 3) {
         // check if HTTP method is POST
         if(event.method === 'POST'){
             return UpdateFeedbackLambda(event);
         }
     }
-    
+
     return {statusCode: 400};
 }
