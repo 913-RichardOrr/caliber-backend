@@ -2,6 +2,7 @@ import * as batchweek from '../batchWeek/lambda/index';
 import getWeeksByBatchId from '../batchWeek/lambda/GetWeeksByBatchId';
 import AddOverallNote from '../batchWeek/lambda/AddOverallNoteLambda';
 import { Client } from 'pg';
+import AddWeekLambda from '../batchWeek/lambda/AddWeekLambda';
 
 const mockConnect = jest.fn();
 const mockQuery = jest.fn(() => {
@@ -31,9 +32,9 @@ describe('batch-week test for handler', () => {
 
     await batchweek.handler(testEvent);
 
-    let testAddNewWeek = batchweek.addNewWeek;
-    let testGetWeek = batchweek.getWeek;
-    let testAddNote = AddOverallNote(testEvent);
+    let testAddNewWeek = AddWeekLambda;
+    let testGetWeek = getWeeksByBatchId;
+    let testAddNote = AddOverallNote;
 
     testAddNewWeek = jest.fn().mockImplementation();
     testGetWeek = jest.fn().mockImplementation();
@@ -53,12 +54,14 @@ describe('batch-week test for handler', () => {
 
     await batchweek.handler(testEvent);
 
-    let testAddNewWeek = batchweek.addNewWeek;
-    let testGetWeek = batchweek.getWeek;
-    let testAddNote = batchweek.addNote;
+    let testAddNewWeek = AddWeekLambda;
+    let testGetWeek = getWeeksByBatchId;
+    let testAddNote = AddOverallNote;
+
     testAddNewWeek = jest.fn().mockImplementation();
     testGetWeek = jest.fn().mockImplementation();
     testAddNote = jest.fn().mockImplementation();
+
     expect(testAddNewWeek).toHaveBeenCalledTimes(1);
     expect(testAddNote).toHaveBeenCalledTimes(0);
     expect(testGetWeek).toHaveBeenCalledTimes(0);
@@ -73,12 +76,14 @@ describe('batch-week test for handler', () => {
 
     await batchweek.handler(testEvent);
 
-    let testAddNewWeek = batchweek.addNewWeek;
-    let testGetWeek = batchweek.getWeek;
-    let testAddNote = batchweek.addNote;
+    let testAddNewWeek = AddWeekLambda;
+    let testGetWeek = getWeeksByBatchId;
+    let testAddNote = AddOverallNote;
+
     testAddNewWeek = jest.fn().mockImplementation();
     testGetWeek = jest.fn().mockImplementation();
     testAddNote = jest.fn().mockImplementation();
+    
     expect(testAddNewWeek).toHaveBeenCalledTimes(0);
     expect(testAddNote).toHaveBeenCalledTimes(1);
     expect(testGetWeek).toHaveBeenCalledTimes(0);
@@ -143,9 +148,19 @@ describe('batch-week test for addOverallNote', ()=> {
     expect(mockEnd).toHaveBeenCalled();
   });
 
+  test('that addOverallNote returns a proper HTTP response', () => {
+    let result = AddOverallNote(testEvent);
+    expect(result).toBeTruthy();
+    if(result) {
+      expect(result).toHaveProperty('statusCode');
+    }
+  });
+
   test('that addOverallNote has been called', () => {
-    AddOverallNote(testEvent.body);
-    expect(AddOverallNote).toBeCalledTimes(1);
+    let mockAddnote = AddOverallNote;
+    mockAddnote = jest.fn().mockImplementation();
+
+    expect(mockAddnote).toBeCalledTimes(1);
   });
 });
 
