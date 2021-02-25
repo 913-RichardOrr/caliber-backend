@@ -1,8 +1,4 @@
-<<<<<<< HEAD:test/BatchWeek.test.ts
-import * as batchweek from '../batchWeek/lambda/index';
-=======
 import * as batchweek from '../batchWeek/index';
->>>>>>> e039ce54ab66a80629ca33e7312eb6db5b467746:batchWeek/test/index.test.ts
 import getWeeksByBatchId from '../batchWeek/lambda/GetWeeksByBatchId';
 import AddOverallNote from '../batchWeek/lambda/AddOverallNoteLambda';
 import { Client } from 'pg';
