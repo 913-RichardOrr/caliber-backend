@@ -1,0 +1,148 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: CloudFormation template for the entire AWS API Gateway Stack
+Resources:
+  # API Gateway
+  apiGateway:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+        Description: Root endpoint for the Caliber Mobile application
+        Name: caliber-mobile-api-cf
+  # categoriesResource - /categories
+  categoriesResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      RestApiId: !Ref apiGateway
+      ParentId: !GetAtt apiGateway.RootResourceId
+      PathPart: categories
+  # CORS for /categories
+  categoriesOptionsMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      RestApiId:
+        Ref: apiGateway
+      ResourceId:
+        Ref: categoriesResource
+      HttpMethod: OPTIONS
+      Integration:
+        IntegrationResponses:
+        - StatusCode: 200
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+            method.response.header.Access-Control-Allow-Methods: "'GET,POST,OPTIONS'"
+            method.response.header.Access-Control-Allow-Origin: "'*'"
+          ResponseTemplates:
+            application/json: ''
+        PassthroughBehavior: WHEN_NO_MATCH
+        RequestTemplates:
+          application/json: '{"statusCode": 200}'
+        Type: MOCK
+      MethodResponses:
+      - StatusCode: 200
+        ResponseModels:
+          application/json: 'Empty'
+        ResponseParameters:
+          method.response.header.Access-Control-Allow-Headers: false
+          method.response.header.Access-Control-Allow-Methods: false
+          method.response.header.Access-Control-Allow-Origin: false
+  # GET method for /categories
+  getCategoriesMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: GET
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Sub
+          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
+          - lambdaArn: arn:aws:lambda:us-east-1:640280721521:function:categoriesLambda
+      ResourceId: !Ref categoriesResource
+      RestApiId: !Ref apiGateway
+  # POST method for /categories
+  addCategoryMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: POST
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Sub
+          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
+          - lambdaArn: arn:aws:lambda:us-east-1:640280721521:function:categoriesLambda
+      ResourceId: !Ref categoriesResource
+      RestApiId: !Ref apiGateway
+  # API Gateway Resource - /categories/{categoryId}
+  categoryIdResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      RestApiId: !Ref apiGateway
+      ParentId: !Ref categoriesResource
+      PathPart: '{proxy+}'
+  # CORS for /categories/{categories}
+  categoryOptionsMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      RestApiId:
+        Ref: apiGateway
+      ResourceId:
+        Ref: categoryIdResource
+      HttpMethod: OPTIONS
+      Integration:
+        IntegrationResponses:
+        - StatusCode: 200
+          ResponseParameters:
+            method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+            method.response.header.Access-Control-Allow-Methods: "'PUT,OPTIONS'"
+            method.response.header.Access-Control-Allow-Origin: "'*'"
+          ResponseTemplates:
+            application/json: ''
+        PassthroughBehavior: WHEN_NO_MATCH
+        RequestTemplates:
+          application/json: '{"statusCode": 200}'
+        Type: MOCK
+      MethodResponses:
+      - StatusCode: 200
+        ResponseModels:
+          application/json: 'Empty'
+        ResponseParameters:
+          method.response.header.Access-Control-Allow-Headers: false
+          method.response.header.Access-Control-Allow-Methods: false
+          method.response.header.Access-Control-Allow-Origin: false
+  # PUT method for /categories/{categoryId}
+  updateCategoryMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: PUT
+      ResourceId: !Ref categoryIdResource
+      RestApiId: !Ref apiGateway
+      RequestParameters:
+        method.request.path.proxy: true
+      Integration:
+        CacheKeyParameters:
+          - 'method.request.path.proxy'
+        RequestParameters:
+          integration.request.path.proxy: 'method.request.path.proxy'
+        IntegrationHttpMethod: ANY
+        Type: HTTP_PROXY
+        Uri: !Sub
+          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
+          - lambdaArn: arn:aws:lambda:us-east-1:640280721521:function:categoriesLambda
+        PassthroughBehavior: WHEN_NO_MATCH
+        IntegrationResponses:
+          - StatusCode: 200
+  apiGatewayDefaultDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn:
+      - getCategoriesMethod
+      - addCategoryMethod
+      - updateCategoryMethod
+    Properties:
+      RestApiId: !Ref apiGateway
+      StageName: default
+Outputs:
+  apiGatewayInvokeUrl:
+    Value: !Sub https://${apiGateway}.execute-api.${AWS::Region}.amazonaws.com/default

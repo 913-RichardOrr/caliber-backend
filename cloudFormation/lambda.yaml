@@ -1,0 +1,25 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: This is the categoriesLambda funtion test stack
+Resources:
+  categoriesLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        ImageUri: 640280721521.dkr.ecr.us-east-1.amazonaws.com/categories-lambda:latest
+      Description: lambda function for GETting POSTing and PUTing categories
+      FunctionName: categoriesLambda
+      PackageType: Image
+      Role: #????
+      VpcConfig:
+        SecurityGroupIds: 
+          - sg-67ed824f
+        SubnetIds:
+          - subnet-75cb6738
+          - subnet-956972bb
+          - subnet-206eb92e
+          - subnet-4b052575
+          - subnet-31ddc056
+          - subnet-65a2bc39
+Outputs:
+  categoriesLambdaArn:
+    Value: !GetAtt categoriesLambda.Arn

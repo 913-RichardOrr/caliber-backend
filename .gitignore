@@ -6,5 +6,6 @@
 **/.env
 **/.eslintcache
 .vscode/
+**/*.js
 *.csv
 **/*.js
