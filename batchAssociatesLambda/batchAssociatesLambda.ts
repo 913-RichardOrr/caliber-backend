@@ -1,5 +1,5 @@
 import createResponse from './response';
-import { getAssociates } from './batchAssociateHelpers'
+import { getAssociates } from './batchAssociatesHelper'
 
 export interface AssociateEvent {
   path: string;
