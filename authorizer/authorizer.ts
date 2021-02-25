@@ -1,7 +1,7 @@
 'user strict';
 
 const admin = require('firebase-admin');
-const serviceAccount = require('serviceAccountKey.json');
+const serviceAccount = require('firebase-service-account-DO_NOT_PUSH.json');
 const helper = require('./helper.js');
 
 interface Role {

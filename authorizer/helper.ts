@@ -26,7 +26,7 @@ module.exports = (arn: string, roles: Role) => {
             }
         }
         // /batches
-    } else if (pathParts[3] == 'batches') {
+    } else if (pathParts[3].includes('batches')) {
         if (method === 'GET' && (roles.qc || roles.trainer)) {
             status = 'Allow';
         }
