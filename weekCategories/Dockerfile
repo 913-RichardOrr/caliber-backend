@@ -8,8 +8,10 @@ FROM public.ecr.aws/lambda/nodejs:12
 # also available from amazon/aws-lambda-nodejs:12 on docker hub
 
 # The Lambda base image expects your code to be placed in the /var/task/ folder
+
+
 COPY ../package.json ../tsconfig.json /var/task/
-COPY ./WeekCategoriesLambda/*.ts /var/task/
+COPY ./weekCategories/*.ts /var/task/
 
 # Install npm dependencies
 RUN npm install

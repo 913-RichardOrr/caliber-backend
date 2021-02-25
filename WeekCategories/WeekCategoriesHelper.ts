@@ -1,4 +1,4 @@
-import createResponse from "../response";
+import createResponse from "./response";
 
 
 interface categoryParams{
