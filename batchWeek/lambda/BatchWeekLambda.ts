@@ -9,8 +9,8 @@ export async function addWeek(event:any) {
     const week = JSON.parse(event.body);
     client.connect();
 
-    const query = `insert into qc_week (id, category_id, batch_id, week)
-                    values ($1::number, $2::number, $3::text, $4::number)`;
+    const query = `insert into qcweeks (weeknumber, note, overallstatus, batchid)
+                    values ($1::number, $2::text, $3, $4::text)`;
     const values = [week.id, week.category_id, week.batch_id, week.week];
 
     let response = await client.query(query, values);

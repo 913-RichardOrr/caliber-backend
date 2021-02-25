@@ -10,9 +10,9 @@ import { Client } from 'pg';
 export default async function getWeeksByBatchId(batchId: string) {
     const client = new Client();
     try {
-        await client.connect();
-        const query = 'select qcWeekId, weekNumber, note, overallStatus, batchId from qcWeeks where batchId = $1::text';
-        const result = await client.query(query, [batchId]);
+        await client.connect(); 
+        const query = `select qcweekid, weeknumber, note, overallstatus, batchid from qcweeks where batchid = $1::text`;
+        const result = await client.query(query, [batchId]);   // batchId  the argument of function
 
         const headers = {
             "Access-Control-Allow-Headers" : "Content-Type",
