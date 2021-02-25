@@ -2,11 +2,11 @@
 //      GET (Gets all of the week objects for a given batchId in the qcWeeks table in our postgreSQL)
 //      POST (add a new week to this batch)
 // qc/batches/{batchId}/weeks/{weekId}
-//      PUT (add an overall note and update overall status for the batch)
+//      PUT (update overall note and update overall status for the batch)
 
 import GetWeeksByBatchId from './GetWeeksByBatchId';
 import AddWeekLambda from './AddWeekLambda';
-import AddOverallNoteLambda from './AddOverallNoteLambda';
+import UpdateFeedbackLambda from './UpdateFeedbackLambda';
 
 export interface BatchWeekEvent {
     path: string;
@@ -33,7 +33,7 @@ export const handler = async (event: BatchWeekEvent) => {
     } else if (sub.length === 3) {
         // check if HTTP method is POST
         if(event.method === 'POST'){
-            return AddOverallNoteLambda(event);
+            return UpdateFeedbackLambda(event);
         }
     }
     
