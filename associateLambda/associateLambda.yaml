@@ -8,17 +8,6 @@ Resources:
       Code:
         ImageUri: !Join ["/",[!Join [".",[!Sub "${AWS::AccountId}", "dkr", "ecr", !Sub "${AWS::Region}", "amazonaws", "com"]], "associatelambda:latest"]]
       Role: arn:aws:iam::169748077841:role/service-role/getApprovedBooks-role-635ptj5r
-      # arn:aws:iam::855430746673:role/caliber-mobile-cf
+      # Role: arn:aws:iam::855430746673:role/caliber-mobile-cf
       FunctionName: "assoc"
       PackageType: "Image"
-# VpcConfig:
-#   SecurityGroupIds:
-#     - sg-67ed824f
-#   SubnetIds:
-#     - subnet-75cb6738
-#     - subnet-956972bb
-# Outputs:
-#   AssociateECRArn:
-#     Value: !GetAtt AssociateECR.Arn
-#     Export:
-#       Name: AssociateECRArn
