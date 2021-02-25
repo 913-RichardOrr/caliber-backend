@@ -1,5 +1,5 @@
 import createResponse from "../response";
-import { AllBatchInfo, getAllBatchesLambda } from "./getAllBatchesLambda";
+import { getAllBatchesLambda } from "./getAllBatchesLambda";
 import { MyEvent, BatchInfo, handler as getBatchesByTrainer } from "./getBatchesLambda";
 import { getValidYearsLambda } from "./getValidYearsLambda";
 
@@ -22,7 +22,7 @@ import { getValidYearsLambda } from "./getValidYearsLambda";
 // }
 
 export default async function handler(event: MyEvent) {
-  let batchInfo: BatchInfo[]|AllBatchInfo[] = [];
+  let batchInfo: BatchInfo[] = [];
   let validYears: string;
   if (!event.queryStringParameters.trainerEmail) {
     let batchInfoResponse = await getAllBatchesLambda();
@@ -30,9 +30,11 @@ export default async function handler(event: MyEvent) {
 		batchInfo = batchInfoResponse
 	}
   } else {
-    batchInfo = JSON.parse(await (await getBatchesByTrainer(event)).body);
+		let bodyTrainer = await getBatchesByTrainer(event)
+		batchInfo = JSON.parse(bodyTrainer.body);
   }
-  validYears = JSON.parse(await (await getValidYearsLambda()).body);
+  let bodyYears = await getValidYearsLambda()
+  validYears = JSON.parse(bodyYears.body);
   let comboBody = { validYears: validYears, batches: batchInfo };
   return createResponse(comboBody, 200);
 }

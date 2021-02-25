@@ -16,6 +16,9 @@ export interface BatchInfo {
   skill: string;
   location: string;
   type: string;
+  trainerEmail: string;
+	trainerFirstName: string;
+	trainerLastName: string;
 }
 
 export const handler = async (event: MyEvent) => {
@@ -39,7 +42,7 @@ export const handler = async (event: MyEvent) => {
   const batchIDs = await getBatchIDs(trainerEmail);
   let batchInfo: BatchInfo[] = [];
   if (batchIDs.data) {
-    batchInfo = await getBatchesLambda(batchIDs.data);
+    batchInfo = await getBatchesLambda(batchIDs.data, trainerEmail);
   }
   resp.body = JSON.stringify(batchInfo);
   return resp;
@@ -54,7 +57,7 @@ async function getBatchIDs(trainerEmail: string): Promise<any | null> {
     .catch(() => null);
 }
 
-export async function getBatchesLambda(batchIDs: string[]) {
+export async function getBatchesLambda(batchIDs: string[], trainerEmail: string) {
   let batchInfo: BatchInfo[] = [];
 
   for (let batchID of batchIDs) {
@@ -69,6 +72,9 @@ export async function getBatchesLambda(batchIDs: string[]) {
         skill: res.data.skill,
         location: res.data.location,
         type: res.data.type,
+        trainerEmail: trainerEmail,
+        trainerFirstName: '',
+        trainerLastName: ''
       };
       batchInfo.push(batchData);
     });

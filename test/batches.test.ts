@@ -128,7 +128,9 @@ describe('Batches Test Suite', () => {
 				public skill: string, // "Java React",
 				public location: string, // "New York",
 				public type: string, // "Revature"
-				public trainer: string // "Richard Orr"
+				public trainerEmail: string, // "sample@mock.com"
+				public trainerFirstName: string, // "Richard"
+				public trainerLastName: string // "Orr"
 			) {
 				this.batchId = batchId;
 				this.name = name;
@@ -137,7 +139,9 @@ describe('Batches Test Suite', () => {
 				this.skill = skill;
 				this.location = location;
 				this.type = type;
-				this.trainer = trainer;
+				this.trainerEmail = trainerEmail;
+				this.trainerFirstName = trainerFirstName;
+				this.trainerLastName = trainerLastName;
 			}
 		}
 		const batch1 = new BatchProjectionWTrainer(
@@ -148,6 +152,8 @@ describe('Batches Test Suite', () => {
 			'React',
 			'New York',
 			'Revature',
+			'',
+			'',
 			''
 		);
 		const batch2 = new BatchProjectionWTrainer(
@@ -158,6 +164,8 @@ describe('Batches Test Suite', () => {
 			'COBOL',
 			'Tampa',
 			'Revature',
+			'',
+			'',
 			''
 		);
 		const batch3 = new BatchProjectionWTrainer(
@@ -168,6 +176,8 @@ describe('Batches Test Suite', () => {
 			'Java',
 			'West Virginia',
 			'Corporate',
+			'',
+			'',
 			''
 		);
 		const batches = [batch1, batch2, batch3];
@@ -178,13 +188,7 @@ describe('Batches Test Suite', () => {
 			return Promise.resolve({ data: batches });
 		});
 
-		let allBatchesEvent: AllBatchesEvent = {
-			queryStringParameters: {
-				year: 2021,
-				quarter: 1,
-			},
-		};
-		await allBatchesHandler(allBatchesEvent).then(
+		await allBatchesHandler().then(
 			(data: any) => (returnValues = data)
 		);
 		// test to make sure that the axios requests have been called the number of batches plus one
@@ -195,7 +199,7 @@ describe('Batches Test Suite', () => {
 		// test to make sure that all of the requests are called with the caliber api
 
 		expect(axios.get).toHaveBeenCalledWith(
-			`${caliberURI}?year=2021&quarter=1`,
+			`${caliberURI}`,
 			{ httpsAgent: allBatchesAgent }
 		);
 	});
