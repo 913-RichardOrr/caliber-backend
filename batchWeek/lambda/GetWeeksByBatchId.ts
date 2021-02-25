@@ -11,7 +11,7 @@ export default async function getWeeksByBatchId(batchId: string) {
     const client = new Client();
     try {
         await client.connect();
-        const query = 'select qcWeekId, weekNumber, note, overallStatus, batchId from qcWeeks where batchId = $1::text';
+        const query = 'select qcweekid, weeknumber, note, overallstatus, batchid from qcweeks where batchid = $1::text';
         const result = await client.query(query, [batchId]);
 
         const headers = {
