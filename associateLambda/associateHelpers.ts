@@ -13,17 +13,17 @@ export interface AssociateEvent {
 export async function getAssociate(path: string): Promise<QCFeedback | null> {
   let associateInfo = parsePath(path);
   //if any of these params are undefined, return null and do not call anything
-  if (!(associateInfo.batchId && associateInfo.weekNumber && associateInfo.associateId)) {
+  if (!(associateInfo.batchid && associateInfo.weeknumber && associateInfo.associateid)) {
     return null;
   }
   const client = new Client();
   try {
     await client.connect();
-    const query = `select "batchId", "weekNumber", "associateId", "noteContent", "technicalStatus" from "qcNotes" where "batchId" = $1::text && "weekNumber" = $2::integer && "associateId" = $3::text`;
+    const query = `select batchid, weeknumber, associateid, notecontent, technicalstatus from qcnotes where batchid = $1::text and weeknumber = $2::integer and associateid = $3::text`;
     const res = await client.query(query, [
-    associateInfo.batchId,
-    associateInfo.weekNumber,
-    associateInfo.associateId
+      associateInfo.batchid,
+      associateInfo.weeknumber,
+      associateInfo.associateid
     ]);
     return res.rows[0] as QCFeedback;
   } catch (err) {
@@ -45,30 +45,36 @@ export async function putAssociate(
   let bodyObject = JSON.parse(body);
   let pathObject = parsePath(path);
   let response = {
-    batchId: pathObject.batchId,
-    weekNumber: pathObject.weekNumber,
-    associateId: pathObject.associateId,
-    noteContent: bodyObject.noteContent,
-    technicalStatus: bodyObject.technicalStatus,
+    batchid: pathObject.batchid,
+    weeknumber: pathObject.weeknumber,
+    associateid: pathObject.associateid,
+    notecontent: bodyObject.notecontent,
+    technicalstatus: bodyObject.technicalstatus,
   };
 
-  if (response.batchId === undefined) {
+  if (response.batchid === undefined) {
     return null;
   } else {
     const client = new Client();
-    await client.connect();
-    const res = await client.query(
-      'insert into "qcNotes"("batchId", "weekNumber", "associateId", "noteContent", "technicalStatus") values ($1::text, $2::integer, $3::integer, $4::text, $5::integer) returning *',
-      [
-        response.batchId,
-        response.weekNumber,
-        response.associateId,
-        response.noteContent,
-        response.technicalStatus,
-      ]
-    );
-    client.end();
-    return response;
+    try {
+      await client.connect();
+      const res = await client.query(
+        'insert into qcnotes(batchid, weeknumber, associateid, notecontent, technicalstatus) values ($1::text, $2::integer, $3::integer, $4::text, $5::integer) returning *',
+        [
+          response.batchid,
+          response.weeknumber,
+          response.associateid,
+          response.notecontent,
+          response.technicalstatus,
+        ]
+      );
+      return response;
+    } catch (err) {
+      console.log(err);
+      return null;
+    } finally {
+      client.end();
+    }
   }
 }
 
@@ -85,32 +91,40 @@ export const patchAssociate = async (
   const client = new Client();
 
   // Get the IDs from the path
-  const { batchId, weekNumber, associateId } = parsePath(path);
+  const { batchid, weeknumber, associateid } = parsePath(path);
 
-  // Figure out if we're editing the note or the technical status
-  let q: string;
-  let args = ['', associateId, weekNumber, batchId];
+  // Figure out how we're updating the note and/or the technical status
   const obj = JSON.parse(updateObject);
-  if (obj.noteContent) {
-    q =
-      'update "qcNotes" set "noteContent" = $1::text where "associateId" = $2::text and "weekNumber" = $3::integer and "batchId" = $4::text';
-    args[0] = obj.noteContent;
-  } else if (obj.technicalStatus) {
-    q =
-      'update "qcNotes" set "technicalStatus" = $1::integer where "associateId" = $2::text and "weekNumber" = $3::integer and "batchId" = $4::text';
-    args[0] = obj.technicalStatus;
-  } else {
+  
+  let q_note = 'update qcnotes set notecontent = $1::text where associateid = $2::text and weeknumber = $3::integer and batchid = $4::text';
+  let args_note = [obj.notecontent || '', associateid, weeknumber, batchid];
+  
+  let q_status = 'update qcnotes set technicalstatus = $1::integer where associateid = $2::text and weeknumber = $3::integer and batchid = $4::text';
+  let args_status = [obj.technicalstatus || 0, associateid, weeknumber, batchid];
+
+  // This function lets us update either the notecontent or the technicalstatus of an associate
+  // If neither of these is present in the object, return null
+  if (!obj.notecontent && !obj.technicalstatus) {
     return null;
   }
 
   // Actually update the table, return updated object if successful (or null if not)
   try {
     await client.connect();
-    await client.query(q, args);
 
+    // Update note?
+    if(obj.notecontent) {
+      await client.query(q_note, args_note);
+    }
+
+    if(obj.technicalstatus) {
+      await client.query(q_status, args_status);
+    }
+
+    // Return the updated object, so we can verify success
     const q_check =
-      'select "batchId", "weekNumber", "associateId", "noteContent", "technicalStatus" from "qcNotes" where "associateId" = $2::text and "weekNumber" = $3::integer and "batchId" = $4::text';
-    const res = await client.query(q_check, args);
+      'select batchid, weeknumber, associateid, notecontent, technicalstatus from qcnotes where associateid = $2::text and weeknumber = $3::integer and batchid = $4::text';
+    const res = await client.query(q_check, args_note);
 
     return res.rows[0] as QCFeedback;
   } catch (err) {
@@ -124,16 +138,16 @@ export const patchAssociate = async (
 
 function parsePath(path: string): any {
   const parts = path.split('/');
-  const associateId = parts[parts.length - 1];
-  const weekNumber = Number(parts[parts.length - 3]);
-  const batchId = parts[parts.length - 5];
-  return { batchId: batchId, weekNumber: weekNumber, associateId: associateId };
+  const associateid = parts[parts.length - 1];
+  const weeknumber = Number(parts[parts.length - 3]);
+  const batchid = parts[parts.length - 5];
+  return { batchid: batchid, weeknumber: weeknumber, associateid: associateid };
 }
 
 export interface QCFeedback {
-  batchId: string;
-  weekNumber: number;
-  associateId: string;
-  noteContent: string;
-  technicalStatus: number;
+  batchid: string;
+  weeknumber: number;
+  associateid: string;
+  notecontent: string;
+  technicalstatus: number;
 }

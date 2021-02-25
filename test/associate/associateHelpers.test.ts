@@ -22,11 +22,11 @@ afterEach(() => {
 
 describe('tests for getAssociate', () => {
   const body: associateLambda.QCFeedback = {
-    batchId: 'YYMM-mmmDD-Stuff',
-    weekNumber: 1,
-    associateId: 'example@example.net',
-    noteContent: 'blablabla',
-    technicalStatus: 2,
+    batchid: 'YYMM-mmmDD-Stuff',
+    weeknumber: 1,
+    associateid: 'example@example.net',
+    notecontent: 'blablabla',
+    technicalstatus: 2,
   };
   const testPath =
     'blablabla/batches/YYMM-mmmDD-Stuff/weeks/1/associates/example@example.net';
@@ -43,12 +43,12 @@ describe('tests for getAssociate', () => {
       expect(mockConnect).toHaveBeenCalledTimes(1);
   
       expect(mockQuery.mock.calls[0][0]).toBe(
-        `select "batchId", "weekNumber", "associateId", "noteContent", "technicalStatus" from "qcNotes" where "batchId" = $1::text && "weekNumber" = $2::integer && "associateId" = $3::text`);
+        `select batchid, weeknumber, associateid, notecontent, technicalstatus from qcnotes where batchid = $1::text and weeknumber = $2::integer and associateid = $3::text`);
   
       expect(mockQuery.mock.calls[0][1]).toEqual([
-        body.batchId,
-        body.weekNumber,
-        body.associateId,
+        body.batchid,
+        body.weeknumber,
+        body.associateid,
       ]);
   
       expect(mockEnd).toHaveBeenCalledTimes(1);
@@ -89,7 +89,7 @@ describe('tests for getAssociate', () => {
 
 describe('tests for putAssociate', () => {
   let path = '/batches/batch1/weeks/1/associates/testAssociateId';
-  let body = '{"noteContent":"test note","technicalStatus":2}';
+  let body = '{"notecontent":"test note","technicalstatus":2}';
 
   test('that an incorrect input does not break anything', async () => {
     let response = await associateLambda.putAssociate(
@@ -104,12 +104,12 @@ describe('tests for putAssociate', () => {
 
   test('that putAssociate returns the object', async () => {
     let response = await associateLambda.putAssociate(body, path);
-    let expectedResponse = {
-      batchId: 'batch1',
-      weekNumber: 1,
-      associateId: 'testAssociateId',
-      noteContent: 'test note',
-      technicalStatus: 2,
+    let expectedResponse: associateLambda.QCFeedback = {
+      batchid: 'batch1',
+      weeknumber: 1,
+      associateid: 'testAssociateId',
+      notecontent: 'test note',
+      technicalstatus: 2,
     };
 
     expect(response).toStrictEqual(expectedResponse);
@@ -121,20 +121,20 @@ describe('tests for putAssociate', () => {
 
 describe('tests for patchAssociate', () => {
   const original: associateLambda.QCFeedback = {
-    batchId: 'YYMM-mmmDD-Stuff',
-    weekNumber: 1,
-    associateId: 'example@example.net',
-    noteContent: 'blablabla',
-    technicalStatus: 2,
+    batchid: 'YYMM-mmmDD-Stuff',
+    weeknumber: 1,
+    associateid: 'example@example.net',
+    notecontent: 'blablabla',
+    technicalstatus: 2,
   };
   const testPath =
     'blablabla/batches/YYMM-mmmDD-Stuff/weeks/1/associates/example@example.net';
 
   test("That updating an associate's note calls pg with correct query", async () => {
-    const testUpdateObject = { noteContent: 'Updated blablabla' };
+    const testUpdateObject = { notecontent: 'Updated blablabla' };
 
     const updatedObject = original;
-    updatedObject.noteContent = testUpdateObject.noteContent;
+    updatedObject.notecontent = testUpdateObject.notecontent;
 
     mockQuery
       .mockResolvedValueOnce(1)
@@ -150,35 +150,35 @@ describe('tests for patchAssociate', () => {
     expect(mockConnect).toHaveBeenCalledTimes(1);
 
     expect(mockQuery.mock.calls[0][0]).toBe(
-      'update "qcNotes" set "noteContent" = $1::text where "associateId" = $2::text and "weekNumber" = $3::integer and "batchId" = $4::text'
+      'update qcnotes set notecontent = $1::text where associateid = $2::text and weeknumber = $3::integer and batchid = $4::text'
     );
 
     expect(mockQuery.mock.calls[0][1]).toEqual([
-      testUpdateObject.noteContent,
-      original.associateId,
-      original.weekNumber,
-      original.batchId,
+      testUpdateObject.notecontent,
+      original.associateid,
+      original.weeknumber,
+      original.batchid,
     ]);
 
     expect(mockQuery.mock.calls[1][0]).toBe(
-      'select "batchId", "weekNumber", "associateId", "noteContent", "technicalStatus" from "qcNotes" where "associateId" = $2::text and "weekNumber" = $3::integer and "batchId" = $4::text'
+      'select batchid, weeknumber, associateid, notecontent, technicalstatus from qcnotes where associateid = $2::text and weeknumber = $3::integer and batchid = $4::text'
     );
 
     expect(mockQuery.mock.calls[1][1]).toEqual([
-      testUpdateObject.noteContent,
-      original.associateId,
-      original.weekNumber,
-      original.batchId,
+      testUpdateObject.notecontent,
+      original.associateid,
+      original.weeknumber,
+      original.batchid,
     ]);
 
     expect(mockEnd).toHaveBeenCalledTimes(1);
   });
 
   test("That updating an associate's status calls pg with correct query", async () => {
-    const testUpdateObject = { technicalStatus: 3 };
+    const testUpdateObject = { technicalstatus: 3 };
 
     const updatedObject = original;
-    updatedObject.technicalStatus = testUpdateObject.technicalStatus;
+    updatedObject.technicalstatus = testUpdateObject.technicalstatus;
 
     mockQuery
       .mockResolvedValueOnce(1)
@@ -193,25 +193,84 @@ describe('tests for patchAssociate', () => {
     expect(mockQuery).toHaveBeenCalledTimes(2);
 
     expect(mockQuery.mock.calls[0][0]).toBe(
-      'update "qcNotes" set "technicalStatus" = $1::integer where "associateId" = $2::text and "weekNumber" = $3::integer and "batchId" = $4::text'
+      'update qcnotes set technicalstatus = $1::integer where associateid = $2::text and weeknumber = $3::integer and batchid = $4::text'
     );
 
     expect(mockQuery.mock.calls[0][1]).toEqual([
-      testUpdateObject.technicalStatus,
-      original.associateId,
-      original.weekNumber,
-      original.batchId,
+      testUpdateObject.technicalstatus,
+      original.associateid,
+      original.weeknumber,
+      original.batchid,
     ]);
 
     expect(mockQuery.mock.calls[1][0]).toBe(
-      'select "batchId", "weekNumber", "associateId", "noteContent", "technicalStatus" from "qcNotes" where "associateId" = $2::text and "weekNumber" = $3::integer and "batchId" = $4::text'
+      'select batchid, weeknumber, associateid, notecontent, technicalstatus from qcnotes where associateid = $2::text and weeknumber = $3::integer and batchid = $4::text'
     );
 
     expect(mockQuery.mock.calls[1][1]).toEqual([
-      testUpdateObject.technicalStatus,
-      original.associateId,
-      original.weekNumber,
-      original.batchId,
+      '',
+      original.associateid,
+      original.weeknumber,
+      original.batchid,
+    ]);
+
+    expect(mockEnd).toHaveBeenCalledTimes(1);
+  });
+
+  test("That updating an associate's note AND status calls pg with correct query", async () => {
+    const testUpdateObject = {
+      notecontent: 'Updated blablabla',
+      technicalstatus: 3
+    };
+
+    const updatedObject = original;
+    updatedObject.notecontent = testUpdateObject.notecontent;
+    updatedObject.technicalstatus = testUpdateObject.technicalstatus;
+
+    mockQuery
+      .mockResolvedValueOnce(1)
+      .mockResolvedValueOnce(1)
+      .mockResolvedValueOnce({ rows: [updatedObject] });
+
+    const res = await associateLambda.patchAssociate(
+      testPath,
+      JSON.stringify(testUpdateObject)
+    );
+    expect(res).toBe(updatedObject);
+    expect(mockConnect).toHaveBeenCalledTimes(1);
+    expect(mockQuery).toHaveBeenCalledTimes(3);
+
+    expect(mockQuery.mock.calls[0][0]).toBe(
+      'update qcnotes set notecontent = $1::text where associateid = $2::text and weeknumber = $3::integer and batchid = $4::text'
+    );
+
+    expect(mockQuery.mock.calls[0][1]).toEqual([
+      testUpdateObject.notecontent,
+      original.associateid,
+      original.weeknumber,
+      original.batchid,
+    ]);
+
+    expect(mockQuery.mock.calls[1][0]).toBe(
+      'update qcnotes set technicalstatus = $1::integer where associateid = $2::text and weeknumber = $3::integer and batchid = $4::text'
+    );
+
+    expect(mockQuery.mock.calls[1][1]).toEqual([
+      testUpdateObject.technicalstatus,
+      original.associateid,
+      original.weeknumber,
+      original.batchid,
+    ]);
+
+    expect(mockQuery.mock.calls[2][0]).toBe(
+      'select batchid, weeknumber, associateid, notecontent, technicalstatus from qcnotes where associateid = $2::text and weeknumber = $3::integer and batchid = $4::text'
+    );
+
+    expect(mockQuery.mock.calls[2][1]).toEqual([
+      testUpdateObject.notecontent,
+      original.associateid,
+      original.weeknumber,
+      original.batchid,
     ]);
 
     expect(mockEnd).toHaveBeenCalledTimes(1);
