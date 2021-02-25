@@ -1,4 +1,4 @@
-import * as batchweek from '../batchWeek/index';
+import * as batchweek from '../batchWeek/lambda/index';
 import getWeeksByBatchId from '../batchWeek/lambda/GetWeeksByBatchId';
 import AddOverallNote from '../batchWeek/lambda/AddOverallNoteLambda';
 import { Client } from 'pg';
@@ -92,31 +92,31 @@ describe('batch-week test for handler', () => {
 
 describe('batch-week test for getWeeksByBatchId', ()=> {
   test('getWeeksByBatchId calls pg', async ()=> {
-    await getWeeksByBatchId('someBatchId');
-    expect(mockConnect).toHaveBeenCalledTimes(1);
-    expect(mockQuery).toHaveBeenCalledTimes(1);
-    expect(mockEnd).toHaveBeenCalledTimes(1);
-  });
+      await getWeeksByBatchId('someBatchId');
+      expect(mockConnect).toHaveBeenCalledTimes(1);
+      expect(mockQuery).toHaveBeenCalledTimes(1);
+      expect(mockEnd).toHaveBeenCalledTimes(1);
+    });
 
-  test('getWeeksByBatchId returns a proper HTTP response', async ()=> {
-    let result = await getWeeksByBatchId('someBatchId');
-    expect(result).toBeTruthy();
-    if(result) {
-      expect(result).toHaveProperty('statusCode');
-    }
-  });
-
-  test('getWeeksByBatchId returns the mocked query result in it\'s body', async ()=> {
-    let result = await getWeeksByBatchId('someBatchId');
-    expect(result).toBeTruthy();
-    if(result) {
-      expect(result).toHaveProperty('body');
-      if(result.body) {
-        expect(JSON.parse(result.body)).toHaveProperty('id');
+    test('getWeeksByBatchId returns a proper HTTP response', async ()=> {
+      let result = await getWeeksByBatchId('someBatchId');
+      expect(result).toBeTruthy();
+      if(result) {
+        expect(result).toHaveProperty('statusCode');
       }
-    }
+    });
+
+  test('getWeeksByBatchId returns the mocked query result in it's body', async ()=> {
+      let result = await getWeeksByBatchId('someBatchId');
+      expect(result).toBeTruthy();
+      if(result) {
+        expect(result).toHaveProperty('body');
+        if(result.body) {
+          expect(JSON.parse(result.body)).toHaveProperty('id');
+        }
+      }
+    });
   });
-});
 
 describe('batch-week test for addNewWeek', ()=> {
     testEvent.path = '/batches/1/weeks/1';
