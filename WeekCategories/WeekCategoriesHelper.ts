@@ -33,19 +33,19 @@ export const addCategory = async (client: any, params: categoryParams) => {
  * @param {getCategoryParams} params - the weekId that specifies which week we want categories for
  */
 export const getCategories = async (client: any, params: getCategoryParams) => {
-    let response;
 
     //we want the name of category and the id
-    response = await client.query(`select c.skill, c.categoryid from categories c join weekcategories w on c.categoryid = w.categoryid`, (err: any, res: any) => {
+    await client.query(`select c.skill, c.categoryid from categories c join weekcategories w on c.categoryid = w.categoryid`, (err: any, res: any) => {
         console.log(res.rows);
         client.end();
+        if (res) {
+            return createResponse(JSON.stringify(res.rows), 200);
+        } else {
+            return createResponse('', 400);
+        };
     });
 
-    if (response) {
-        return createResponse(JSON.stringify(response.rows), 200);
-    } else {
-        return createResponse('', 400);
-    };
+    
 }
 
 export const deleteCategory = async (client: any, params: categoryParams) => {
