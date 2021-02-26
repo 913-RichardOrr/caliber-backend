@@ -38,7 +38,7 @@ create table qcnotes
 (
 	qcnoteid serial primary key,
 	weeknumber int not null,
-	batchid text not null, 
+	batchid text not null,
 	associateid int not null,
 	technicalstatus STATUS,
 	notecontent text,
