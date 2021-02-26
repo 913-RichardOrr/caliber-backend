@@ -1,10 +1,8 @@
 // function for /categories GET method (query params for inactive ? active = false)
 export const getCategories = async (client: any, params?: any) => {
     if (params) {
-        const stringParams = JSON.stringify(params);
-        const active = (stringParams.substring(11, stringParams.length - 4));
         const q = 'select c.categoryid, c.skill, c.active from categories c where active=$1::boolean';
-        const args = [active];
+        const args = [params.active];
         const res = await client.query(q, args);
         await client.end();
         if (res) {
