@@ -46,11 +46,6 @@ function h(event) {
                 case 0:
                     Client = require('pg').Client;
                     client = new Client({
-                        user: 'calibermobile',
-                        host: 'calibermobile.cvtq9j4axrge.us-east-1.rds.amazonaws.com',
-                        database: 'calibermobile',
-                        password: '8Sy2MoFBRxY1Rt0prtuOh',
-                        port: 5432
                     });
                     return [4 /*yield*/, client.connect()];
                 case 1:
