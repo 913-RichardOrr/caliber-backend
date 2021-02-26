@@ -1,0 +1,65 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: CloudFormation template for the associate note AWS API Gateway Stack
+Parameters:
+  apiGatewayName:
+    Type: String
+    Default: caliber-mobile-api-cf
+  apiGatewayStageName:
+    Type: String
+    AllowedPattern: "[a-z0-9]+"
+    Default: testdeployment
+  apiGatewayHTTPMethod:
+    Type: String
+    Default: POST
+
+Resources:
+  # API Gateway
+  apiGateway:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Description: Root endpoint for the Caliber Mobile application
+      Name: caliber-mobile-api-cf
+      EndpointConfiguration:
+        Types:
+          - REGIONAL
+
+  apiGatewayRootMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: !Ref apiGatewayHTTPMethod
+      Integration:
+        IntegrationHttpMethod: GET
+        Type: AWS_PROXY
+        Uri: !Sub
+          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
+          - lambdaArn: !Sub arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:assoc
+      ResourceId: !GetAtt apiGateway.RootResourceId
+      RestApiId: !Ref apiGateway
+
+  apiGatewayDeployment:
+    Type: AWS::ApiGateway::Deployment
+    DependsOn:
+      - apiGatewayRootMethod
+    Properties:
+      RestApiId: !Ref apiGateway
+      StageName: !Ref apiGatewayStageName
+
+  lambdaApiGatewayInvoke:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Sub arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:assoc
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${apiGateway}/${apiGatewayStageName}/${apiGatewayHTTPMethod}/qc/batches/{batchId}/weeks/{week}/associates
+
+  # Create our log group
+  lambdaLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: /aws/lambda/assocwithgateway
+      RetentionInDays: 90
+
+Outputs:
+  apiGatewayInvokeUrl:
+    Value: !Sub https://${apiGateway}.execute-api.${AWS::Region}.amazonaws.com/testdeployment
