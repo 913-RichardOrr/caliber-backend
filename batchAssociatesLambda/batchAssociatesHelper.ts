@@ -1,4 +1,3 @@
-import { Client } from 'pg';
 import axios from "axios";
 
 export interface AssociateEvent {
