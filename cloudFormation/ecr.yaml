@@ -54,7 +54,7 @@ Resources:
   FireBaseECR:
     Type: AWS::ECR::Repository
     Properties:
-      RepositoryName: "firebase-qc-lambda"
+      RepositoryName: "firebase-lambda"
       LifecyclePolicy:
         LifecyclePolicyText: !Ref PolicyTemplate
 Outputs:

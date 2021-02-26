@@ -10,8 +10,18 @@ RUN npm install
 # Transpile
 RUN npx tsc
 
+ARG USER
+ARG HOST
+ARG PASSWORD
+ARG DATABASE
+
+ENV PGUSER=${USER}
+ENV PGHOST=${HOST}
+ENV PGPASSWORD=${PASSWORD}
+ENV PGDATABASE=${DATABASE}
 # check to see my file exists
 RUN ls
+
 
 # Tell lambda what to call
 CMD ["index.handler"]
