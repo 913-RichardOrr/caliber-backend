@@ -1,6 +1,6 @@
 # Run this Dockerfile from the caliber-backend directory
 # using the command:
-# docker build -t batchAssociatesECR -f batchAssociatesLambda/Dockerfile
+# docker build -t BatchAssociatesECR -f batchAssociatesLambda/Dockerfile
 #      --build-arg USER=<username> --build-arg HOST=<host> --build-arg PASSWORD=<password> --build-arg DATABASE=<database> .
 
 # Retrieiving a public image from Amazon's Elastic Container Registry
