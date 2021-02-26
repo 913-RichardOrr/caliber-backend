@@ -1,21 +1,17 @@
-interface responseType {
-    statusCode: number,
-    header: {},
-    body: {}
-}
-
 // function for /categories GET method (query params for inactive ? active = false)
 export const getCategories = async (client: any, params?: any) => {
     if (params) {
-        const q = 'select c.categoryId, c.skill, c.active from category c where active=$1::text';
-        const args = [params];
+        const stringParams = JSON.stringify(params);
+        const active = (stringParams.substring(11, stringParams.length - 4));
+        const q = 'select c.categoryid, c.skill, c.active from categories c where active=$1::boolean';
+        const args = [active];
         const res = await client.query(q, args);
         await client.end();
         if (res) {
             return {
                 statusCode: 200,
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Headers': 'application/json',
                     'Access-Control-Allow-Origin': '*',
                     'Access-Control-Allow-Methods': 'OPTIONS,POST,GET',
                 },
@@ -25,21 +21,22 @@ export const getCategories = async (client: any, params?: any) => {
             return {
                 statusCode: 400,
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Headers': 'application/json',
                     'Access-Control-Allow-Origin': '*',
                     'Access-Control-Allow-Methods': 'OPTIONS,POST,GET',
-                }
+                },
+                body: JSON.stringify(res)
             }
         }
     } else {
-        const q = 'select c.categoryId, c.skill, c.active from category c';
+        const q = 'select c.categoryid, c.skill, c.active from categories c';
         const res = await client.query(q);
         await client.end();
         if (res) {
             return {
                 statusCode: 200,
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Headers': 'application/json',
                     'Access-Control-Allow-Origin': '*',
                     'Access-Control-Allow-Methods': 'OPTIONS,POST,GET',
                 },
@@ -49,10 +46,11 @@ export const getCategories = async (client: any, params?: any) => {
             return {
                 statusCode: 400,
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Headers': 'application/json',
                     'Access-Control-Allow-Origin': '*',
-                    'Access-Control-Allow-Methods': 'OPTIONS,POST,GET'
-                }
+                    'Access-Control-Allow-Methods': 'OPTIONS,POST,GET',
+                },
+                body: JSON.stringify(res)
             }
         }
     }
@@ -60,16 +58,15 @@ export const getCategories = async (client: any, params?: any) => {
 
 // function for /categories POST method (add a new category)
 export const postCategories = async (client: any, event: any) => {
-    const q = 'insert into category (skill,active) values ($1,true) returning categoryid, skill, active';
-    // might need to change to event.body
-    const params = [event.body.skill];
+    const q = 'insert into categories (skill,active) values ($1::text,true) returning categoryid, skill, active';
+    const params = [event.body];
     const resp = await client.query(q, params);
     await client.end();
     if (resp) {
         return {
             statusCode: 200,
             headers: {
-                'Content-Type': 'application/json',
+                'Access-Control-Allow-Headers': 'Content-Type',
                 'Access-Control-Allow-Origin': '*',
                 'Access-Control-Allow-Methods': 'OPTIONS,POST,GET',
             },
@@ -79,7 +76,7 @@ export const postCategories = async (client: any, event: any) => {
         return {
             statusCode: 400,
             headers: {
-                'Content-Type': 'application/json',
+                'Access-Control-Allow-Headers': 'application/json',
                 'Access-Control-Allow-Origin': '*',
                 'Access-Control-Allow-Methods': 'OPTIONS,POST,GET'
             }
@@ -88,16 +85,16 @@ export const postCategories = async (client: any, event: any) => {
 }
 // function for /categories/{categoryId} PUT method (update a category to be active/inactive)
 export const putCategory = async (client: any, event: any) => {
-    const category = event.path.substring(event.path.lastIndexOf('/') + 1, event.path.length);
-    const q = 'update category set skill=$1, active=$2 where categoryId=$3';
-    const params = [event.body.skill, event.body.active, category];
+    const categoryid = event.path.substring(event.path.lastIndexOf('/') + 1, event.path.length);
+    const q = 'update categories set skill=$1, active=$2 where categoryid=$3';
+    const params = [JSON.parse(event.body).skill, JSON.parse(event.body).active, categoryid];
     const resp = await client.query(q, params);
     await client.end();
     if (resp) {
         return {
             statusCode: 200,
             headers: {
-                'Content-Type': 'application/json',
+                'Access-Control-Allow-Headers': 'application/json',
                 'Access-Control-Allow-Origin': '*',
                 'Access-Control-Allow-Methods': 'OPTIONS,POST,GET',
             },
@@ -107,7 +104,7 @@ export const putCategory = async (client: any, event: any) => {
         return {
             statusCode: 400,
             headers: {
-                'Content-Type': 'application/json',
+                'Access-Control-Allow-Headers': 'application/json',
                 'Access-Control-Allow-Origin': '*',
                 'Access-Control-Allow-Methods': 'OPTIONS,POST,GET'
             }
