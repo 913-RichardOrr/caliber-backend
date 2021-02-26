@@ -7,6 +7,7 @@ Resources:
     Properties:
       Code:
         ImageUri: !Join ["/",[!Join [".",[!Sub "${AWS::AccountId}", "dkr", "ecr", !Sub "${AWS::Region}", "amazonaws", "com"]], "associatelambda:latest"]]
-      Role: arn:aws:iam::855430746673:role/caliber-mobile-cf
+      Role: arn:aws:iam::184385528907:role/testAdmin
+        #Role: arn:aws:iam::855430746673:role/caliber-mobile-cf
       FunctionName: "batchAssociates"
       PackageType: "Image"

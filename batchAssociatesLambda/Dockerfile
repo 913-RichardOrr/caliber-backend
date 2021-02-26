@@ -1,7 +1,6 @@
 # Run this Dockerfile from the caliber-backend directory
 # using the command:
-# docker build -t batch-associates-lambda -f batchAssociatesLambda/Dockerfile
-#      --build-arg USER=<username> --build-arg HOST=<host> --build-arg PASSWORD=<password> --build-arg DATABASE=<database> .
+# docker build -t batch-associates-lambda -f batchAssociatesLambda/Dockerfile --build-arg USER=<username> --build-arg HOST=<host> --build-arg PASSWORD=<password> --build-arg DATABASE=<database> .
 
 # Retrieiving a public image from Amazon's Elastic Container Registry
 FROM public.ecr.aws/lambda/nodejs:12
@@ -35,4 +34,4 @@ ENV PGPORT=5432
 RUN ls
 
 # Tell lambda what to call
-CMD ["batchAssociateLambda.handler"]
+CMD ["batchAssociatesLambda.handler"]
