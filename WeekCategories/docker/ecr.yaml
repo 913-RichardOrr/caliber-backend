@@ -1,10 +1,10 @@
 AWSTemplateFormatVersion: 2010-09-09
-Description: ECR repo for qcWeekCategories lambda
+Description: ECR repo for WeekCategories lambda
 Resources:
-  QcweekCategoriesECR:
+  weekCategoriesECR:
     Type: AWS::ECR::Repository
     Properties:
-      RepositoryName: "qcWeekCategories-lambda"
+      RepositoryName: "WeekCategories-lambda"
       LifecyclePolicy:
         LifecyclePolicyText: |
           {
@@ -24,7 +24,7 @@ Resources:
             ]
           }
 Outputs:
-  QcweekCategoriesECRArn:
-    Value: !GetAtt QcweekCategoriesECR.Arn
+  WeekCategoriesECRArn:
+    Value: !GetAtt WeekCategoriesECR.Arn
     Export:
-      Name: QcweekCategoriesECRArn
+      Name: WeekCategoriesECRArn
