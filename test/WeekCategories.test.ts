@@ -1,4 +1,3 @@
-import { Client } from 'pg';
 import { handler } from '../categoriesFeature/categoriesLambda';
 import * as categoriesHelpers from '../categoriesFeature/categoriesHelpers';
 
