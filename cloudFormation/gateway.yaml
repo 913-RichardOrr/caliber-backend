@@ -205,53 +205,6 @@ Resources:
       RestApiId: !Ref apiGateway
       ParentId: !GetAtt qcBatchesResource
       PathPart: {batchId}
-  # CORS for /qc/batches/{batchId}
-  qcBatchOptionsMethod:
-    Type: AWS::ApiGateway::Method
-    Properties:
-      AuthorizationType: NONE
-      RestApiId:
-        Ref: apiGateway
-      ResourceId:
-        Ref: qcBatchResource
-      HttpMethod: OPTIONS
-      Integration:
-        IntegrationResponses:
-        - StatusCode: 200
-          ResponseParameters:
-            method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
-            method.response.header.Access-Control-Allow-Methods: "'GET,OPTIONS'"
-            method.response.header.Access-Control-Allow-Origin: "'*'"
-          ResponseTemplates:
-            application/json: ''
-        PassthroughBehavior: WHEN_NO_MATCH
-        RequestTemplates:
-          application/json: '{"statusCode": 200}'
-        Type: MOCK
-      MethodResponses:
-      - StatusCode: 200
-        ResponseModels:
-          application/json: 'Empty'
-        ResponseParameters:
-          method.response.header.Access-Control-Allow-Headers: false
-          method.response.header.Access-Control-Allow-Methods: false
-          method.response.header.Access-Control-Allow-Origin: false
-  # GET method for qc/batches/{batchId}
-  getBatchMethod:
-    Type: AWS::ApiGateway::Method
-    DependsOn:
-      - # batch lambda
-    Properties:
-      AuthorizationType: NONE
-      HttpMethod: GET
-      Integration:
-        Type: AWS_PROXY
-        IntegrationHttpMethod: POST
-        Uri: !Sub
-          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
-          - lambdaArn: !GetAtt # batch lambda arn
-      ResourceId: !Ref qcBatchResource
-      RestApiId: !Ref apiGateway
   # API Gateway Resource - /qc/batches/{batchId}/weeks
   qcWeeksResource:
     Type: AWS::ApiGateway::Resource
@@ -274,7 +227,7 @@ Resources:
         - StatusCode: 200
           ResponseParameters:
             method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
-            method.response.header.Access-Control-Allow-Methods: "'POST,OPTIONS'"
+            method.response.header.Access-Control-Allow-Methods: "'GET,POST,OPTIONS'"
             method.response.header.Access-Control-Allow-Origin: "'*'"
           ResponseTemplates:
             application/json: ''
@@ -290,6 +243,22 @@ Resources:
           method.response.header.Access-Control-Allow-Headers: false
           method.response.header.Access-Control-Allow-Methods: false
           method.response.header.Access-Control-Allow-Origin: false
+  # GET method for /qc/batches/{batchId}/weeks
+  getWeeksMethod:
+    Type: AWS::ApiGateway::Method
+    DependsOn:
+      - # qc weeks lambda
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: GET
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Sub
+          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
+          - lambdaArn: !GetAtt # qc week lambda arn
+      ResourceId: !Ref qcWeeksResource
+      RestApiId: !Ref apiGateway
   # POST method for /qc/batches/{batchId}/weeks
   addWeekMethod:
     Type: AWS::ApiGateway::Method
@@ -328,7 +297,7 @@ Resources:
         - StatusCode: 200
           ResponseParameters:
             method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
-            method.response.header.Access-Control-Allow-Methods: "'GET,POST,OPTIONS'"
+            method.response.header.Access-Control-Allow-Methods: "'POST,OPTIONS'"
             method.response.header.Access-Control-Allow-Origin: "'*'"
           ResponseTemplates:
             application/json: ''
@@ -344,22 +313,6 @@ Resources:
           method.response.header.Access-Control-Allow-Headers: false
           method.response.header.Access-Control-Allow-Methods: false
           method.response.header.Access-Control-Allow-Origin: false
-  # GET method for qc/batches/{batchId}/weeks/{week}
-  getWeekInfoMethod:
-    Type: AWS::ApiGateway::Method
-    DependsOn:
-      - # qc week lambda
-    Properties:
-      AuthorizationType: NONE
-      HttpMethod: GET
-      Integration:
-        Type: AWS_PROXY
-        IntegrationHttpMethod: POST
-        Uri: !Sub
-          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
-          - lambdaArn: !GetAtt # qc week lambda arn
-      ResourceId: !Ref qcWeekResource
-      RestApiId: !Ref apiGateway
   # POST method for qc/batches/{batchId}/weeks/{week}
   addWeekNoteMethod:
     Type: AWS::ApiGateway::Method
