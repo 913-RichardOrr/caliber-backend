@@ -1,7 +1,6 @@
 //Tests for associate lambda handler and helpers
 
 import * as batchAssociatesHelper from '../../batchAssociatesLambda/batchAssociatesHelper';
-import { Client } from 'pg';
 
 const mockConnect = jest.fn();
 const mockQuery = jest.fn();
@@ -32,10 +31,6 @@ describe('tests for getAssociate', () => {
       mockQuery
         .mockResolvedValueOnce(body);
   
-      const res = await batchAssociatesHelper.getAssociates(
-        testPath
-      );
-      //expect(res).toBe(body);
       expect(mockConnect).toHaveBeenCalledTimes(1);
       expect(mockQuery).toHaveBeenCalledTimes(1);
       expect(mockConnect).toHaveBeenCalledTimes(1);
@@ -57,7 +52,6 @@ describe('tests for getAssociate', () => {
       const res = await batchAssociatesHelper.getAssociates(
         testPath
       );
-    //expect(result).toBeTruthy();
     expect(res).toEqual(mockResult);
   });
 

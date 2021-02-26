@@ -18,4 +18,4 @@ export async function handler(event: AssociateEvent): Promise<any> {
     return createResponse(JSON.stringify(associates), 200);
   }
   return createResponse('', 404);
-};
+}
