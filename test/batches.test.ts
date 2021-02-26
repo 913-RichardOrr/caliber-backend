@@ -130,31 +130,6 @@ describe('Batches Test Suite', () => {
   });
 
   test('Get All Batches Lambda axios requests', async () => {
-    // class BatchProjectionWTrainer {
-    //   constructor(
-    //     public batchId: string, //"TR-1131",
-    //     public name: string, //"Mock Batch 65",
-    //     public startDate: string, //"2021-04-09",
-    //     public endDate: string, //"2021-06-18",
-    //     public skill: string, // "Java React",
-    //     public location: string, // "New York",
-    //     public type: string, // "Revature"
-    //     public trainerEmail: string, // "",
-    //     public trainerFirstName: string, // "",
-    //     public trainerLastName: string // "",
-    //   ) {
-    //     this.batchId = batchId;
-    //     this.name = name;
-    //     this.startDate = startDate;
-    //     this.endDate = endDate;
-    //     this.skill = skill;
-    //     this.location = location;
-    //     this.type = type;
-    //     this.trainerEmail = trainerEmail;
-    //     this.trainerFirstName = trainerFirstName;
-    //     this.trainerLastName = trainerLastName;
-    //   }
-    // }
     const batch1 = new BatchProjection(
       'TR-1131',
       'Mock Batch 100',
