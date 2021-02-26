@@ -1,5 +1,11 @@
 import {getCategories, addCategory, deleteCategory} from './WeekCategoriesHelper';
 
+
+/**
+ * Process an http request and return objects depending on if the httpMethod is Get, Post, or Delete
+ * 
+ * @event - the http request
+ */
 export const handler = async (event:any)=>{
     const { Client } = require('pg');
     const client = new Client();
