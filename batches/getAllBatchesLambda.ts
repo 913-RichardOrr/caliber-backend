@@ -24,11 +24,12 @@ export default async function handler() {
 const URI = 'https://caliber2-mock.revaturelabs.com:443/mock/training/batch';
 export const allBatchesAgent = new https.Agent({ rejectUnauthorized: false });
 
-export async function getAllBatchesLambda(): Promise<BatchInfo[] | null> {
+export async function getAllBatchesLambda(year?: string): Promise<BatchInfo[] | null> {
 	let batchInfo: BatchInfo[] = [];
 	await axios
 		.get(`${URI}`, {
 			httpsAgent: allBatchesAgent,
+			params: year ? {year: year} : ''
 		})
 		.then((res) => {
 			if (res.data) {
