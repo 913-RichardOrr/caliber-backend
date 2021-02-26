@@ -159,7 +159,7 @@ describe('Batches Test Suite', () => {
       'React',
       'New York',
       'Revature',
-      'mock1027.employee74df14df-5842-4811-a57c-be9836537a40@mock.com',
+      '',
       '',
       ''
     );
@@ -171,7 +171,7 @@ describe('Batches Test Suite', () => {
       'COBOL',
       'Tampa',
       'Revature',
-      'mock1027.employee74df14df-5842-4811-a57c-be9836537a40@mock.com',
+      '',
       '',
       ''
     );
@@ -183,7 +183,7 @@ describe('Batches Test Suite', () => {
       'Java',
       'West Virginia',
       'Corporate',
-      'mock1027.employee74df14df-5842-4811-a57c-be9836537a40@mock.com',
+      '',
       '',
       ''
     );
@@ -205,6 +205,7 @@ describe('Batches Test Suite', () => {
 
     expect(axios.get).toHaveBeenCalledWith(`${caliberURI}`, {
       httpsAgent: allBatchesAgent,
+      params: '',
     });
   });
 
