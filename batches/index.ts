@@ -23,7 +23,8 @@ export interface CombinedEvent {
 // 	trainer?: string;
 // }
 
-export default async function handler(event: CombinedEvent) {
+export async function handler(event: CombinedEvent) {
+	console.log(event)
   let batchInfo: BatchInfo[] = [];
   let validYears: string;
   if (event.queryStringParameters.year) {
