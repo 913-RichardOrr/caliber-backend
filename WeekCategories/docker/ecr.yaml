@@ -1,0 +1,30 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: ECR repo for qcWeekCategories lambda
+Resources:
+  QcweekCategoriesECR:
+    Type: AWS::ECR::Repository
+    Properties:
+      RepositoryName: "qcWeekCategories-lambda"
+      LifecyclePolicy:
+        LifecyclePolicyText: |
+          {
+            "rules": [
+              {
+                "rulePriority": 1,
+                "description": "Keep only two untagged images, expire all others",
+                "selection": {
+                  "tagStatus": "untagged",
+                  "countType": "imageCountMoreThan",
+                  "countNumber": 2
+                },
+                "action": {
+                  "type": "expire"
+                }
+              }
+            ]
+          }
+Outputs:
+  QcweekCategoriesECRArn:
+    Value: !GetAtt QcweekCategoriesECR.Arn
+    Export:
+      Name: QcweekCategoriesECRArn

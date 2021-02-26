@@ -1,0 +1,62 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  BatchLayer:
+    Type: AWS::Lambda::LayerVersion
+    Properties:
+      CompatibleRuntimes:
+        - nodejs14.x
+      Content:
+        #S3Bucket: caliber-mobilr-p3 # need to update this to S3 bucket holding the lambdas
+        #S3Key: QcWeekCategoriesLayersCode # need to update this to key for the file holding layers zip file
+      Description: QcWeekCategoriesLayersCode
+      LayerName: qcWeekCategories-layers
+  QcWeekCategories:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: QcWeekCategories
+      Handler: lambda/index.handler
+      Layers:
+        - !Ref BatchLayer
+      Role:
+        Fn::GetAtt:
+          - QcWeekCategoriesRole
+          - Arn
+      Code:
+        #S3Bucket: caliber-QcWeekCategories # need to update this to S3 bucket holding the lambdas
+        #S3Key: QcWeekCategoriesCode # need to update this to key for the file holding lambda zip file
+      Runtime: nodejs14.x
+      Timeout: 5
+  QcWeekCategoriesRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      RoleName: QcWeekCategoriesRole
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Path: /
+      Policies:
+        - PolicyName: AWSLambdaBasicExecutionRole
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 'logs:CreateLogGroup'
+                  - 'logs:CreateLogStream'
+                  - 'logs:PutLogEvents'
+                Resource: '*'
+        - PolicyName: AmazonS3FullAccess
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: 's3:*'
+                Resource:
+                  - 'arn:aws:s3:::exchange-data-raw'
+                  - 'arn:aws:s3:::exchange-data-raw/*'
