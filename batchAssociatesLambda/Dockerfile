@@ -1,6 +1,6 @@
 # Run this Dockerfile from the caliber-backend directory
 # using the command:
-# docker build -t associatelambda -f associateLambda/Dockerfile
+# docker build -t associatelambda -f batchAssociatesLambda/Dockerfile
 #      --build-arg USER=<username> --build-arg HOST=<host> --build-arg PASSWORD=<password> --build-arg DATABASE=<database> .
 
 # Retrieiving a public image from Amazon's Elastic Container Registry
@@ -14,7 +14,7 @@ COPY package.json tsconfig.json /var/task/
 RUN npm install
 
 # Do this after the npm install to save time on future builds
-COPY ./associateLambda/*.ts /var/task/
+COPY ./batchAssociatesLambda/*.ts /var/task/
 
 # Transpile
 RUN npx tsc
