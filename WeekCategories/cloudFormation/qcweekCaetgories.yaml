@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Resources:
-  BatchLayer:
+  WeekCategoriesLayer:
     Type: AWS::Lambda::LayerVersion
     Properties:
       CompatibleRuntimes:
@@ -16,7 +16,7 @@ Resources:
       FunctionName: WeekCategories
       Handler: lambda/index.handler
       Layers:
-        - !Ref BatchLayer
+        - !Ref WeekCategoriesLayer
       Role:
         Fn::GetAtt:
           - WeekCategoriesRole
