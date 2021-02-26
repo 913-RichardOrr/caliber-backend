@@ -1,35 +1,35 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Resources:
-  BatchLayer:
+  WeekCategoriesLayer:
     Type: AWS::Lambda::LayerVersion
     Properties:
       CompatibleRuntimes:
         - nodejs14.x
       Content:
         #S3Bucket: caliber-mobilr-p3 # need to update this to S3 bucket holding the lambdas
-        #S3Key: QcWeekCategoriesLayersCode # need to update this to key for the file holding layers zip file
-      Description: QcWeekCategoriesLayersCode
-      LayerName: qcWeekCategories-layers
-  QcWeekCategories:
+        #S3Key: WeekCategoriesLayersCode # need to update this to key for the file holding layers zip file
+      Description: WeekCategoriesLayersCode
+      LayerName: WeekCategories-layers
+  WeekCategories:
     Type: AWS::Lambda::Function
     Properties:
-      FunctionName: QcWeekCategories
+      FunctionName: WeekCategories
       Handler: lambda/index.handler
       Layers:
-        - !Ref BatchLayer
+        - !Ref WeekCategoriesLayer
       Role:
         Fn::GetAtt:
-          - QcWeekCategoriesRole
+          - WeekCategoriesRole
           - Arn
       Code:
-        #S3Bucket: caliber-QcWeekCategories # need to update this to S3 bucket holding the lambdas
-        #S3Key: QcWeekCategoriesCode # need to update this to key for the file holding lambda zip file
+        #S3Bucket: caliber-WeekCategories # need to update this to S3 bucket holding the lambdas
+        #S3Key: WeekCategoriesCode # need to update this to key for the file holding lambda zip file
       Runtime: nodejs14.x
       Timeout: 5
-  QcWeekCategoriesRole:
+  WeekCategoriesRole:
     Type: 'AWS::IAM::Role'
     Properties:
-      RoleName: QcWeekCategoriesRole
+      RoleName: WeekCategoriesRole
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
         Statement:
