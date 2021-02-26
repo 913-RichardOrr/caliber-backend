@@ -17,33 +17,35 @@ describe('Batches Test Suite', () => {
   let caliberURI: string =
     'https://caliber2-mock.revaturelabs.com:443/mock/training/batch';
 
+  class BatchProjection {
+    constructor(
+      public batchId: string, //"TR-1131",
+      public name: string, //"Mock Batch 65",
+      public startDate: string, //"2021-04-09",
+      public endDate: string, //"2021-06-18",
+      public skill: string, // "Java React",
+      public location: string, // "New York",
+      public type: string, // "Revature"
+      public trainerEmail: string, // "",
+      public trainerFirstName: string, // "",
+      public trainerLastName: string // "",
+    ) {
+      this.batchId = batchId;
+      this.name = name;
+      this.startDate = startDate;
+      this.endDate = endDate;
+      this.skill = skill;
+      this.location = location;
+      this.type = type;
+      this.trainerEmail = trainerEmail;
+      this.trainerFirstName = trainerFirstName;
+      this.trainerLastName = trainerLastName;
+    }
+  }
+
   test('Get Batches By Trainer Lambda axios requests', async () => {
     const batchIDs = ['TR-1111', 'TR-1112', 'TR-1113'];
-    class BatchProjection {
-      constructor(
-        public batchId: string, //"TR-1131",
-        public name: string, //"Mock Batch 65",
-        public startDate: string, //"2021-04-09",
-        public endDate: string, //"2021-06-18",
-        public skill: string, // "Java React",
-        public location: string, // "New York",
-        public type: string, // "Revature"
-        public trainerEmail: string, // "",
-        public trainerFirstName: string, // "",
-        public trainerLastName: string // "",
-      ) {
-        this.batchId = batchId;
-        this.name = name;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.skill = skill;
-        this.location = location;
-        this.type = type;
-        this.trainerEmail = trainerEmail;
-        this.trainerFirstName = trainerFirstName;
-        this.trainerLastName = trainerLastName;
-      }
-    }
+
     const batch1 = new BatchProjection(
       'TR-1131',
       'Mock Batch 100',
@@ -114,11 +116,12 @@ describe('Batches Test Suite', () => {
     expect(JSON.parse(returnValues.body)).toEqual(resp.data);
     // test to make sure that all of the requests are called with the caliber api
 
-    expect(
-      axios.get
-    ).toHaveBeenCalledWith(`${caliberURI}/${caliberTrainerEmail}/ids`, {
-      httpsAgent: agent,
-    });
+    expect(axios.get).toHaveBeenCalledWith(
+      `${caliberURI}/${caliberTrainerEmail}/ids`,
+      {
+        httpsAgent: agent,
+      }
+    );
     for (let batchID of batchIDs) {
       expect(axios.get).toHaveBeenCalledWith(`${caliberURI}/${batchID}`, {
         httpsAgent: agent,
@@ -127,32 +130,32 @@ describe('Batches Test Suite', () => {
   });
 
   test('Get All Batches Lambda axios requests', async () => {
-    class BatchProjectionWTrainer {
-      constructor(
-        public batchId: string, //"TR-1131",
-        public name: string, //"Mock Batch 65",
-        public startDate: string, //"2021-04-09",
-        public endDate: string, //"2021-06-18",
-        public skill: string, // "Java React",
-        public location: string, // "New York",
-        public type: string, // "Revature"
-        public trainerEmail: string, // "",
-        public trainerFirstName: string, // "",
-        public trainerLastName: string // "",
-      ) {
-        this.batchId = batchId;
-        this.name = name;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.skill = skill;
-        this.location = location;
-        this.type = type;
-        this.trainerEmail = trainerEmail;
-        this.trainerFirstName = trainerFirstName;
-        this.trainerLastName = trainerLastName;
-      }
-    }
-    const batch1 = new BatchProjectionWTrainer(
+    // class BatchProjectionWTrainer {
+    //   constructor(
+    //     public batchId: string, //"TR-1131",
+    //     public name: string, //"Mock Batch 65",
+    //     public startDate: string, //"2021-04-09",
+    //     public endDate: string, //"2021-06-18",
+    //     public skill: string, // "Java React",
+    //     public location: string, // "New York",
+    //     public type: string, // "Revature"
+    //     public trainerEmail: string, // "",
+    //     public trainerFirstName: string, // "",
+    //     public trainerLastName: string // "",
+    //   ) {
+    //     this.batchId = batchId;
+    //     this.name = name;
+    //     this.startDate = startDate;
+    //     this.endDate = endDate;
+    //     this.skill = skill;
+    //     this.location = location;
+    //     this.type = type;
+    //     this.trainerEmail = trainerEmail;
+    //     this.trainerFirstName = trainerFirstName;
+    //     this.trainerLastName = trainerLastName;
+    //   }
+    // }
+    const batch1 = new BatchProjection(
       'TR-1131',
       'Mock Batch 100',
       '2019-01-01',
@@ -164,7 +167,7 @@ describe('Batches Test Suite', () => {
       '',
       ''
     );
-    const batch2 = new BatchProjectionWTrainer(
+    const batch2 = new BatchProjection(
       'TR-1112',
       'Mock Batch 2',
       '2021-06-07',
@@ -176,7 +179,7 @@ describe('Batches Test Suite', () => {
       '',
       ''
     );
-    const batch3 = new BatchProjectionWTrainer(
+    const batch3 = new BatchProjection(
       'TR-1111',
       'Mock Batch 3',
       '2021-05-01',
