@@ -37,47 +37,49 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 exports.__esModule = true;
 var WeekCategoriesHelper_1 = require("./WeekCategoriesHelper");
-exports.handler =
-    function (event) {
-        return __awaiter(this, void 0, void 0, function () {
-            var Client, client, method, id, postCategory, postWeek, deleteVarCategory, deleteWeek;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        Client = require('pg').Client;
-                        client = new Client({
-                            user: 'calibermobile',
-                            host: 'calibermobile.cvtq9j4axrge.us-east-1.rds.amazonaws.com',
-                            database: 'calibermobile',
-                            password: '8Sy2MoFBRxY1Rt0prtuOh',
-                            port: 5432
-                        });
-                        return [4 /*yield*/, client.connect()];
-                    case 1:
-                        _a.sent();
-                        method = event.httpMethod;
-                        switch (method) {
-                            case 'GET':
-                                id = event.path.substring(event.path.lastIndexOf('/') + 1, event.path.length);
-                                WeekCategoriesHelper_1.getCategories(client, { weekID: Number(id) });
-                                break;
-                            case 'POST':
-                                postCategory = JSON.stringify(event.body);
-                                postWeek = event.path.substring(event.path.lastIndexOf('/') + 1, event.path.length);
-                                WeekCategoriesHelper_1.addCategory(client, { weekID: Number(postWeek), categoryID: Number(postCategory) });
-                                break;
-                            case 'DELETE':
-                                deleteVarCategory = JSON.stringify(event.body);
-                                deleteWeek = event.path.substring(event.path.lastIndexOf('/') + 1, event.path.length);
-                                WeekCategoriesHelper_1.deleteCategory(client, { weekID: Number(deleteWeek), categoryID: Number(deleteVarCategory) });
-                                break;
-                            default:
-                                console.log("Does not support HTTP method " + method);
-                                // client.end();
-                                break;
-                        }
-                        return [2 /*return*/];
-                }
-            });
+//exports.handler = 
+function h(event) {
+    return __awaiter(this, void 0, void 0, function () {
+        var Client, client, method, id, postCategory, postWeek, deleteVarCategory, deleteWeek;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    Client = require('pg').Client;
+                    client = new Client({
+                        user: 'calibermobile',
+                        host: 'calibermobile.cvtq9j4axrge.us-east-1.rds.amazonaws.com',
+                        database: 'calibermobile',
+                        password: '8Sy2MoFBRxY1Rt0prtuOh',
+                        port: 5432
+                    });
+                    return [4 /*yield*/, client.connect()];
+                case 1:
+                    _a.sent();
+                    WeekCategoriesHelper_1.getCategories(client, { weekID: Number('1') });
+                    method = event.httpMethod;
+                    switch (method) {
+                        case 'GET':
+                            id = event.path.substring(event.path.lastIndexOf('/') + 1, event.path.length);
+                            WeekCategoriesHelper_1.getCategories(client, { weekID: Number(id) });
+                            break;
+                        case 'POST':
+                            postCategory = JSON.stringify(event.body);
+                            postWeek = event.path.substring(event.path.lastIndexOf('/') + 1, event.path.length);
+                            WeekCategoriesHelper_1.addCategory(client, { weekID: Number(postWeek), categoryID: Number(postCategory) });
+                            break;
+                        case 'DELETE':
+                            deleteVarCategory = JSON.parse(event.body);
+                            deleteWeek = event.path.substring(event.path.lastIndexOf('/') + 1, event.path.length);
+                            WeekCategoriesHelper_1.deleteCategory(client, { weekID: Number(deleteWeek), categoryID: Number(deleteVarCategory) });
+                            break;
+                        default:
+                            console.log("Does not support HTTP method " + method);
+                            client.end();
+                            break;
+                    }
+                    return [2 /*return*/];
+            }
         });
-    };
+    });
+}
+h('1');

@@ -1,28 +1,14 @@
 import {getCategories, addCategory, deleteCategory} from './WeekCategoriesHelper';
 
-<<<<<<< HEAD
-exports.handler = 
-async function (event:any){
-=======
-
-/**
- * Process an http request and return objects depending on if the httpMethod is Get, Post, or Delete
- * 
- * @event - the http request
- */
-export const handler = async (event:any)=>{
->>>>>>> 72610d0d63efeb01f1c340f01330380abe3e25df
+//exports.handler = 
+async function h(event:any){
     const { Client } = require('pg');
     const client = new Client({
-        user: 'calibermobile',
-        host: 'calibermobile.cvtq9j4axrge.us-east-1.rds.amazonaws.com',
-        database: 'calibermobile',
-        password: '8Sy2MoFBRxY1Rt0prtuOh',
-        port: 5432
+      
     });
      await client.connect();
     
-     //getCategories(client, {weekID: Number('1')});
+     getCategories(client, {weekID: Number('1')});
      // addCategory(client,{weekID: Number('1'), categoryID: Number('2')});
      // deleteCategory(client, {weekID: Number('1'), categoryID: Number('1')});
 
@@ -39,13 +25,15 @@ export const handler = async (event:any)=>{
             addCategory(client,{weekID: Number(postWeek), categoryID: Number(postCategory)});
             break;
         case 'DELETE':
-            let deleteVarCategory = JSON.stringify(event.body);
+            let deleteVarCategory = JSON.parse(event.body);
             let deleteWeek = event.path.substring(event.path.lastIndexOf('/') + 1, event.path.length);
             deleteCategory(client, {weekID: Number(deleteWeek), categoryID: Number(deleteVarCategory)});
             break;
         default:
             console.log(`Does not support HTTP method ${method}`);
-           // client.end();
+            client.end();
             break;
     }
 }
+
+h('1');

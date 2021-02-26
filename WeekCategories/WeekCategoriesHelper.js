@@ -61,6 +61,12 @@ var addCategory = function (client, params) { return __awaiter(void 0, void 0, v
     });
 }); };
 exports.addCategory = addCategory;
+/**
+ * Retrieve all categories (category[]) from a given week from the database
+ *
+ * @client - the client from pg
+ * @param {getCategoryParams} params - the weekId that specifies which week we want categories for
+ */
 var getCategories = function (client, params) { return __awaiter(void 0, void 0, void 0, function () {
     var response;
     return __generator(this, function (_a) {
