@@ -12,7 +12,7 @@ import validYearsHandler, {
 jest.mock('axios');
 
 describe('Batches Test Suite', () => {
-  let trainerEmail: string =
+  let caliberTrainerEmail: string =
     'mock1027.employee74df14df-5842-4811-a57c-be9836537a40@mock.com';
   let caliberURI: string =
     'https://caliber2-mock.revaturelabs.com:443/mock/training/batch';
@@ -103,7 +103,7 @@ describe('Batches Test Suite', () => {
 
     let myEvent: MyEvent = {
       queryStringParameters: {
-        trainerEmail: trainerEmail,
+        trainerEmail: caliberTrainerEmail,
       },
     };
     await handler(myEvent).then((data: any) => (returnValues = data));
@@ -114,10 +114,11 @@ describe('Batches Test Suite', () => {
     expect(JSON.parse(returnValues.body)).toEqual(resp.data);
     // test to make sure that all of the requests are called with the caliber api
 
-    expect(axios.get).toHaveBeenCalledWith(
-      `${caliberURI}/${trainerEmail}/ids`,
-      { httpsAgent: agent }
-    );
+    expect(
+      axios.get
+    ).toHaveBeenCalledWith(`${caliberURI}/${caliberTrainerEmail}/ids`, {
+      httpsAgent: agent,
+    });
     for (let batchID of batchIDs) {
       expect(axios.get).toHaveBeenCalledWith(`${caliberURI}/${batchID}`, {
         httpsAgent: agent,
