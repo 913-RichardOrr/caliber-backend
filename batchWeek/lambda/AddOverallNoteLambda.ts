@@ -11,8 +11,8 @@ export default function AddOverallNoteLambda(event: any) {
     const weekInfo = JSON.parse(event.body);
     client.connect();
 
-    const query = `update qc_week set note = $1::text where weekNumber = $2::number`;
-    const values = [weekInfo.note, weekInfo.weekNumber];
+    const query = `update qcweeks set note = $1::text where weeknumber = $2::number`;
+    const values = [weekInfo.note, weekInfo.weeknumber];
 
     let response = client.query(query, values);
 
