@@ -7,15 +7,15 @@ import { Client } from 'pg';
  * @returns {object} - HTTP response containing the status code and headers to deal with CORS issues.
  */
 
-export default function UpdateFeedbackLambda(event: any) {
+export default async function UpdateFeedbackLambda(event: any) {
     const client = new Client();
     const weekInfo = JSON.parse(event.body);
     client.connect();
 
-    const query = `update qcweeks set note = $1::text, overallstatus = $2::STATUS where weeknumber = $3::number`;
+    const query = `update qcweeks set note = $1::text, overallstatus = $2::STATUS where weeknumber = $3::int`;
     const values = [weekInfo.note, weekInfo.overallstatus, weekInfo.weeknumber];
 
-    let response = client.query(query, values);
+    let response = await client.query(query, values);
 
     if(response) {
         client.end();
