@@ -3,8 +3,7 @@ import { Client } from 'pg';
 /**
  * Method is POST
  * add an overall note for that batch in this specific week
- * @param {object} event - the event that triggers the API gateway which contains the information for that week.
- * @returns {object} - HTTP response containing the status code and headers to deal with CORS issues.
+ * @param event - the event that triggers the API gateway which contains the information for that week.
  */
 
 export default function AddOverallNoteLambda(event: any) {
@@ -12,8 +11,8 @@ export default function AddOverallNoteLambda(event: any) {
     const weekInfo = JSON.parse(event.body);
     client.connect();
 
-    const query = `update qcweeks set note = $1::text where weeknumber = $2::number`;
-    const values = [weekInfo.note, weekInfo.weeknumber];
+    const query = `update qc_week set note = $1::text where weekNumber = $2::number`;
+    const values = [weekInfo.note, weekInfo.weekNumber];
 
     let response = client.query(query, values);
 
