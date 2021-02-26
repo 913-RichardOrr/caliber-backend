@@ -11,18 +11,6 @@ export interface CombinedEvent {
   };
 }
 
-// export interface BatchInfo {
-// 	id: string;
-// 	batchId: string;
-// 	name: string;
-// 	startDate: string;
-// 	endDate: string;
-// 	skill: string;
-// 	location: string;
-// 	type: string;
-// 	trainer?: string;
-// }
-
 export async function handler(event: CombinedEvent) {
 	console.log(event)
   let batchInfo: BatchInfo[] = [];
