@@ -52,7 +52,7 @@ describe('Batches Test Suite', () => {
       'React',
       'New York',
       'Revature',
-      '',
+      'mock1027.employee74df14df-5842-4811-a57c-be9836537a40@mock.com',
       '',
       ''
     );
@@ -64,7 +64,7 @@ describe('Batches Test Suite', () => {
       'COBOL',
       'Tampa',
       'Revature',
-      '',
+      'mock1027.employee74df14df-5842-4811-a57c-be9836537a40@mock.com',
       '',
       ''
     );
@@ -76,7 +76,7 @@ describe('Batches Test Suite', () => {
       'Java',
       'West Virginia',
       'Corporate',
-      '',
+      'mock1027.employee74df14df-5842-4811-a57c-be9836537a40@mock.com',
       '',
       ''
     );
@@ -159,7 +159,7 @@ describe('Batches Test Suite', () => {
       'React',
       'New York',
       'Revature',
-      '',
+      'mock1027.employee74df14df-5842-4811-a57c-be9836537a40@mock.com',
       '',
       ''
     );
@@ -171,7 +171,7 @@ describe('Batches Test Suite', () => {
       'COBOL',
       'Tampa',
       'Revature',
-      '',
+      'mock1027.employee74df14df-5842-4811-a57c-be9836537a40@mock.com',
       '',
       ''
     );
@@ -183,7 +183,7 @@ describe('Batches Test Suite', () => {
       'Java',
       'West Virginia',
       'Corporate',
-      '',
+      'mock1027.employee74df14df-5842-4811-a57c-be9836537a40@mock.com',
       '',
       ''
     );
@@ -222,7 +222,8 @@ describe('Batches Test Suite', () => {
     await validYearsHandler().then((data: any) => (returnValues = data));
 
     expect(axios.get).toHaveBeenCalledTimes(1);
-    expect(JSON.parse(returnValues.body)).toEqual(resp.data);
+    const response = JSON.parse(returnValues.body);
+    expect(JSON.parse(response.body)).toEqual(resp.data);
 
     expect(axios.get).toHaveBeenCalledWith(`${caliberURI}/validYears`, {
       httpsAgent: validYearAgent,
