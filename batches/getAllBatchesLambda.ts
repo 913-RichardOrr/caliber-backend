@@ -1,26 +1,8 @@
 import axios from 'axios';
 import https from 'https';
+import { BatchInfo } from './getBatchesLambda';
 
-export interface AllBatchesEvent {
-	queryStringParameters: {
-		year: number;
-		quarter: number;
-	};
-}
-
-export interface AllBatchInfo {
-	id: string;
-	batchId: string;
-	name: string;
-	startDate: string;
-	endDate: string;
-	skill: string;
-	location: string;
-	type: string;
-	trainer: string;
-}
-
-export default async function handler(event: AllBatchesEvent) {
+export default async function handler() {
 	const resp = {
 		statusCode: 200,
 		headers: {
@@ -31,26 +13,7 @@ export default async function handler(event: AllBatchesEvent) {
 		body: '',
 	};
 
-	let year: number;
-	let quarter: number;
-
-	if (event.queryStringParameters.year) {
-		year = event.queryStringParameters.year;
-	} else {
-		resp.statusCode = 400;
-		resp.body = 'Bad request.';
-		return resp;
-	}
-
-	if (event.queryStringParameters.quarter) {
-		quarter = event.queryStringParameters.quarter;
-	} else {
-		resp.statusCode = 400;
-		resp.body = 'Bad request.';
-		return resp;
-	}
-
-	const batchInfo = await getAllBatchesLambda(year, quarter);
+	const batchInfo = await getAllBatchesLambda();
 
 	if (batchInfo) {
 		resp.body = JSON.stringify(batchInfo);
@@ -61,19 +24,17 @@ export default async function handler(event: AllBatchesEvent) {
 const URI = 'https://caliber2-mock.revaturelabs.com:443/mock/training/batch';
 export const allBatchesAgent = new https.Agent({ rejectUnauthorized: false });
 
-export async function getAllBatchesLambda(
-	year: number,
-	quarter: number
-): Promise<any | null> {
-	let batchInfo: AllBatchInfo[] = [];
+export async function getAllBatchesLambda(year?: string): Promise<BatchInfo[] | null> {
+	let batchInfo: BatchInfo[] = [];
 	await axios
-		.get(`${URI}?year=${year}&quarter=${quarter}`, {
+		.get(`${URI}`, {
 			httpsAgent: allBatchesAgent,
+			params: year ? {year: year} : ''
 		})
 		.then((res) => {
 			if (res.data) {
 				batchInfo = res.data.map((batch: any) => {
-					let batchData = {
+					let batchData:BatchInfo = {
 						id: batch.id,
 						batchId: batch.batchId,
 						name: batch.name,
@@ -82,15 +43,18 @@ export async function getAllBatchesLambda(
 						skill: batch.skill,
 						location: batch.location,
 						type: batch.type,
-						trainer: '',
+						trainerEmail: '',
+					    trainerFirstName: '',
+						trainerLastName: ''
 					};
 					let trainer: string;
 					if (
 						batch.employeeAssignments &&
 						batch.employeeAssignments[0].role === 'ROLE_LEAD_TRAINER'
 					) {
-						trainer = `${batch.employeeAssignments[0].employee.firstName} ${batch.employeeAssignments[0].employee.lastName}`;
-						batchData.trainer = trainer;
+						batchData.trainerEmail = batch.employeeAssignments[0].employee.email;
+						batchData.trainerFirstName = batch.employeeAssignments[0].employee.firstName;
+						batchData.trainerLastName = batch.employeeAssignments[0].employee.lastName;
 					}
 					return batchData;
 				});
