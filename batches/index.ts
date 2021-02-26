@@ -1,40 +1,57 @@
-import createResponse from "../response";
-import { getAllBatchesLambda } from "./getAllBatchesLambda";
-import { MyEvent, BatchInfo, handler as getBatchesByTrainer } from "./getBatchesLambda";
-import { getValidYearsLambda } from "./getValidYearsLambda";
+import createResponse from '../response';
+import { getAllBatchesLambda } from './getAllBatchesLambda';
+import { BatchInfo, handler as getBatchesByTrainer } from './getBatchesLambda';
+import { getValidYearsLambda } from './getValidYearsLambda';
 
-// export interface MyEvent {
-//   queryStringParameters: {
-//     trainerEmail: string;
-//   };
-// }
+export interface CombinedEvent {
+  queryStringParameters: {
+    trainerEmail: string;
+    query: string;
+    year: string;
+  };
+}
 
-// export interface BatchInfo {
-// 	id: string;
-// 	batchId: string;
-// 	name: string;
-// 	startDate: string;
-// 	endDate: string;
-// 	skill: string;
-// 	location: string;
-// 	type: string;
-// 	trainer?: string;
-// }
-
-export default async function handler(event: MyEvent) {
+export async function handler(event: CombinedEvent) {
+  console.log(event);
   let batchInfo: BatchInfo[] = [];
   let validYears: string;
-  if (!event.queryStringParameters.trainerEmail) {
-    let batchInfoResponse = await getAllBatchesLambda();
-	if (batchInfoResponse) {
-		batchInfo = batchInfoResponse
-	}
+  if (event.queryStringParameters.year) {
+    let batchInfoResponse = await getAllBatchesLambda(
+      event.queryStringParameters.year
+    );
+    if (batchInfoResponse) {
+      batchInfo = batchInfoResponse;
+      return createResponse(JSON.stringify(batchInfo), 200);
+    } else {
+      return createResponse('Not Found', 404);
+    }
+  } else if (event.queryStringParameters.trainerEmail) {
+    let bodyTrainer = await getBatchesByTrainer(event);
+    if (bodyTrainer) {
+      batchInfo = JSON.parse(bodyTrainer.body);
+      let validYearsArray = batchInfo.map((batch) => {
+        return new Date(batch.startDate).getFullYear();
+      });
+      let validYearsSet = new Set(validYearsArray);
+      validYears = JSON.stringify(Array.from(validYearsSet));
+      return createResponse(
+        JSON.stringify({
+          validYears: JSON.parse(validYears),
+          batches: batchInfo,
+        })
+      );
+    } else {
+      return createResponse('Not Found', 404);
+    }
+  } else if (event.queryStringParameters.query == 'validYears') {
+    let validYearsResponse = await getValidYearsLambda();
+    if (validYearsResponse) {
+      validYears = validYearsResponse.body;
+      return createResponse(validYears, 200);
+    } else {
+      return createResponse('Not Found', 404);
+    }
   } else {
-		let bodyTrainer = await getBatchesByTrainer(event)
-		batchInfo = JSON.parse(bodyTrainer.body);
+    return createResponse('Bad Request', 400);
   }
-  let bodyYears = await getValidYearsLambda()
-  validYears = JSON.parse(bodyYears.body);
-  let comboBody = { validYears: validYears, batches: batchInfo };
-  return createResponse(comboBody, 200);
 }
