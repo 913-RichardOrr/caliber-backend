@@ -6,7 +6,7 @@ export default async function AddWeekLambda(event:any) {
     client.connect();
 
     const query = `insert into qcweeks (weeknumber, note, overallstatus, batchid)
-                    values ($1::number, $2::text, $3, $4::text)`;
+                    values ($1::int, $2::text, $3::STATUS, $4::text)`;
     const values = [week.weeknumber, week.note, week.overallstatus, week.batchid];
 
     let response = await client.query(query, values);
@@ -17,7 +17,7 @@ export default async function AddWeekLambda(event:any) {
         headers: {
             "Access-Control-Allow-Headers" : "Content-Type",
             "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Methods": "OPTIONS,POST,GET,PUT"
+            "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
         }
         };
     } else {
@@ -27,7 +27,7 @@ export default async function AddWeekLambda(event:any) {
             headers: {
                 "Access-Control-Allow-Headers": "Content-Type",
                 "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Methods": "OPTIONS,POST,GET,PUT"
+                "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
             }
         };
     }
