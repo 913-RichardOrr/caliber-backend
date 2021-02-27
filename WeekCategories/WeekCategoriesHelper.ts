@@ -11,7 +11,7 @@ interface getCategoryParams {
 
 }
 
-export const addCategory = async (client: any, params: categoryParams) => {
+export const addCategory = async (client: any, params: categoryParams) => { 
 
     const query = `insert into weekcategories (categoryid, qcweekid) values ($1, $2)`;
     const values = [params.categoryID, params.weekID];
