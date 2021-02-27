@@ -8,11 +8,6 @@ async function (event:any){
         
     });
      await client.connect();
-    
-     //getCategories(client, {weekID: Number('1')});
-     // addCategory(client,{weekID: Number('1'), categoryID: Number('2')});
-     // deleteCategory(client, {weekID: Number('1'), categoryID: Number('1')});
-
 
     const method = event.httpMethod;
     switch (method) {
