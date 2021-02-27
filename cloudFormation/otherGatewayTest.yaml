@@ -111,13 +111,13 @@ Resources:
           method.response.header.Access-Control-Allow-Headers: false
           method.response.header.Access-Control-Allow-Methods: false
           method.response.header.Access-Control-Allow-Origin: false
-
-  RootMethod:
+  # GET method for /categories/{categoryId}
+  updateCategoryIdMethod:
     Type: 'AWS::ApiGateway::Method'
     Properties:
-      HttpMethod: ANY
-      ResourceId: !GetAtt apiGateway.RootResourceId
       RestApiId: !Ref apiGateway
+      ResourceId: !Ref categoryIdResource
+      HttpMethod: GET
       AuthorizationType: NONE
       Integration:
         IntegrationHttpMethod: ANY
@@ -156,9 +156,7 @@ Resources:
     DependsOn:
       - getCategoriesMethod
       - addCategoryMethod
-      - RootMethod
-      - proxyMethod
-      - categoriesOptionsMethod
+      - updateCategoryIdMethod
     Properties:
       RestApiId: !Ref apiGateway
       StageName: default
