@@ -193,7 +193,7 @@ describe('tests for patchAssociate', () => {
     expect(mockQuery).toHaveBeenCalledTimes(2);
 
     expect(mockQuery.mock.calls[0][0]).toBe(
-      'update qcnotes set technicalstatus = $1::integer where associateid = $2::text and weeknumber = $3::integer and batchid = $4::text'
+      'update qcnotes set technicalstatus = $1::STATUS where associateid = $2::text and weeknumber = $3::integer and batchid = $4::text'
     );
 
     expect(mockQuery.mock.calls[0][1]).toEqual([
@@ -252,7 +252,7 @@ describe('tests for patchAssociate', () => {
     ]);
 
     expect(mockQuery.mock.calls[1][0]).toBe(
-      'update qcnotes set technicalstatus = $1::integer where associateid = $2::text and weeknumber = $3::integer and batchid = $4::text'
+      'update qcnotes set technicalstatus = $1::STATUS where associateid = $2::text and weeknumber = $3::integer and batchid = $4::text'
     );
 
     expect(mockQuery.mock.calls[1][1]).toEqual([
@@ -289,3 +289,14 @@ describe('tests for patchAssociate', () => {
     expect(mockEnd).toHaveBeenCalledTimes(0);
   });
 });
+
+describe('Tests for parsePath', () => {
+
+  test("That parsePath returns the expected values", () => {
+    const testPath = 'blablabla/batches/YYMM-mmmDD-Stuff/weeks/1/associates/example@example.net';
+    const expected = { batchid: 'YYMM-mmmDD-Stuff', weeknumber: 1, associateid: 'example@example.net' };
+
+    expect(associateLambda.parsePath(testPath)).toEqual(expected);
+
+  })
+})
