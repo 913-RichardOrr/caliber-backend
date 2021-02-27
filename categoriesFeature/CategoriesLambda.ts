@@ -1,4 +1,4 @@
-import { getCategories, postCategories, putCategory } from './CategoriesHelpers';
+import { getCategories, postCategories, putCategory } from "./CategoriesHelpers";
 
 export const handler = async (event: any) => {
     const { Client } = require('pg');
@@ -10,18 +10,11 @@ export const handler = async (event: any) => {
 
     switch (method) {
         case 'GET':
-            if (event.queryStringParameters) {
-                getCategories(client, event.queryStringParameters.active);
-            } else {
-                getCategories(client);
-            }
-            break;
+                return getCategories(client, event.queryStringParameters);
         case 'POST':
-            postCategories(client,event);
-            break;
+            return postCategories(client, event);
         case 'PUT':
-            putCategory(client, event);
-            break;
+            return putCategory(client, event);
         default:
             console.log(`Does not support HTTP method ${method}`);
             client.end();

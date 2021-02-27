@@ -1,17 +1,16 @@
-
 FROM public.ecr.aws/lambda/nodejs:14
 
-COPY ./categoriesFeature/*.ts package.json tsconfig.json /var/task/
+COPY ./categoriesFeature/CategoriesHelpers.ts ./categoriesFeature/CategoriesLambda.ts package.json tsconfig.json /var/task/
 
-ARG v1
-ARG v2
-ARG v3
-ARG v4
+ARG USER
+ARG HOST
+ARG PASSWORD
+ARG DATABASE
 
-ENV PGUSER=${v1}
-ENV PGHOST=${v2}
-ENV PGPASSWORD=${v3}
-ENV PGDATABASE=${v4}
+ENV PGUSER=${USER}
+ENV PGHOST=${HOST}
+ENV PGPASSWORD=${PASSWORD}
+ENV PGDATABASE=${DATABASE}
 
 RUN npm install
 
@@ -19,4 +18,4 @@ RUN npx tsc
 
 RUN ls
 
-CMD ["categoriesLambda.handler"]
+CMD ["CategoriesLambda.handler"]
