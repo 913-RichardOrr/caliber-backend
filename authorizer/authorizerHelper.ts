@@ -33,14 +33,14 @@ module.exports = (arn: string, roles: Role) => {
         // /qc
     } else if (pathParts[3] == 'qc') {
         //if weeks doesn't exist
-        if (!pathParts[5]) {
+        if (!pathParts[6]) {
             if (method == 'GET' && (roles.qc || roles.trainer)) {
                 status = 'Allow';
             }
         } else {
             //if WeekId doesn't exist
             // /batches/{batchId}/weeks
-            if (!pathParts[6]) {
+            if (!pathParts[7]) {
                 if (method == 'GET' && (roles.qc || roles.trainer)) {
                     status = 'Allow';
                 } else if (method == 'POST' && roles.qc) {
@@ -49,14 +49,14 @@ module.exports = (arn: string, roles: Role) => {
             } else {
                 //if categories/associates doesn't exist
                 // /batches/{batchId}/weeks/{weekId}
-                if (!pathParts[7]) {
+                if (!pathParts[8]) {
                     if (method == 'POST' && roles.qc) {
                         status = 'Allow';
                     }
-                } else if (pathParts[7] == 'categories') {
+                } else if (pathParts[8] == 'categories') {
                     //if categoryID doesn't exist
                     // /batches/{batchId}/weeks/{weekId}/categories
-                    if (!pathParts[8]) {
+                    if (!pathParts[9]) {
                         if (
                             (method == 'GET' || method == 'POST') &&
                             (roles.qc || roles.trainer)
@@ -70,7 +70,7 @@ module.exports = (arn: string, roles: Role) => {
                         }
                     }
                     // /batches/{batchId}/weeks/{weekId}/associates/{associateId}
-                } else if (pathParts[7] == 'associates') {
+                } else if (pathParts[8] == 'associates') {
                     if (method == 'GET' && (roles.qc || roles.trainer)) {
                         status = 'Allow';
                     } else if (

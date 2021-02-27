@@ -1,27 +1,9 @@
-'user strict';
-
-const admin = require('firebase-admin');
 const serviceAccount = require('firebase-service-account-DO_NOT_PUSH.json');
-const helper = require('./helper.js');
-
-interface Role {
-    qc: boolean;
-    vp: boolean;
-    trainer: boolean;
-}
-
-const initializeSdk = function () {
-    // Check if Firebase Admin SDK is already initialized, if not, then do it
-    if (!admin.apps.length) {
-        admin.initializeApp({
-            credential: admin.credential.cert(serviceAccount),
-            databaseURL: 'https://training-team-253916.firebaseio.com'
-        });
-    }
-};
+const helper = require('./authorizerHelper');
+import admin from 'firebase-admin';
 
 // Helper funtion for generating the response API Gateway requires to handle the token verification
-const generateIamPolicy = (effect: any, resource: any) => {
+export const generateIamPolicy = (effect: any, resource: any) => {
     const authResponse: any = {};
 
     if (effect && resource) {
@@ -57,7 +39,14 @@ exports.handler = async (event: any, context: any) => {
         }
 
         // Prepare for validating Firebase JWT token by initializing SDK
-        initializeSdk();
+        // Check if Firebase Admin SDK is already initialized, if not, then do it
+        if (!admin.apps.length) {
+            admin.initializeApp({
+                credential: admin.credential.cert(serviceAccount),
+                databaseURL: 'https://training-team-253916.firebaseio.com'
+            });
+        }
+        
         let roles: Role = {
             qc: false,
             vp: false,
