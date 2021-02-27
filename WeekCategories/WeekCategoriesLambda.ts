@@ -1,9 +1,5 @@
 import {getCategories, addCategory, deleteCategory} from './WeekCategoriesHelper';
 
-<<<<<<< HEAD
-exports.handler = 
-async function (event:any){
-=======
 
 /**
  * Process an http request and return objects depending on if the httpMethod is Get, Post, or Delete
@@ -11,41 +7,29 @@ async function (event:any){
  * @event - the http request
  */
 export const handler = async (event:any)=>{
->>>>>>> 72610d0d63efeb01f1c340f01330380abe3e25df
     const { Client } = require('pg');
-    const client = new Client({
-        user: 'calibermobile',
-        host: 'calibermobile.cvtq9j4axrge.us-east-1.rds.amazonaws.com',
-        database: 'calibermobile',
-        password: '8Sy2MoFBRxY1Rt0prtuOh',
-        port: 5432
-    });
-     await client.connect();
-    
-     //getCategories(client, {weekID: Number('1')});
-     // addCategory(client,{weekID: Number('1'), categoryID: Number('2')});
-     // deleteCategory(client, {weekID: Number('1'), categoryID: Number('1')});
-
+    const client = new Client();
+    await client.connect();
 
     const method = event.httpMethod;
     switch (method) {
         case 'GET':
             let id = event.path.substring(event.path.lastIndexOf('/') + 1, event.path.length);
-            getCategories(client, {weekID: Number(id)});
+            getCategories(client,id);
             break;
         case 'POST':
-            let postCategory = JSON.stringify(event.body);
+            let postCategory = JSON.parse(event.body);
             let postWeek = event.path.substring(event.path.lastIndexOf('/')+ 1, event.path.length);
-            addCategory(client,{weekID: Number(postWeek), categoryID: Number(postCategory)});
+            addCategory(client,{weekID: postWeek, categoryID: postCategory});
             break;
         case 'DELETE':
-            let deleteVarCategory = JSON.stringify(event.body);
+            let deleteVarCategory = JSON.parse(event.body);
             let deleteWeek = event.path.substring(event.path.lastIndexOf('/') + 1, event.path.length);
-            deleteCategory(client, {weekID: Number(deleteWeek), categoryID: Number(deleteVarCategory)});
+            deleteCategory(client, {weekID: deleteWeek, categoryID: deleteVarCategory})
             break;
         default:
             console.log(`Does not support HTTP method ${method}`);
-           // client.end();
+            client.end();
             break;
     }
 }
