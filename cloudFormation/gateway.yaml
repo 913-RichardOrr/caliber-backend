@@ -83,7 +83,7 @@ Resources:
     Properties:
       RestApiId: !Ref apiGateway
       ParentId: !Ref categoriesResource
-      PathPart: '{categoryId+}'
+      PathPart: '{categoryId}'
   # CORS for /categories/{categoryId}
   categoryOptionsMethod:
     Type: AWS::ApiGateway::Method
@@ -115,13 +115,13 @@ Resources:
           method.response.header.Access-Control-Allow-Headers: false
           method.response.header.Access-Control-Allow-Methods: false
           method.response.header.Access-Control-Allow-Origin: false
-  # GET method for /categories/{categoryId}
+  # PUT method for /categories/{categoryId}
   updateCategoryMethod:
     Type: 'AWS::ApiGateway::Method'
     Properties:
       RestApiId: !Ref apiGateway
       ResourceId: !Ref categoryIdResource
-      HttpMethod: ANY
+      HttpMethod: PUT
       AuthorizationType: NONE
       Integration:
         Type: AWS_PROXY
@@ -208,8 +208,8 @@ Resources:
     Properties:
       RestApiId: !Ref apiGateway
       ParentId: !Ref qcBatchesResource
-      PathPart: '{batchId+}'
-  # CORS for /qc/batches/{batchId}/weeks
+      PathPart: '{batchId}'
+  # CORS for /qc/batches/{batchId}
   qcBatchResourceOptionsMethod:
     Type: AWS::ApiGateway::Method
     Properties:
@@ -241,20 +241,20 @@ Resources:
           method.response.header.Access-Control-Allow-Methods: false
           method.response.header.Access-Control-Allow-Origin: false
   # GET method for /qc/batches/{batchId}/
-    getBatchMethod:
-      Type: AWS::ApiGateway::Method
-      Properties:
-        AuthorizationType: NONE
-        HttpMethod: GET
-        Integration:
-          Type: MOCK
-          # Type: AWS_PROXY
-          # IntegrationHttpMethod: POST
-          # Uri: !Sub
-          #   - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
-          #   - lambdaArn:
-        ResourceId: !Ref qcWeeksResource
-        RestApiId: !Ref apiGateway
+  getBatchMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: GET
+      Integration:
+        Type: MOCK
+        # Type: AWS_PROXY
+        # IntegrationHttpMethod: POST
+        # Uri: !Sub
+        #   - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
+        #   - lambdaArn:
+      ResourceId: !Ref qcBatchResource
+      RestApiId: !Ref apiGateway
 # ------------------------------------------- qcWeek Feature ------------------------------------------- #
 
   # API Gateway Resource - /qc/batches/{batchId}/weeks
@@ -331,7 +331,7 @@ Resources:
     Properties:
       RestApiId: !Ref apiGateway
       ParentId: !Ref qcWeeksResource
-      PathPart: '{week+}'
+      PathPart: '{week}'
   # CORS for /qc/batches/{batchId}/weeks/{week}
   qcWeekOptionsMethod:
     Type: AWS::ApiGateway::Method
@@ -370,7 +370,8 @@ Resources:
       AuthorizationType: NONE
       HttpMethod: POST
       Integration:
-        Type: AWS_PROXY
+        Type: MOCK
+        # Type: AWS_PROXY
         # IntegrationHttpMethod: POST
         # Uri: !Sub
         #   - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
@@ -385,7 +386,7 @@ Resources:
     Type: AWS::ApiGateway::Resource
     Properties:
       RestApiId: !Ref apiGateway
-      ParentId: !GetAtt qcWeekResource
+      ParentId: !Ref qcWeekResource
       PathPart: categories
   # CORS for /qc/batches/{batchId}/weeks/{week}/categories
   qcCategoriesOptionsMethod:
@@ -425,11 +426,12 @@ Resources:
       AuthorizationType: NONE
       HttpMethod: GET
       Integration:
-        Type: AWS_PROXY
-        IntegrationHttpMethod: POST
-        Uri: !Sub
-          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
-          # - lambdaArn:
+        Type: MOCK
+        # Type: AWS_PROXY
+        # IntegrationHttpMethod: POST
+        # Uri: !Sub
+        #   - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
+        #   - lambdaArn:
       ResourceId: !Ref qcCategoriesResource
       RestApiId: !Ref apiGateway
   # POST method for qc/batches/{batchId}/weeks/{week}/categories
@@ -439,11 +441,12 @@ Resources:
       AuthorizationType: NONE
       HttpMethod: POST
       Integration:
-        Type: AWS_PROXY
-        IntegrationHttpMethod: POST
-        Uri: !Sub
-          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
-          # - lambdaArn:
+        Type: MOCK
+        # Type: AWS_PROXY
+        # IntegrationHttpMethod: POST
+        # Uri: !Sub
+        #   - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
+        #   - lambdaArn:
       ResourceId: !Ref qcCategoriesResource
       RestApiId: !Ref apiGateway
   # API Gateway Resource - /qc/batches/{batchId}/weeks/{week}/categories/{categoryId}
@@ -452,7 +455,7 @@ Resources:
     Properties:
       RestApiId: !Ref apiGateway
       ParentId: !Ref qcCategoriesResource
-      PathPart: '{categoryId+}'
+      PathPart: '{categoryId}'
   # CORS for /qc/batches/{batchId}/weeks/{week}/categories/{categoryId}
   qcCategoryOptionsMethod:
     Type: AWS::ApiGateway::Method
@@ -491,11 +494,12 @@ Resources:
       AuthorizationType: NONE
       HttpMethod: DELETE
       Integration:
-        Type: AWS_PROXY
-        IntegrationHttpMethod: POST
-        Uri: !Sub
-          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
-          # - lambdaArn:
+        Type: MOCK
+        # Type: AWS_PROXY
+        # IntegrationHttpMethod: POST
+        # Uri: !Sub
+        #   - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
+        #   - lambdaArn:
       ResourceId: !Ref qcCategoryResource
       RestApiId: !Ref apiGateway
 
@@ -514,7 +518,7 @@ Resources:
     Properties:
         RestApiId: !Ref apiGateway
         ParentId: !Ref qcAssociatesResource
-        PathPart: '{associateId+}'
+        PathPart: '{associateId}'
   # CORS for /qc/batches/{batchId}/weeks/{week}/associates/{associateId}
   qcAssociatesOptionsMethod:
     Type: AWS::ApiGateway::Method
@@ -553,11 +557,12 @@ Resources:
       AuthorizationType: NONE
       HttpMethod: GET
       Integration:
-        Type: AWS_PROXY
-        IntegrationHttpMethod: POST
-        Uri: !Sub
-          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
-          # - lambdaArn:
+        Type: MOCK
+        # Type: AWS_PROXY
+        # IntegrationHttpMethod: POST
+        # Uri: !Sub
+        #   - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
+        #   - lambdaArn:
       ResourceId: !Ref qcAssociateResource
       RestApiId: !Ref apiGateway
   # PUT method for /qc/batches/{batchId}/weeks/{week}/associates/{associateId}
@@ -567,11 +572,12 @@ Resources:
       AuthorizationType: NONE
       HttpMethod: PUT
       Integration:
-        Type: HTTP_PROXY
-        IntegrationHttpMethod: POST
-        Uri: !Sub
-          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
-          # - lambdaArn:
+        Type: MOCK
+        # Type: AWS_PROXY
+        # IntegrationHttpMethod: POST
+        # Uri: !Sub
+        #   - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
+        #   - lambdaArn:
       ResourceId: !Ref qcAssociateResource
       RestApiId: !Ref apiGateway
   # PATCH method for /qc/batches/{batchId}/weeks/{week}/associates/{associateId}
@@ -581,16 +587,18 @@ Resources:
       AuthorizationType: NONE
       HttpMethod: PATCH
       Integration:
-        Type: HTTP_PROXY
-        IntegrationHttpMethod: POST
-        Uri: !Sub
-          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
-          # - lambdaArn:
+        Type: MOCK
+        # Type: AWS_PROXY
+        # IntegrationHttpMethod: POST
+        # Uri: !Sub
+        #   - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
+        #   - lambdaArn:
       ResourceId: !Ref qcAssociateResource
       RestApiId: !Ref apiGateway
 
   # API Gateway Deployment
   apiGatewayDefaultDeployment:
+    Type: AWS::ApiGateway::Deployment
     DependsOn:
       - getCategoriesMethod
       - addCategoryMethod
@@ -598,7 +606,7 @@ Resources:
       - getBatchesMethod
       - getBatchMethod
       - addWeekMethod
-      - getWeekInfoMethod
+      - getWeeksMethod
       - addWeekNoteMethod
       - getQcCategoriesMethod
       - addQcCategoryMethod
@@ -609,43 +617,42 @@ Resources:
     Properties:
       RestApiId: !Ref apiGateway
       StageName: default
-apiGatewayInvokeCategoriesLambda:
+  InvokeCategoriesLambda:
     Type: AWS::Lambda::Permission
     Properties:
       Action: lambda:InvokeFunction
       FunctionName: arn:aws:lambda:us-east-1:640280721521:function:categoriesLambda
       Principal: apigateway.amazonaws.com
-# lambdaIAMRole:
-  #   Type: AWS::IAM::Role
-  #   Properties:
-  #     AssumeRolePolicyDocument:
-  #       Version: 2012-10-17
-  #       Statement:
-  #         - Action:
-  #             - sts:AssumeRole
-  #           Effect: Allow
-  #           Principal:
-  #             Service:
-  #               - lambda.amazonaws.com
-  #     Policies:
-  #       - PolicyDocument:
-  #           Version: 2012-10-17
-  #           Statement:
-  #             - Action:
-  #                 - logs:CreateLogGroup
-  #                 - logs:CreateLogStream
-  #                 - logs:PutLogEvents
-  #               Effect: Allow
-  #               Resource:
-  #                 - !Sub arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/categoriesLambda:*
-  #         PolicyName: lambda-cf
-  # # Create our log group
-  # lambdaLogGroup:
-  #   Type: AWS::Logs::LogGroup
-  #   Properties:
-  #     LogGroupName: /aws/lambda/categoriesLambda-cf
-  #     RetentionInDays: 90
-
+  LambdaIAMRole:
+      Type: AWS::IAM::Role
+      Properties:
+        AssumeRolePolicyDocument:
+          Version: 2012-10-17
+          Statement:
+            - Action:
+                - sts:AssumeRole
+              Effect: Allow
+              Principal:
+                Service:
+                  - lambda.amazonaws.com
+        Policies:
+          - PolicyDocument:
+              Version: 2012-10-17
+              Statement:
+                - Action:
+                    - logs:CreateLogGroup
+                    - logs:CreateLogStream
+                    - logs:PutLogEvents
+                  Effect: Allow
+                  Resource:
+                    - !Sub arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/categoriesLambda:*
+            PolicyName: lambda-cf
+  # Create our log group
+  LambdaLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: /aws/lambda/categoriesLambda-cf
+      RetentionInDays: 90
 Outputs:
   apiGatewayInvokeUrl:
     Value: !Sub https://${apiGateway}.execute-api.${AWS::Region}.amazonaws.com/default
