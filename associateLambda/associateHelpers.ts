@@ -25,6 +25,9 @@ export async function getAssociate(path: string): Promise<QCFeedback | null> {
       associateInfo.weeknumber,
       associateInfo.associateid
     ]);
+
+    //frontend expects technicalstatus as an integer, so convert it back from a string
+    res.rows[0].technicalstatus = Status.findIndex((statusString) => statusString === res.rows[0].technicalstatus)
     return res.rows[0] as QCFeedback;
   } catch (err) {
     console.log(err);
@@ -59,13 +62,13 @@ export async function putAssociate(
     try {
       await client.connect();
       const res = await client.query(
-        'insert into qcnotes(batchid, weeknumber, associateid, notecontent, technicalstatus) values ($1::text, $2::integer, $3::integer, $4::text, $5::integer) returning *',
+        'insert into qcnotes(batchid, weeknumber, associateid, notecontent, technicalstatus) values ($1::text, $2::integer, $3::text, $4::text, $5::STATUS) returning *',
         [
           response.batchid,
           response.weeknumber,
           response.associateid,
           response.notecontent,
-          response.technicalstatus,
+          Status[response.technicalstatus],
         ]
       );
       return response;
@@ -92,15 +95,16 @@ export const patchAssociate = async (
 
   // Get the IDs from the path
   const { batchid, weeknumber, associateid } = parsePath(path);
+  const args_query = [associateid, weeknumber, batchid];
 
   // Figure out how we're updating the note and/or the technical status
   const obj = JSON.parse(updateObject);
   
   let q_note = 'update qcnotes set notecontent = $1::text where associateid = $2::text and weeknumber = $3::integer and batchid = $4::text';
-  let args_note = [obj.notecontent || '', associateid, weeknumber, batchid];
+  let args_note = [obj.notecontent || '', ...args_query];
   
-  let q_status = 'update qcnotes set technicalstatus = $1::integer where associateid = $2::text and weeknumber = $3::integer and batchid = $4::text';
-  let args_status = [obj.technicalstatus || 0, associateid, weeknumber, batchid];
+  let q_status = 'update qcnotes set technicalstatus = $1::STATUS where associateid = $2::text and weeknumber = $3::integer and batchid = $4::text';
+  let args_status = [Status[obj.technicalstatus] || Status[0], ...args_query];
 
   // This function lets us update either the notecontent or the technicalstatus of an associate
   // If neither of these is present in the object, return null
@@ -123,9 +127,11 @@ export const patchAssociate = async (
 
     // Return the updated object, so we can verify success
     const q_check =
-      'select batchid, weeknumber, associateid, notecontent, technicalstatus from qcnotes where associateid = $2::text and weeknumber = $3::integer and batchid = $4::text';
-    const res = await client.query(q_check, args_note);
+      'select batchid, weeknumber, associateid, notecontent, technicalstatus from qcnotes where associateid = $1::text and weeknumber = $2::integer and batchid = $3::text';
+    const res = await client.query(q_check, args_query);
 
+    //frontend expects technicalstatus as an integer, so convert it back from a string
+    res.rows[0].technicalstatus = Status.findIndex((statusString) => statusString === res.rows[0].technicalstatus);
     return res.rows[0] as QCFeedback;
   } catch (err) {
     console.log(err);
@@ -136,7 +142,7 @@ export const patchAssociate = async (
   }
 };
 
-function parsePath(path: string): any {
+export function parsePath(path: string): any {
   const parts = path.split('/');
   const associateid = parts[parts.length - 1];
   const weeknumber = Number(parts[parts.length - 3]);
@@ -151,3 +157,11 @@ export interface QCFeedback {
   notecontent: string;
   technicalstatus: number;
 }
+
+const Status = [
+  'Undefined',
+  'Poor',
+  'Average',
+  'Good',
+  'Superstar'
+]
