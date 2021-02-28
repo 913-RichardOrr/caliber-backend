@@ -124,12 +124,11 @@ Resources:
       # AuthorizerId: !Ref Authorizer
       HttpMethod: GET
       Integration:
-        Type: MOCK
-        # Type: AWS_PROXY
-        # IntegrationHttpMethod: POST
-        # Uri: !Sub
-        #   - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
-        #   - lambdaArn:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Sub
+          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
+          - lambdaArn: arn:aws:lambda:us-east-1:640280721521:function:categories
       ResourceId: !Ref categoriesResource
       RestApiId: !Ref apiGateway
   # POST method for /categories
@@ -141,12 +140,11 @@ Resources:
       # AuthorizerId: !Ref Authorizer
       HttpMethod: POST
       Integration:
-        Type: MOCK
-        # Type: AWS_PROXY
-        # IntegrationHttpMethod: POST
-        # Uri: !Sub
-        #   - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
-        #   - lambdaArn:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Sub
+          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
+          - lambdaArn: arn:aws:lambda:us-east-1:640280721521:function:categories
       ResourceId: !Ref categoriesResource
       RestApiId: !Ref apiGateway
   # API Gateway Resource - /categories/{categoryId}
@@ -198,12 +196,11 @@ Resources:
       # AuthorizationType: CUSTOM
       # AuthorizerId: !Ref Authorizer
       Integration:
-        Type: MOCK
-        # Type: AWS_PROXY
-        # IntegrationHttpMethod: POST
-        # Uri: !Sub
-        #   - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
-        #   - lambdaArn:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Sub
+          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
+          - lambdaArn: arn:aws:lambda:us-east-1:640280721521:function:categories
 
 # ------------------------------------------------------------------------------------------------------ #
 
@@ -662,12 +659,12 @@ Resources:
   #     Action: lambda:InvokeFunction
   #     FunctionName:
   #     Principal: apigateway.amazonaws.com
-  # InvokeCategoriesLambda:
-  #   Type: AWS::Lambda::Permission
-  #   Properties:
-  #     Action: lambda:InvokeFunction
-  #     FunctionName: 
-  #     Principal: apigateway.amazonaws.com
+  InvokeCategoriesLambda:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: arn:aws:lambda:us-east-1:640280721521:function:categories
+      Principal: apigateway.amazonaws.com
   # InvokeQCWeekLambda:
   #   Type: AWS::Lambda::Permission
   #   Properties:
