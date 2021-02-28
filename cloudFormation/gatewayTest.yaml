@@ -9,16 +9,14 @@ Resources:
         Description: Root endpoint for the Caliber Mobile application
         Name: caliber-mobile-api-cf
   # Authorizer
-  Authorizer:
-    Type: AWS::ApiGateway::Authorizer
-    Properties:
-      AuthorizerResultTtlInSeconds: '0'
-      AuthorizerUri: !Sub
-          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
-          - lambdaArn: 
-      RestApiId: !Ref apiGateway
-      Name: DefaultAuthorizer
-      Type: TOKEN
+  # Type: AWS::ApiGateway::Authorizer
+  #   Properties:
+  #     AuthorizerResultTtlInSeconds: '0'
+  #     AuthorizerUri: !Sub
+  #         - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
+  #         - lambdaArn:
+  #     RestApiId: !Ref apiGateway
+  #     Type: TOKEN
 
 # ------------------------------------------- Batches Feature ------------------------------------------- #
 
@@ -64,15 +62,17 @@ Resources:
   getBatchesMethod:
     Type: AWS::ApiGateway::Method
     Properties:
-      AuthorizationType: CUSTOM
-      AuthorizerId: !Ref Authorizer
+      AuthorizationType: NONE
+      # AuthorizationType: CUSTOM
+      # AuthorizerId: !Ref Authorizer
       HttpMethod: GET
       Integration:
-        Type: AWS_PROXY
-        IntegrationHttpMethod: POST
-        Uri: !Sub
-          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
-          - lambdaArn:
+        Type: MOCK 
+        # Type: AWS_PROXY
+        # IntegrationHttpMethod: POST
+        # Uri: !Sub
+        #   - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
+        #   - lambdaArn:
       ResourceId: !Ref batchesResource
       RestApiId: !Ref apiGateway
 # ------------------------------------------- Categories Feature ------------------------------------------- #
@@ -119,30 +119,34 @@ Resources:
   getCategoriesMethod:
     Type: AWS::ApiGateway::Method
     Properties:
-      AuthorizationType: CUSTOM
-      AuthorizerId: !Ref Authorizer
+      AuthorizationType: NONE
+      # AuthorizationType: CUSTOM
+      # AuthorizerId: !Ref Authorizer
       HttpMethod: GET
       Integration:
-        Type: AWS_PROXY
-        IntegrationHttpMethod: POST
-        Uri: !Sub
-          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
-          - lambdaArn: arn:aws:lambda:us-east-1:640280721521:function:categories
+        Type: MOCK
+        # Type: AWS_PROXY
+        # IntegrationHttpMethod: POST
+        # Uri: !Sub
+        #   - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
+        #   - lambdaArn:
       ResourceId: !Ref categoriesResource
       RestApiId: !Ref apiGateway
   # POST method for /categories
   addCategoryMethod:
     Type: AWS::ApiGateway::Method
     Properties:
-      AuthorizationType: CUSTOM
-      AuthorizerId: !Ref Authorizer
+      AuthorizationType: NONE
+      # AuthorizationType: CUSTOM
+      # AuthorizerId: !Ref Authorizer
       HttpMethod: POST
       Integration:
-        Type: AWS_PROXY
-        IntegrationHttpMethod: POST
-        Uri: !Sub
-          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
-          - lambdaArn: arn:aws:lambda:us-east-1:640280721521:function:categories
+        Type: MOCK
+        # Type: AWS_PROXY
+        # IntegrationHttpMethod: POST
+        # Uri: !Sub
+        #   - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
+        #   - lambdaArn:
       ResourceId: !Ref categoriesResource
       RestApiId: !Ref apiGateway
   # API Gateway Resource - /categories/{categoryId}
@@ -190,14 +194,16 @@ Resources:
       RestApiId: !Ref apiGateway
       ResourceId: !Ref categoryIdResource
       HttpMethod: PUT
-      AuthorizationType: CUSTOM
-      AuthorizerId: !Ref Authorizer
+      AuthorizationType: NONE
+      # AuthorizationType: CUSTOM
+      # AuthorizerId: !Ref Authorizer
       Integration:
-        Type: AWS_PROXY
-        IntegrationHttpMethod: POST
-        Uri: !Sub
-          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
-          - lambdaArn: arn:aws:lambda:us-east-1:640280721521:function:categories
+        Type: MOCK
+        # Type: AWS_PROXY
+        # IntegrationHttpMethod: POST
+        # Uri: !Sub
+        #   - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
+        #   - lambdaArn:
 
 # ------------------------------------------------------------------------------------------------------ #
 
@@ -257,15 +263,17 @@ Resources:
   getBatchMethod:
     Type: AWS::ApiGateway::Method
     Properties:
-      AuthorizationType: CUSTOM
-      AuthorizerId: !Ref Authorizer
+      AuthorizationType: NONE
+      # AuthorizationType: CUSTOM
+      # AuthorizerId: !Ref Authorizer
       HttpMethod: GET
       Integration:
-        Type: AWS_PROXY
-        IntegrationHttpMethod: POST
-        Uri: !Sub
-          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
-          - lambdaArn:
+        Type: MOCK
+        # Type: AWS_PROXY
+        # IntegrationHttpMethod: POST
+        # Uri: !Sub
+        #   - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
+        #   - lambdaArn:
       ResourceId: !Ref qcBatchResource
       RestApiId: !Ref apiGateway
 # ------------------------------------------- qcWeek Feature ------------------------------------------- #
@@ -312,30 +320,34 @@ Resources:
   getWeeksMethod:
     Type: AWS::ApiGateway::Method
     Properties:
-      AuthorizationType: CUSTOM
-      AuthorizerId: !Ref Authorizer
+      AuthorizationType: NONE
+      # AuthorizationType: CUSTOM
+      # AuthorizerId: !Ref Authorizer
       HttpMethod: GET
       Integration:
-        Type: AWS_PROXY
-        IntegrationHttpMethod: POST
-        Uri: !Sub
-          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
-          - lambdaArn:
+        Type: MOCK
+        # Type: AWS_PROXY
+        # IntegrationHttpMethod: POST
+        # Uri: !Sub
+        #   - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
+        #   - lambdaArn:
       ResourceId: !Ref qcWeeksResource
       RestApiId: !Ref apiGateway
   # POST method for /qc/batches/{batchId}/weeks
   addWeekMethod:
     Type: AWS::ApiGateway::Method
     Properties:
-      AuthorizationType: CUSTOM
-      AuthorizerId: !Ref Authorizer
+      AuthorizationType: NONE
+      # AuthorizationType: CUSTOM
+      # AuthorizerId: !Ref Authorizer
       HttpMethod: POST
       Integration:
-        Type: AWS_PROXY
-        IntegrationHttpMethod: POST
-        Uri: !Sub
-          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
-          - lambdaArn:
+        Type: MOCK
+        # Type: AWS_PROXY
+        # IntegrationHttpMethod: POST
+        # Uri: !Sub
+        #   - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
+        #   - lambdaArn:
       ResourceId: !Ref qcWeeksResource
       RestApiId: !Ref apiGateway
   # API Gateway Resource - /qc/batches/{batchId}/weeks/{week}
@@ -380,15 +392,17 @@ Resources:
   addWeekNoteMethod:
     Type: AWS::ApiGateway::Method
     Properties:
-      AuthorizationType: CUSTOM
-      AuthorizerId: !Ref Authorizer
+      AuthorizationType: NONE
+      # AuthorizationType: CUSTOM
+      # AuthorizerId: !Ref Authorizer
       HttpMethod: POST
       Integration:
-        Type: AWS_PROXY
-        IntegrationHttpMethod: POST
-        Uri: !Sub
-          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
-          - lambdaArn:
+        Type: MOCK
+        # Type: AWS_PROXY
+        # IntegrationHttpMethod: POST
+        # Uri: !Sub
+        #   - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
+        #   - lambdaArn:
       ResourceId: !Ref qcWeekResource
       RestApiId: !Ref apiGateway
 
@@ -436,30 +450,34 @@ Resources:
   getQcCategoriesMethod:
     Type: AWS::ApiGateway::Method
     Properties:
-      AuthorizationType: CUSTOM
-      AuthorizerId: !Ref Authorizer
+      AuthorizationType: NONE
+      # AuthorizationType: CUSTOM
+      # AuthorizerId: !Ref Authorizer
       HttpMethod: GET
       Integration:
-        Type: AWS_PROXY
-        IntegrationHttpMethod: POST
-        Uri: !Sub
-          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
-          - lambdaArn:
+        Type: MOCK
+        # Type: AWS_PROXY
+        # IntegrationHttpMethod: POST
+        # Uri: !Sub
+        #   - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
+        #   - lambdaArn:
       ResourceId: !Ref qcCategoriesResource
       RestApiId: !Ref apiGateway
   # POST method for qc/batches/{batchId}/weeks/{week}/categories
   addQcCategoryMethod:
     Type: AWS::ApiGateway::Method
     Properties:
-      AuthorizationType: CUSTOM
-      AuthorizerId: !Ref Authorizer
+      AuthorizationType: NONE
+      # AuthorizationType: CUSTOM
+      # AuthorizerId: !Ref Authorizer
       HttpMethod: POST
       Integration:
-        Type: AWS_PROXY
-        IntegrationHttpMethod: POST
-        Uri: !Sub
-          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
-          - lambdaArn:
+        Type: MOCK
+        # Type: AWS_PROXY
+        # IntegrationHttpMethod: POST
+        # Uri: !Sub
+        #   - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
+        #   - lambdaArn:
       ResourceId: !Ref qcCategoriesResource
       RestApiId: !Ref apiGateway
   # API Gateway Resource - /qc/batches/{batchId}/weeks/{week}/categories/{categoryId}
@@ -504,15 +522,17 @@ Resources:
   deleteQcCategoryMethod:
     Type: AWS::ApiGateway::Method
     Properties:
-      AuthorizationType: CUSTOM
-      AuthorizerId: !Ref Authorizer
+      AuthorizationType: NONE
+      # AuthorizationType: CUSTOM
+      # AuthorizerId: !Ref Authorizer
       HttpMethod: DELETE
       Integration:
-        Type: AWS_PROXY
-        IntegrationHttpMethod: POST
-        Uri: !Sub
-          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
-          - lambdaArn:
+        Type: MOCK
+        # Type: AWS_PROXY
+        # IntegrationHttpMethod: POST
+        # Uri: !Sub
+        #   - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
+        #   - lambdaArn:
       ResourceId: !Ref qcCategoryResource
       RestApiId: !Ref apiGateway
 
@@ -567,45 +587,51 @@ Resources:
   getAssociateInfoMethod:
     Type: AWS::ApiGateway::Method
     Properties:
-      AuthorizationType: CUSTOM
-      AuthorizerId: !Ref Authorizer
+      AuthorizationType: NONE
+      # AuthorizationType: CUSTOM
+      # AuthorizerId: !Ref Authorizer
       HttpMethod: GET
       Integration:
-        Type: AWS_PROXY
-        IntegrationHttpMethod: POST
-        Uri: !Sub
-          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
-          - lambdaArn:
+        Type: MOCK
+        # Type: AWS_PROXY
+        # IntegrationHttpMethod: POST
+        # Uri: !Sub
+        #   - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
+        #   - lambdaArn:
       ResourceId: !Ref qcAssociateResource
       RestApiId: !Ref apiGateway
   # PUT method for /qc/batches/{batchId}/weeks/{week}/associates/{associateId}
   updateAssociateInfoMethod:
     Type: AWS::ApiGateway::Method
     Properties:
-      AuthorizationType: CUSTOM
-      AuthorizerId: !Ref Authorizer
+      AuthorizationType: NONE
+      # AuthorizationType: CUSTOM
+      # AuthorizerId: !Ref Authorizer
       HttpMethod: PUT
       Integration:
-        Type: AWS_PROXY
-        IntegrationHttpMethod: POST
-        Uri: !Sub
-          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
-          - lambdaArn:
+        Type: MOCK
+        # Type: AWS_PROXY
+        # IntegrationHttpMethod: POST
+        # Uri: !Sub
+        #   - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
+        #   - lambdaArn:
       ResourceId: !Ref qcAssociateResource
       RestApiId: !Ref apiGateway
   # PATCH method for /qc/batches/{batchId}/weeks/{week}/associates/{associateId}
   updateNoteOrStatusMethod:
     Type: AWS::ApiGateway::Method
     Properties:
-      AuthorizationType: CUSTOM
-      AuthorizerId: !Ref Authorizer
+      AuthorizationType: NONE
+      # AuthorizationType: CUSTOM
+      # AuthorizerId: !Ref Authorizer
       HttpMethod: PATCH
       Integration:
-        Type: AWS_PROXY
-        IntegrationHttpMethod: POST
-        Uri: !Sub
-          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
-          - lambdaArn:
+        Type: MOCK
+        # Type: AWS_PROXY
+        # IntegrationHttpMethod: POST
+        # Uri: !Sub
+        #   - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
+        #   - lambdaArn:
       ResourceId: !Ref qcAssociateResource
       RestApiId: !Ref apiGateway
 
@@ -630,48 +656,48 @@ Resources:
     Properties:
       RestApiId: !Ref apiGateway
       StageName: default
-  InvokeBatchesLambda:
-    Type: AWS::Lambda::Permission
-    Properties:
-      Action: lambda:InvokeFunction
-      FunctionName:
-      Principal: apigateway.amazonaws.com
-  InvokeCategoriesLambda:
-    Type: AWS::Lambda::Permission
-    Properties:
-      Action: lambda:InvokeFunction
-      FunctionName: arn:aws:lambda:us-east-1:640280721521:function:categories
-      Principal: apigateway.amazonaws.com
-  InvokeQCWeekLambda:
-    Type: AWS::Lambda::Permission
-    Properties:
-      Action: lambda:InvokeFunction
-      FunctionName:
-      Principal: apigateway.amazonaws.com
-  InvokeQCCategoriesLambda:
-    Type: AWS::Lambda::Permission
-    Properties:
-      Action: lambda:InvokeFunction
-      FunctionName:
-      Principal: apigateway.amazonaws.com
-  InvokeAssociatesLambda:
-    Type: AWS::Lambda::Permission
-    Properties:
-      Action: lambda:InvokeFunction
-      FunctionName:
-      Principal: apigateway.amazonaws.com
-  InvokeBatchAssociatesLambda:
-    Type: AWS::Lambda::Permission
-    Properties:
-      Action: lambda:InvokeFunction
-      FunctionName:
-      Principal: apigateway.amazonaws.com
-  InvokeFirebaseLambda:
-    Type: AWS::Lambda::Permission
-    Properties:
-      Action: lambda:InvokeFunction
-      FunctionName:
-      Principal: apigateway.amazonaws.com
+  # InvokeBatchesLambda:
+  #   Type: AWS::Lambda::Permission
+  #   Properties:
+  #     Action: lambda:InvokeFunction
+  #     FunctionName:
+  #     Principal: apigateway.amazonaws.com
+  # InvokeCategoriesLambda:
+  #   Type: AWS::Lambda::Permission
+  #   Properties:
+  #     Action: lambda:InvokeFunction
+  #     FunctionName: 
+  #     Principal: apigateway.amazonaws.com
+  # InvokeQCWeekLambda:
+  #   Type: AWS::Lambda::Permission
+  #   Properties:
+  #     Action: lambda:InvokeFunction
+  #     FunctionName:
+  #     Principal: apigateway.amazonaws.com
+  # InvokeQCCategoriesLambda:
+  #   Type: AWS::Lambda::Permission
+  #   Properties:
+  #     Action: lambda:InvokeFunction
+  #     FunctionName:
+  #     Principal: apigateway.amazonaws.com
+  # InvokeAssociatesLambda:
+  #   Type: AWS::Lambda::Permission
+  #   Properties:
+  #     Action: lambda:InvokeFunction
+  #     FunctionName:
+  #     Principal: apigateway.amazonaws.com
+  # InvokeBatchAssociatesLambda:
+  #   Type: AWS::Lambda::Permission
+  #   Properties:
+  #     Action: lambda:InvokeFunction
+  #     FunctionName:
+  #     Principal: apigateway.amazonaws.com
+  # InvokeFirebaseLambda:
+  #   Type: AWS::Lambda::Permission
+  #   Properties:
+  #     Action: lambda:InvokeFunction
+  #     FunctionName:
+  #     Principal: apigateway.amazonaws.com
   LambdaIAMRole:
       Type: AWS::IAM::Role
       Properties:
