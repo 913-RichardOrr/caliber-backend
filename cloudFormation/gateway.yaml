@@ -127,7 +127,7 @@ Resources:
         IntegrationHttpMethod: POST
         Uri: !Sub
           - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
-          - lambdaArn: arn:aws:lambda:us-east-1:640280721521:function:categories
+          - lambdaArn: arn:aws:lambda:us-east-1:855430746673:function:categories
       ResourceId: !Ref categoriesResource
       RestApiId: !Ref apiGateway
   # POST method for /categories
@@ -142,7 +142,7 @@ Resources:
         IntegrationHttpMethod: POST
         Uri: !Sub
           - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
-          - lambdaArn: arn:aws:lambda:us-east-1:640280721521:function:categories
+          - lambdaArn: arn:aws:lambda:us-east-1:855430746673:function:categories
       ResourceId: !Ref categoriesResource
       RestApiId: !Ref apiGateway
   # API Gateway Resource - /categories/{categoryId}
@@ -197,7 +197,7 @@ Resources:
         IntegrationHttpMethod: POST
         Uri: !Sub
           - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
-          - lambdaArn: arn:aws:lambda:us-east-1:640280721521:function:categories
+          - lambdaArn: arn:aws:lambda:us-east-1:855430746673:function:categories
 
 # ------------------------------------------------------------------------------------------------------ #
 
@@ -640,7 +640,7 @@ Resources:
     Type: AWS::Lambda::Permission
     Properties:
       Action: lambda:InvokeFunction
-      FunctionName: arn:aws:lambda:us-east-1:640280721521:function:categories
+      FunctionName: arn:aws:lambda:us-east-1:855430746673:function:categories
       Principal: apigateway.amazonaws.com
   InvokeQCWeekLambda:
     Type: AWS::Lambda::Permission
