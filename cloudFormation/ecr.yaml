@@ -1,0 +1,94 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: ECR repo for lambda containers
+Parameters:
+  PolicyTemplate:
+    Type: String
+    Default: |
+        {
+          "rules": [
+            {
+              "rulePriority": 1,
+              "description": "Keep only two untagged images, expire all others",
+              "selection": {
+                "tagStatus": "untagged",
+                "countType": "imageCountMoreThan",
+                "countNumber": 2
+              },
+              "action": {
+                "type": "expire"
+              }
+            }
+          ]
+        }
+Resources:
+  BatchesECR:
+    Type: AWS::ECR::Repository
+    Properties:
+      RepositoryName: "batches-lambda"
+      LifecyclePolicy:
+        LifecyclePolicyText: !Ref PolicyTemplate
+  AssociatesECR:
+    Type: AWS::ECR::Repository
+    Properties:
+      RepositoryName: "associates-lambda"
+      LifecyclePolicy:
+        LifecyclePolicyText: !Ref PolicyTemplate
+  BatchAssociatesECR:
+    Type: AWS::ECR::Repository
+    Properties:
+      RepositoryName: "batch-associates-lambda"
+      LifecyclePolicy:
+        LifecyclePolicyText: !Ref PolicyTemplate
+  BatchWeekECR:
+    Type: AWS::ECR::Repository
+    Properties:
+      RepositoryName: "batchweek-lambda"
+      LifecyclePolicy:
+        LifecyclePolicyText: !Ref PolicyTemplate
+  CategoriesECR:
+    Type: AWS::ECR::Repository
+    Properties:
+      RepositoryName: "categories-lambda"
+      LifecyclePolicy:
+        LifecyclePolicyText: !Ref PolicyTemplate
+  WeekCategoriesECR:
+    Type: AWS::ECR::Repository
+    Properties:
+      RepositoryName: "weekcategories-lambda"
+      LifecyclePolicy:
+        LifecyclePolicyText: !Ref PolicyTemplate
+  FireBaseECR:
+    Type: AWS::ECR::Repository
+    Properties:
+      RepositoryName: "firebase-lambda"
+      LifecyclePolicy:
+        LifecyclePolicyText: !Ref PolicyTemplate
+Outputs:
+  BatchesECRArn:
+    Value: !GetAtt BatchesECR.Arn
+    Export:
+      Name: BatchesECRArn
+  AssociatesECRArn:
+    Value: !GetAtt AssociatesECR.Arn
+    Export:
+      Name: AssociatesECRArn
+  BatchAssociatesECRArn:
+    Value: !GetAtt BatchAssociatesECR.Arn
+    Export:
+      Name: AssociateECRArn
+  BatchWeekECRArn:
+    Value: !GetAtt BatchWeekECR.Arn
+    Export:
+      Name: BatchWeekECRArn
+  CategoriesECRArn:
+    Value: !GetAtt CategoriesECR.Arn
+    Export:
+      Name: CategoriesECRArn
+  WeekCategoriesECRArn:
+    Value: !GetAtt WeekCategoriesECR.Arn
+    Export:
+      Name: WeekCategoriesECRArn
+  FireBaseECRArn:
+    Value: !GetAtt FireBaseECR.Arn
+    Export:
+      Name: FireBaseECRArn
