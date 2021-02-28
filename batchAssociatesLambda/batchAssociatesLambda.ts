@@ -8,8 +8,8 @@ export interface AssociateEvent {
 }
 
 /**
- * figures out what http method has been called: GET, PUT, PATCH, then 
- * calls the relevant helper function return the relevant object
+ * passes the path to the helper function (to call mock api) 
+ * handles the helper function's output
  * @param event 
  */
 export async function handler(event: AssociateEvent): Promise<any> {
