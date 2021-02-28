@@ -13,7 +13,7 @@ jest.mock('pg', () => {
 });
 
 // mocked helper functions
-jest.mock('../categoriesFeature/categoriesHelpers', () => {
+jest.mock('../../categoriesFeature/CategoriesHelpers', () => {
     const mockget = jest.fn();
     const mockpost = jest.fn();
     const mockput = jest.fn();

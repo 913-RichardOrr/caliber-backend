@@ -1,6 +1,5 @@
 import { Client } from 'pg';
 import * as categoriesHelpers from '../../categoriesFeature/CategoriesHelpers';
-import { handler } from '../../categoriesFeature/CategoriesLambda';
 
 // mocked client
 jest.mock('pg', () => {
@@ -29,7 +28,7 @@ describe('getCategories', () => {
             path: '/test',
             body: {},
             httpMethod: 'GET',
-            queryStringParameters: { active: 'true' }
+            queryStringParameters: { active: true }
         }
     });
 
@@ -40,8 +39,8 @@ describe('getCategories', () => {
     });
 
     test('GET request should succeed', async () => {
-        await categoriesHelpers.getCategories(client, mEvent.queryStringParameters.active);
-        expect(client.query).toBeCalledWith('select c.categoryId, c.skill, c.active from category c where active=$1::text', ['true']);
+        await categoriesHelpers.getCategories(client, mEvent.queryStringParameters);
+        expect(client.query).toBeCalledWith('select c.categoryid, c.skill, c.active from categories c where active=$1::boolean', [true]);
         expect(client.end).toBeCalledTimes(1);
     });
 });
@@ -75,7 +74,7 @@ describe('postCategories', () => {
             queryStringParameters: { active: 'true' }
         };
         const res = await categoriesHelpers.postCategories(client, mEvent);
-        expect(client.query).toBeCalledWith(`insert into category (skill,active) values ($1,$2)`, ['testskill', true]);
+        expect(client.query).toBeCalledWith(`insert into categories (skill,active) values ($1::text,true) returning categoryid, skill, active`, [{"active": true,"skill": "testskill"}]);
         expect(client.end).toBeCalledTimes(1);
     });
 
@@ -88,7 +87,7 @@ describe('postCategories', () => {
         };
         const res = await categoriesHelpers.postCategories(client, mEvent);
         expect(res.statusCode).not.toBe(200);
-        expect(client.query).toBeCalledWith(`insert into category (skill,active) values ($1,$2)`, ['testskill','true']);
+        expect(client.query).toBeCalledWith(`insert into categories (skill,active) values ($1::text,true) returning categoryid, skill, active`, [{"active": "true","skill": "testskill"}]);
         expect(client.end).toBeCalledTimes(1);
     });
 });
@@ -117,25 +116,25 @@ describe('putCategory', () => {
     test('PUT request should succeed', async () => {
         mEvent = {
             path: '/something/2',
-            body: {skill: 'test', active: true},
+            body: JSON.stringify({skill: 'test', active: true}),
             httpMethod: 'PUT',
             queryStringParameters: {}
         }
         const res = await categoriesHelpers.putCategory(client, mEvent);
-        expect(client.query).toBeCalledWith('update category set skill=$1, active=$2 where categoryId=$3',['test', true, '2']);
+        expect(client.query).toBeCalledWith('update categories set skill=$1, active=$2 where categoryid=$3',['test', true, '2']);
         expect(client.end).toBeCalledTimes(1);
     });
 
     test('PUT request should fail', async () => {
         mEvent = {
             path: '/something/2',
-            body: { skill: 'testskill', active: 'true' },
+            body: JSON.stringify({ skill: 'testskill', active: true }),
             httpMethod: 'PUT',
             queryStringParameters: {}
         };
         const res = await categoriesHelpers.putCategory(client, mEvent);
         expect(res.statusCode).not.toBe(200);
-        expect(client.query).toBeCalledWith('update category set skill=$1, active=$2 where categoryId=$3',['testskill', 'true', '2']);
+        expect(client.query).toBeCalledWith('update categories set skill=$1, active=$2 where categoryid=$3',['testskill', true, '2']);
         expect(client.end).toBeCalledTimes(1);
     });
 });
