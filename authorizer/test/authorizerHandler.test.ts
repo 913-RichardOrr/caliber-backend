@@ -1,9 +1,10 @@
 const handler = require('../authorizerHandler');
 const helper = require('../authorizerHelper');
-const serviceAccount = require('firebase-service-account-DO_NOT_PUSH.json');
+const serviceAccount = require('firebase.json');
 
 import admin from 'firebase-admin';
-jest.mock('firebase-service-account-DO_NOT_PUSH.json', ()=>({
+import { generateIamPolicy } from '../authorizerHandler';
+jest.mock('firebase.json', ()=>({
     settings: 'someSetting'
   }), { virtual: true })
 
