@@ -8,3 +8,4 @@
 .vscode/
 *.csv
 **/*.js
+firebase-service-account-DO_NOT_PUSH.json
