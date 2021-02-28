@@ -1,6 +1,7 @@
 //Tests for associate lambda handler and helpers
 
 import * as associateLambda from '../../associateLambda/associateHelpers';
+import { Client } from 'pg';
 
 const mockConnect = jest.fn();
 const mockQuery = jest.fn();
@@ -33,6 +34,9 @@ describe('tests for getAssociate', () => {
       mockQuery
         .mockResolvedValueOnce(body);
   
+      const res = await associateLambda.getAssociate(
+        testPath
+      );
       //expect(res).toBe(body);
       expect(mockConnect).toHaveBeenCalledTimes(1);
       expect(mockQuery).toHaveBeenCalledTimes(1);
@@ -291,5 +295,5 @@ describe('Tests for parsePath', () => {
 
     expect(associateLambda.parsePath(testPath)).toEqual(expected);
 
-  })
-})
+  });
+});
