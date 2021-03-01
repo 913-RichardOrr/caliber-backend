@@ -41,7 +41,7 @@ console.log("We have entered the Container Made by Salman Saeed");
 exports.handler =
     function (event) {
         return __awaiter(this, void 0, void 0, function () {
-            var Client, client, method, id, postCategory, postWeek, deleteVarCategory, deleteWeek;
+            var Client, client, response, method, id, postCategory, postWeek, deleteVarCategory, deleteWeek;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:

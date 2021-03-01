@@ -19,9 +19,10 @@ export const addCategory = async (client: any, params: categoryParams) => {
     await client.query(query, values).then((response: any) => {
         client.end();
         if (response) {
-            return createResponse(JSON.stringify(response.rows), 200);
+            console.log("i am runnign in the response retutn location");
+            return createResponse(JSON.stringify(response), 200);
         } else {
-            return createResponse('', 400);
+            return createResponse('No Rows Available', 400);
         }
     });
 }
@@ -39,7 +40,6 @@ export const getCategories = async (client: any, params:getCategoryParams) => {
     await client.query(`select c.skill, c.categoryid from categories c join weekcategories w on c.categoryid = w.categoryid where w.qcweekid = ${params.weekID}`, (err: any, res: any) => {
         client.end();
         if (res) {
-            console.log(res.rows);
             return createResponse(JSON.stringify(res.rows), 200);
         } else {
             return createResponse('', 400);

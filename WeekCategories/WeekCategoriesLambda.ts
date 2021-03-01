@@ -13,13 +13,15 @@ async function (event:any){
         password: process.env.PGPASSWORD, 
         port: 5432
     });
-    await client.connect();    
+    await client.connect(); 
+    var response;    
     
    const method = event.httpMethod;
     switch (method) {
         case 'GET':
             let id = event.path.substring(event.path.lastIndexOf('/') + 1, event.path.length);
             getCategories(client,{weekID:Number(id)});
+            
             break;
         case 'POST':
             let postCategory = JSON.stringify(event.body.categoryid);
@@ -36,5 +38,6 @@ async function (event:any){
             client.end();
             break;
     }
+    
 }
 
