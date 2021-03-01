@@ -72,10 +72,10 @@ var getCategories = function (client, params) { return __awaiter(void 0, void 0,
         switch (_a.label) {
             case 0: 
             //we want the name of category and the id
-            return [4 /*yield*/, client.query("select c.skill, c.categoryid from categories c join weekcategories w on c.categoryid = w.categoryid", function (err, res) {
-                    console.log(res.rows);
+            return [4 /*yield*/, client.query("select c.skill, c.categoryid from categories c join weekcategories w on c.categoryid = w.categoryid where w.qcweekid = " + params.weekID, function (err, res) {
                     client.end();
                     if (res) {
+                        console.log(res.rows);
                         return response_1["default"](JSON.stringify(res.rows), 200);
                     }
                     else {
@@ -94,7 +94,7 @@ exports.getCategories = getCategories;
 var deleteCategory = function (client, params) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, client.query("delete from weekcategories where qcweekid = " + params.weekID).then(function (response) {
+            case 0: return [4 /*yield*/, client.query("delete from weekcategories where qcweekid = " + params.weekID + " and categoryid = " + params.categoryID).then(function (response) {
                     client.end();
                     if (response) {
                         return response_1["default"]('', 200);

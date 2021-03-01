@@ -37,6 +37,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 exports.__esModule = true;
 var WeekCategoriesHelper_1 = require("./WeekCategoriesHelper");
+console.log("We have entered the Container Made by Salman Saeed");
 exports.handler =
     function (event) {
         return __awaiter(this, void 0, void 0, function () {
@@ -45,7 +46,13 @@ exports.handler =
                 switch (_a.label) {
                     case 0:
                         Client = require('pg').Client;
-                        client = new Client({});
+                        client = new Client({
+                            user: process.env.PGUSER,
+                            host: process.env.PGHOST,
+                            database: process.env.PGDATABASE,
+                            password: process.env.PGPASSWORD,
+                            port: 5432
+                        });
                         return [4 /*yield*/, client.connect()];
                     case 1:
                         _a.sent();
@@ -67,7 +74,7 @@ exports.handler =
                                 break;
                             default:
                                 console.log("Does not support HTTP method " + method);
-                                //  client.end();
+                                client.end();
                                 break;
                         }
                         return [2 /*return*/];
