@@ -12,11 +12,11 @@ enter region
 
 aws sts get-caller-identity
 
-aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 846663386575.dkr.ecr.us-west-2.amazonaws.com
+aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 123.dkr.ecr.us-west-2.amazonaws.com
 
-docker tag firebaselambda:latest 846663386575.dkr.ecr.us-west-2.amazonaws.com/firebase-lambda:latest
+docker tag firebaselambda:latest 123.dkr.ecr.us-west-2.amazonaws.com/firebase-lambda:latest
 
-docker push 846663386575.dkr.ecr.us-west-2.amazonaws.com/firebase-lambda:latest
+docker push 123.dkr.ecr.us-west-2.amazonaws.com/firebase-lambda:latest
 
 
 ## create a lambda function
@@ -25,7 +25,7 @@ aws cloudformation deploy --template-file authorizer.yaml --stack-name firebasel
 aws cloudformation delete-stack --stack-name firebaselambda
 
 ## deploy api gateway
-aws cloudformation deploy --template-file cloudFormation/gatewayTestAuthorizer.yaml --stack-name calibermobile-apigateway
+aws cloudformation deploy --template-file authorizer/gatewayTestAuthorizer.yaml --stack-name calibermobile-apigateway
 
 aws cloudformation describe-stack-events --stack-name calibermobile-apigateway
 
