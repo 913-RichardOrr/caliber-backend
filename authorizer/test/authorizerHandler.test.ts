@@ -25,7 +25,7 @@ jest.mock('firebase-admin', () => {
 });
 
 jest.mock(
-    'firebase-service-account-DO_NOT_PUSH.json',
+    'firebase.json',
     () => ({
         settings: 'someSetting'
     }),
