@@ -35,16 +35,16 @@ Resources:
     Properties:
         Description: Root endpoint for the Caliber Mobile application
         Name: caliber-mobile-api-cf
-  Authorizer:
-    Type: AWS::ApiGateway::Authorizer
-    Properties:
-      Name: calibermobileauthorizer
-      AuthorizerResultTtlInSeconds: '0'
-      AuthorizerUri: !Sub
-          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
-          - lambdaArn: !Join ["",[!Ref lambdaARNTemplate, !Ref fireBaseLambdaName]]
-      RestApiId: !Ref apiGateway
-      Type: TOKEN
+  # Authorizer:
+  #   Type: AWS::ApiGateway::Authorizer
+  #   Properties:
+  #     Name: calibermobileauthorizer
+  #     AuthorizerResultTtlInSeconds: '0'
+  #     AuthorizerUri: !Sub
+  #         - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
+  #         - lambdaArn: !Join ["",[!Ref lambdaARNTemplate, !Ref fireBaseLambdaName]]
+  #     RestApiId: !Ref apiGateway
+  #     Type: TOKEN
 
 # ------------------------------------------- Batches Feature ------------------------------------------- #
 
@@ -132,12 +132,12 @@ Resources:
         PassthroughBehavior: WHEN_NO_MATCH
         RequestTemplates:
           application/json: '{"statusCode": 200}'
-        # Type: MOCK
-        Type: AWS_PROXY
-        IntegrationHttpMethod: POST
-        Uri: !Sub
-          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
-          - lambdaArn: !Join ["",[!Ref lambdaARNTemplate, !Ref categoriesLambdaName]]
+        Type: MOCK
+        # Type: AWS_PROXY
+        # IntegrationHttpMethod: POST
+        # Uri: !Sub
+        #   - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
+        #   - lambdaArn: !Join ["",[!Ref lambdaARNTemplate, !Ref categoriesLambdaName]]
       MethodResponses:
       - StatusCode: 200
         ResponseModels:
@@ -178,12 +178,12 @@ Resources:
         PassthroughBehavior: WHEN_NO_MATCH
         RequestTemplates:
           application/json: '{"statusCode": 200}'
-        # Type: MOCK
-        Type: AWS_PROXY
-        IntegrationHttpMethod: POST
-        Uri: !Sub
-          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
-          - lambdaArn: !Join ["",[!Ref lambdaARNTemplate, !Ref categoriesLambdaName]]
+        Type: MOCK
+        # Type: AWS_PROXY
+        # IntegrationHttpMethod: POST
+        # Uri: !Sub
+        #   - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
+        #   - lambdaArn: !Join ["",[!Ref lambdaARNTemplate, !Ref categoriesLambdaName]]
       MethodResponses:
       - StatusCode: 200
         ResponseModels:
@@ -241,12 +241,12 @@ Resources:
         PassthroughBehavior: WHEN_NO_MATCH
         RequestTemplates:
           application/json: '{"statusCode": 200}'
-        # Type: MOCK
-        Type: AWS_PROXY
-        IntegrationHttpMethod: POST
-        Uri: !Sub
-          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
-          - lambdaArn: !Join ["",[!Ref lambdaARNTemplate, !Ref batchAssociatesLambdaName]]
+        Type: MOCK
+        # Type: AWS_PROXY
+        # IntegrationHttpMethod: POST
+        # Uri: !Sub
+        #   - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
+        #   - lambdaArn: !Join ["",[!Ref lambdaARNTemplate, !Ref batchAssociatesLambdaName]]
       MethodResponses:
       - StatusCode: 200
         ResponseModels:
@@ -484,12 +484,12 @@ Resources:
         PassthroughBehavior: WHEN_NO_MATCH
         RequestTemplates:
           application/json: '{"statusCode": 200}'
-        # Type: MOCK
-        Type: AWS_PROXY
-        IntegrationHttpMethod: POST
-        Uri: !Sub
-          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
-          - lambdaArn: !Join ["",["arn:aws:lambda:", !Sub "${AWS::Region}", ":", !Sub "${AWS::AccountId}", ":function:", !Ref associateLambdaName]]
+        Type: MOCK
+        # Type: AWS_PROXY
+        # IntegrationHttpMethod: POST
+        # Uri: !Sub
+        #   - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
+        #   - lambdaArn: !Join ["",["arn:aws:lambda:", !Sub "${AWS::Region}", ":", !Sub "${AWS::AccountId}", ":function:", !Ref associateLambdaName]]
       MethodResponses:
       - StatusCode: 200
         ResponseModels:
@@ -520,12 +520,12 @@ Resources:
       Action: lambda:InvokeFunction
       FunctionName: !Ref batchesLambdaName
       Principal: apigateway.amazonaws.com
-  InvokeCategoriesLambda:
-    Type: AWS::Lambda::Permission
-    Properties:
-      Action: lambda:InvokeFunction
-      FunctionName: !Ref categoriesLambdaName
-      Principal: apigateway.amazonaws.com
+  # InvokeCategoriesLambda:
+  #   Type: AWS::Lambda::Permission
+  #   Properties:
+  #     Action: lambda:InvokeFunction
+  #     FunctionName: !Ref categoriesLambdaName
+  #     Principal: apigateway.amazonaws.com
   # InvokeQCWeekLambda:
   #   Type: AWS::Lambda::Permission
   #   Properties:
@@ -538,24 +538,24 @@ Resources:
   #     Action: lambda:InvokeFunction
   #     FunctionName: !Ref qcCategoriesLambdaName
   #     Principal: apigateway.amazonaws.com
-  InvokeAssociatesLambda:
-    Type: AWS::Lambda::Permission
-    Properties:
-      Action: lambda:InvokeFunction
-      FunctionName: !Ref associateLambdaName
-      Principal: apigateway.amazonaws.com
-  InvokeBatchAssociatesLambda:
-    Type: AWS::Lambda::Permission
-    Properties:
-      Action: lambda:InvokeFunction
-      FunctionName: !Ref batchAssociatesLambdaName
-      Principal: apigateway.amazonaws.com
-  InvokeFirebaseLambda:
-    Type: AWS::Lambda::Permission
-    Properties:
-      Action: lambda:InvokeFunction
-      FunctionName: !Ref fireBaseLambdaName
-      Principal: apigateway.amazonaws.com
+  # InvokeAssociatesLambda:
+  #   Type: AWS::Lambda::Permission
+  #   Properties:
+  #     Action: lambda:InvokeFunction
+  #     FunctionName: !Ref associateLambdaName
+  #     Principal: apigateway.amazonaws.com
+  # InvokeBatchAssociatesLambda:
+  #   Type: AWS::Lambda::Permission
+  #   Properties:
+  #     Action: lambda:InvokeFunction
+  #     FunctionName: !Ref batchAssociatesLambdaName
+  #     Principal: apigateway.amazonaws.com
+  # InvokeFirebaseLambda:
+  #   Type: AWS::Lambda::Permission
+  #   Properties:
+  #     Action: lambda:InvokeFunction
+  #     FunctionName: !Ref fireBaseLambdaName
+  #     Principal: apigateway.amazonaws.com
 Outputs:
   apiGatewayInvokeUrl:
     Value: !Sub https://${apiGateway}.execute-api.${AWS::Region}.amazonaws.com/default
