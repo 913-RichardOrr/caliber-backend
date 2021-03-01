@@ -5,13 +5,13 @@ Parameters:
   lambdaARNTemplate:
     Type: String
     # Default: "arn:aws:lambda:us-east-1:855430746673:function:"
-    Default: "arn:aws:lambda:us-west-2:169748077841:function:"
+    Default: "arn:aws:lambda:us-west-2:135086786261:function:"
   associateLambdaName:
     Type: String
     Default: associate
   batchesLambdaName:
     Type: String
-    Default: batches
+    Default: getBatchesCombined
   categoriesLambdaName:
     Type: String
     Default: categories
@@ -79,12 +79,6 @@ Resources:
         PassthroughBehavior: WHEN_NO_MATCH
         RequestTemplates:
           application/json: '{"statusCode": 200}'
-        RequestParameters:
-          method.request.querystring.year: true
-          method.request.querystring.trainer: true
-          method.request.querystring.trainerEmail: true
-          method.request.path.query: true
-        # Type: MOCK
         Type: AWS_PROXY
         IntegrationHttpMethod: POST
         Uri: !Sub
@@ -510,7 +504,7 @@ Resources:
       - qcWeeksOptionsMethod
       - qcCategoriesOptionsMethod
       - qcAssociateMethod
-      - Authorizer
+      #- Authorizer
     Properties:
       RestApiId: !Ref apiGateway
       StageName: default
