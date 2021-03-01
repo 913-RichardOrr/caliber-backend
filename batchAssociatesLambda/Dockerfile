@@ -18,18 +18,6 @@ COPY ./batchAssociatesLambda/*.ts /var/task/
 # Transpile
 RUN npx tsc
 
-# ENV variables for accessing database
-ARG USER
-ARG HOST
-ARG PASSWORD
-ARG DATABASE
-
-ENV PGUSER=${USER}
-ENV PGHOST=${HOST}
-ENV PGPASSWORD=${PASSWORD}
-ENV PGDATABASE=${DATABASE}
-ENV PGPORT=5432
-
 # check to see my file exists
 RUN ls
 
