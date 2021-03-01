@@ -1,4 +1,4 @@
-const serviceAccount = require('firebase-service-account-DO_NOT_PUSH.json');
+const serviceAccount = require('firebase.json');
 import admin from 'firebase-admin';
 import { Role, helper, generateIamPolicy } from './authorizerHelper';
 

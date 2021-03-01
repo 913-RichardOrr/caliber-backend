@@ -1,4 +1,4 @@
-const serviceAccount = require('firebase-service-account-DO_NOT_PUSH.json');
+const serviceAccount = require('firebase.json');
 import { handler } from '../authorizerHandler';
 var module = require('../authorizerHelper');
 import admin from 'firebase-admin';
@@ -87,4 +87,16 @@ describe('Authorizer Handler Test Suite', () => {
         //will not call helper function, vp returns allow before that
         expect(module.helper.mock.calls.length).toBe(0);
     });
+
+    test('user with trainer role is allow access to specific route', async () => {
+        await handler(event, context);
+        expect(module.generateIamPolicy).toBeCalled();
+        expect(module.generateIamPolicy).toBeCalledWith(
+            'Allow' || 'Deny',
+            event.methodArn
+        );
+        //will not call helper function, vp returns allow before that
+        expect(module.helper.mock.calls.length).toBe(0);
+    });
+  
 });
