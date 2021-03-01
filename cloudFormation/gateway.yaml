@@ -19,7 +19,7 @@ Parameters:
     Default: batchassociates
   qcWeekLambdaName:
     Type: String
-    Default: qcweek
+    Default: batchWeekLambda
   qcCategoriesLambdaName:
     Type: String
     Default: qccategories
