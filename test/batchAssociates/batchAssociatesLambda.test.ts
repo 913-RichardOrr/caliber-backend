@@ -21,8 +21,7 @@ jest.mock('../../batchAssociatesLambda/batchAssociatesHelper', () => {
   };
 });
 jest.mock('../../batchAssociatesLambda/response', () => {
-  const mockresponse = jest.fn().mockImplementation((one, two) => { return {"body": one}});
-  return mockresponse;
+  return jest.fn().mockImplementation((one, two) => { return {"body": one}});
 });
 
 describe('tests for handler', () => {
