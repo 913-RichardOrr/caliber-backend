@@ -1,4 +1,4 @@
-const serviceAccount = require('firebase-service-account-DO_NOT_PUSH.json');
+const serviceAccount = require('caliber-mobile-firebase-service-account_DO_NOT_PUSH.json');
 import admin from 'firebase-admin';
 import { Role, helper, generateIamPolicy } from './authorizerHelper';
 
@@ -41,9 +41,6 @@ export async function handler (event: any, context: any) {
                     vp: claims.ROLE_VP,
                     trainer: claims.ROLE_TRAINER
                 };
-                console.log(roles);
-            }).catch(err=>{
-                console.log(err);
             });
         if (roles.vp) {
             return generateIamPolicy('Allow', event.methodArn);

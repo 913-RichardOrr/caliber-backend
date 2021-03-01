@@ -28,3 +28,5 @@ aws delete-stack --stack-name namestack
 aws cloudformation deploy --template-file cloudFormation/gatewayTestAuthorizer.yaml --stack-name calibermobile-apigateway
 
 aws cloudformation describe-stack-events --stack-name calibermobile-apigateway
+
+aws cloudformation delete-stack --stack-name calibermobile-apigateway
