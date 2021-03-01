@@ -1,0 +1,13 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: >-
+  This is a CloudFormation Template to create the AWS EC2 instance to run Jenkins. 
+  Jenkins will get webhook info from github merged pull requests to dev. 
+  When a pull request is merged to dev, Jenkins will build the expo files, 
+  and put it on the s3 bucket for the web and android.
+Parameters:
+  
+
+Resources:
+  
+
+Outputs:
