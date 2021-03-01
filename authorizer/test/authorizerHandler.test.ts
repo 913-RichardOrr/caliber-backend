@@ -8,19 +8,21 @@ const vp = {
     ROLE_VP: true,
     ROLE_TRAINER: false
 };
-
-jest.mock('firebase-admin', () => ({
-    apps: [],
-    credential: {
-        cert: jest.fn()
-    },
-    initializeApp: jest.fn(),
-    auth: jest.fn(() => ({
-        verifyIdToken: jest
+jest.mock('firebase-admin', () => {
+    const verifyIdToken = jest
             .fn()
             .mockImplementation((token: string) => Promise.resolve(vp))
-    }))
-}));
+    return {
+        apps: [],
+        credential: {
+            cert: jest.fn()
+        },
+        initializeApp: jest.fn(),
+        auth: jest.fn(() => ({
+            verifyIdToken: verifyIdToken
+        }))        
+    }
+});
 
 jest.mock(
     'firebase-service-account-DO_NOT_PUSH.json',
