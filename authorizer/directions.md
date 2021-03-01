@@ -8,6 +8,7 @@ aws configure
 
 enter access key id
 enter secret access key
+enter region
 
 aws sts get-caller-identity
 
@@ -22,3 +23,8 @@ docker push 123.dkr.ecr.us-east-1.amazonaws.com/authorizer:latest
 aws cloudformation deploy --template-file filename.yaml --stack-name namestack
 
 aws delete-stack --stack-name namestack
+
+## deploy api gateway
+aws cloudformation deploy --template-file cloudFormation/gatewayTestAuthorizer.yaml --stack-name calibermobile-apigateway
+
+aws cloudformation describe-stack-events --stack-name calibermobile-apigateway
