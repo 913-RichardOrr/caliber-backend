@@ -19,7 +19,7 @@ Parameters:
     Default: batchassociates
   qcWeekLambdaName:
     Type: String
-    Default: qcweek
+    Default: batchWeekLambda
   qcCategoriesLambdaName:
     Type: String
     Default: qccategories
@@ -34,8 +34,8 @@ Resources:
     Properties:
         Description: Root endpoint for the Caliber Mobile application
         Name: caliber-mobile-api-cf
-  Authorizer
-  Type: AWS::ApiGateway::Authorizer
+  Authorizer:
+    Type: AWS::ApiGateway::Authorizer
     Properties:
       AuthorizerResultTtlInSeconds: '0'
       AuthorizerUri: !Sub
@@ -63,7 +63,7 @@ Resources:
         Ref: apiGateway
       ResourceId:
         Ref: batchesResource
-      HttpMethod: OPTIONS
+      HttpMethod: ANY
       Integration:
         IntegrationResponses:
         - StatusCode: 200
