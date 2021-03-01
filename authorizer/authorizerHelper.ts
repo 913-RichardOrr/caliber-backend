@@ -1,7 +1,26 @@
-interface Role {
+export interface Role {
     qc: boolean;
     vp: boolean;
     trainer: boolean;
+}
+
+// Helper funtion for generating the response API Gateway requires to handle the token verification
+export function generateIamPolicy(effect: any, resource: any) {
+    const authResponse: any = {};
+
+    if (effect && resource) {
+        const policyDocument: any = {};
+        policyDocument.Version = '2012-10-17';
+        policyDocument.Statement = [];
+        const statementOne: any = {};
+        statementOne.Action = 'execute-api:Invoke';
+        statementOne.Effect = effect;
+        statementOne.Resource = resource;
+        policyDocument.Statement[0] = statementOne;
+        authResponse.policyDocument = policyDocument;
+    }
+
+    return authResponse;
 }
 
 /**
@@ -9,7 +28,7 @@ interface Role {
  * @param arn :string, event.methodARN stores request method & request route
  * @param roles: Role, role of the user including qc, vp, trainer
  */
-module.exports = (arn: string, roles: Role) => {
+export function helper(arn: string, roles: Role) {
     let status = 'Deny';
     //arn looks something like this
     //arn:smth.smth-smth/state-name/GET/categories
@@ -18,20 +37,20 @@ module.exports = (arn: string, roles: Role) => {
     const method = pathParts[2];
 
     // /categories
-    if (pathParts[3] == 'categories') {
+    if (pathParts[3].includes('categories')) {
         // if categoryId doesn't exist
         if (!pathParts[4]) {
-            if (method === 'GET' && (roles.qc || roles.trainer)) {
+            if (method == 'GET' && (roles.qc || roles.trainer)) {
                 status = 'Allow';
             }
         }
         // /batches
     } else if (pathParts[3].includes('batches')) {
-        if (method === 'GET' && (roles.qc || roles.trainer)) {
+        if (method == 'GET' && (roles.qc || roles.trainer)) {
             status = 'Allow';
         }
         // /qc
-    } else if (pathParts[3] == 'qc') {
+    } else if (pathParts[3].includes('qc')) {
         //if weeks doesn't exist
         if (!pathParts[6]) {
             if (method == 'GET' && (roles.qc || roles.trainer)) {
@@ -53,7 +72,7 @@ module.exports = (arn: string, roles: Role) => {
                     if (method == 'POST' && roles.qc) {
                         status = 'Allow';
                     }
-                } else if (pathParts[8] == 'categories') {
+                } else if (pathParts[8].includes('categories')) {
                     //if categoryID doesn't exist
                     // /batches/{batchId}/weeks/{weekId}/categories
                     if (!pathParts[9]) {
@@ -70,7 +89,7 @@ module.exports = (arn: string, roles: Role) => {
                         }
                     }
                     // /batches/{batchId}/weeks/{weekId}/associates/{associateId}
-                } else if (pathParts[8] == 'associates') {
+                } else if (pathParts[8].includes('associates')) {
                     if (method == 'GET' && (roles.qc || roles.trainer)) {
                         status = 'Allow';
                     } else if (
@@ -84,4 +103,4 @@ module.exports = (arn: string, roles: Role) => {
         }
     }
     return status;
-};
+}

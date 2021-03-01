@@ -1,3 +1,7 @@
+## creating docker image
+docker build -t name .
+
+docker run name:latest
 
 ## push docker image to aws
 aws configure
@@ -7,11 +11,11 @@ enter secret access key
 
 aws sts get-caller-identity
 
-aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 538173639645.dkr.ecr.us-west-2.amazonaws.com
+aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 123.dkr.ecr.us-east-1.amazonaws.com
 
-docker tag authorizer:latest 538173639645.dkr.ecr.us-west-2.amazonaws.com/authorizer:latest
+docker tag authorizer:latest 123.dkr.ecr.us-east-1.amazonaws.com/authorizer:latest
 
-docker push 538173639645.dkr.ecr.us-west-2.amazonaws.com/authorizer:latest
+docker push 123.dkr.ecr.us-east-1.amazonaws.com/authorizer:latest
 
 
 ## create a lambda function

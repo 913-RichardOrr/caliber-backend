@@ -1,4 +1,4 @@
-const helper = require('../authorizerHelper');
+import { helper } from '../authorizerHelper';
 
 describe('Authorizer Helper Test Suite', () => {
     //don't need to test vp, allowed access to all endpoints in main handler
@@ -51,8 +51,9 @@ describe('Authorizer Helper Test Suite', () => {
     });
 
     test('access for /GET/batches', () => {
+        //checks for query params too
         const route =
-            'arn:aws:execute-api:us-west-2:123:example/stagename/GET/batches';
+            'arn:aws:execute-api:us-west-2:123:example/stagename/GET/batches?trainer=random@email.com';
         const trainerResult = helper(route, trainer);
         expect(trainerResult).toBe('Allow');
         const qcResult = helper(route, qc);

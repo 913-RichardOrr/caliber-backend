@@ -5,7 +5,7 @@ FROM public.ecr.aws/lambda/nodejs:12
 # also available from amazon/aws-lambda-nodejs:12 on docker hub
 
 # The Lambda base image expects your code to be placed in the /var/task/ folder
-COPY tsconfig.json helper.ts authorizer.ts firebase-service-account-DO_NOT_PUSH.json /var/task/
+COPY tsconfig.json authorizerHelper.ts authorizerHandler.ts caliber-mobile-firebase.json /var/task/
 
 # Install npm dependencies
 RUN npm init -y

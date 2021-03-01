@@ -1,27 +1,8 @@
 const serviceAccount = require('firebase-service-account-DO_NOT_PUSH.json');
-const helper = require('./authorizerHelper');
 import admin from 'firebase-admin';
+import { Role, helper, generateIamPolicy } from './authorizerHelper';
 
-// Helper funtion for generating the response API Gateway requires to handle the token verification
-export const generateIamPolicy = (effect: any, resource: any) => {
-    const authResponse: any = {};
-
-    if (effect && resource) {
-        const policyDocument: any = {};
-        policyDocument.Version = '2012-10-17';
-        policyDocument.Statement = [];
-        const statementOne: any = {};
-        statementOne.Action = 'execute-api:Invoke';
-        statementOne.Effect = effect;
-        statementOne.Resource = resource;
-        policyDocument.Statement[0] = statementOne;
-        authResponse.policyDocument = policyDocument;
-    }
-
-    return authResponse;
-};
-
-exports.handler = async (event: any, context: any) => {
+export async function handler (event: any, context: any) {
     try {
         // Return from function if no authorizationToken present in header
         // context.fail('Unauthorized') will trigger API Gateway to return 401 response
@@ -46,7 +27,6 @@ exports.handler = async (event: any, context: any) => {
                 databaseURL: 'https://training-team-253916.firebaseio.com'
             });
         }
-        
         let roles: Role = {
             qc: false,
             vp: false,
@@ -62,6 +42,8 @@ exports.handler = async (event: any, context: any) => {
                     trainer: claims.ROLE_TRAINER
                 };
                 console.log(roles);
+            }).catch(err=>{
+                console.log(err);
             });
         if (roles.vp) {
             return generateIamPolicy('Allow', event.methodArn);
