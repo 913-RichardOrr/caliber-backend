@@ -1,7 +1,7 @@
 ## creating docker image
-docker build -t name .
+docker build -t firebaselambda .
 
-docker run name:latest
+docker run firebaselambda:latest
 
 ## push docker image to aws
 aws configure
@@ -14,15 +14,15 @@ aws sts get-caller-identity
 
 aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 123.dkr.ecr.us-east-1.amazonaws.com
 
-docker tag authorizer:latest 123.dkr.ecr.us-east-1.amazonaws.com/authorizer:latest
+docker tag firebaselambda:latest 123.dkr.ecr.us-east-1.amazonaws.com/firebaselambda:latest
 
-docker push 123.dkr.ecr.us-east-1.amazonaws.com/authorizer:latest
+docker push 123.dkr.ecr.us-east-1.amazonaws.com/firebaselambda:latest
 
 
 ## create a lambda function
-aws cloudformation deploy --template-file filename.yaml --stack-name namestack
+aws cloudformation deploy --template-file authorizer.yaml --stack-name firebaselambda
 
-aws delete-stack --stack-name namestack
+aws delete-stack --stack-name firebaselambda
 
 ## deploy api gateway
 aws cloudformation deploy --template-file cloudFormation/gatewayTestAuthorizer.yaml --stack-name calibermobile-apigateway
