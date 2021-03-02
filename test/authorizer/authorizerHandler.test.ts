@@ -1,5 +1,5 @@
 const serviceAccount = require('firebase-service-account-DO_NOT_PUSH.json');
-import { handler } from '../authorizerHandler';
+import { handler } from '../../authorizer/authorizerHandler';
 var module = require('../authorizerHelper');
 import admin from 'firebase-admin';
 
