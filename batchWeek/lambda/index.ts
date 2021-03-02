@@ -18,7 +18,7 @@ export interface BatchWeekEvent {
 export const handler = async (event: BatchWeekEvent) => {
     // obtain everything in the path after "/batches/"
     let eventSubstr = event.path.split('/batches/')[1];
-    // contains "{batchId}", "weeks", and optionally "{weekid}"
+    // contains "{batchId}", "weeks", and optionally "{weeknumber}"
     let sub = eventSubstr.split('/');
 
     // check length of substring after the split

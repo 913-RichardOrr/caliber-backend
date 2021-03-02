@@ -15,7 +15,7 @@ export default async function getWeeksByBatchId(batchId: string) {
         const result = await client.query(query, [batchId]);
 
         const headers = {
-            "Access-Control-Allow-Headers" : "Content-Type",
+            "Content-Type": "application/json",
             "Access-Control-Allow-Origin": "*",
             "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
         };
