@@ -26,7 +26,7 @@ aws cloudformation delete-stack --stack-name firebaselambda
 
 ## deploy api gateway
 aws cloudformation deploy --template-file authorizer/gatewayTestAuthorizer.yaml --stack-name calibermobile-apigateway
-aws cloudformation deploy --template-file authorizer/old.yaml --stack-name calibermobile-apigateway --capabilities CAPABILITY_IAM
+aws cloudformation deploy --template-file authorizer/new.yaml --stack-name calibermobile-apigateway --capabilities CAPABILITY_IAM
 
 aws cloudformation describe-stack-events --stack-name calibermobile-apigateway
 

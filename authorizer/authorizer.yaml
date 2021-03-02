@@ -7,6 +7,6 @@ Resources:
     Properties:
       Code:
         ImageUri: !Join ["/",[!Join [".",[!Sub "${AWS::AccountId}", "dkr", "ecr", !Sub "${AWS::Region}", "amazonaws", "com"]], "firebase-lambda:latest"]]
-      Role: arn:aws:iam::846663386575:role/LambdaVPCRole
+      Role: arn:aws:iam::855430746673:role/caliber-mobile-cf
       FunctionName: "firebaselambda"
       PackageType: "Image"
