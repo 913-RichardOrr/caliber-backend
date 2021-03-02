@@ -338,9 +338,8 @@ Resources:
   getWeeksMethod:
     Type: AWS::ApiGateway::Method
     Properties:
-      AuthorizationType: NONE
-      # AuthorizationType: CUSTOM
-      # AuthorizerId: !Ref Authorizer
+      AuthorizationType: CUSTOM
+      AuthorizerId: !Ref Authorizer
       HttpMethod: GET
       Integration:
         Type: AWS_PROXY
