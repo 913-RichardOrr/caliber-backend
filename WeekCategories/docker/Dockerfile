@@ -19,6 +19,7 @@ RUN npm install
 # Transpile
 RUN npx tsc
 
+
 # ENV variables for accessing database
 ARG USER
 ARG HOST
