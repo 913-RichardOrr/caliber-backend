@@ -5,11 +5,11 @@ Resources:
   BatchesLambda:
     Type: AWS::Lambda::Function
     Properties:
-      FunctionName: handler
+      FunctionName: weekCategories
       Role:
         arn:aws:iam::855430746673:role/caliber-mobile-cf
       Code:
-        ImageUri: !Join ["/",[!Join [".",[!Sub "${AWS::AccountId}", "dkr", "ecr", !Sub "${AWS::Region}", "amazonaws", "com"]], "handler:latest"]]
+        ImageUri: !Join ["/",[!Join [".",[!Sub "${AWS::AccountId}", "dkr", "ecr", !Sub "${AWS::Region}", "amazonaws", "com"]], "weekCategories:latest"]]
       Timeout: 5
       PackageType: "Image"
 
