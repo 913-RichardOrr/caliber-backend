@@ -24,8 +24,7 @@ async function (event:any){
     switch (method) {
         case 'GET':
             let id = event.path.substring(event.path.lastIndexOf('/') + 1, event.path.length);
-            return await  getCategories(client,{weekID:Number(id)})
-     
+            return await  getCategories(client,{weekID:Number(id)});
             break;
         case 'POST':
             let postCategory = JSON.stringify(event.body.categoryid);
@@ -35,7 +34,7 @@ async function (event:any){
         case 'DELETE':
             let deleteVarCategory = JSON.stringify(event.body.categoryid);
             let deleteWeek = event.path.substring(event.path.lastIndexOf('/') + 1, event.path.length);
-            deleteCategory(client, {weekID: Number(deleteWeek), categoryID: Number(deleteVarCategory)});
+            deleteCategory(client, {weekID: Number(deleteWeek), categoryID: Number(deleteVarCategory)})
             break;
         default:
             console.log(`Does not support HTTP method ${method}`);
