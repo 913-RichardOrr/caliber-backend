@@ -61,24 +61,31 @@ var addCategory = function (client, params) { return __awaiter(void 0, void 0, v
     });
 }); };
 exports.addCategory = addCategory;
+/**
+ * Retrieve all categories (category[]) from a given week from the database
+ *
+ * @client - the client from pg
+ * @param {getCategoryParams} params - the weekId that specifies which week we want categories for
+ */
 var getCategories = function (client, params) { return __awaiter(void 0, void 0, void 0, function () {
-    var response;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, client.query("select c.skill, c.categoryid from categories c join weekcategories w on c.categoryid = w.categoryid", function (err, res) {
+            case 0: 
+            //we want the name of category and the id
+            return [4 /*yield*/, client.query("select c.skill, c.categoryid from categories c join weekcategories w on c.categoryid = w.categoryid", function (err, res) {
                     console.log(res.rows);
                     client.end();
+                    if (res) {
+                        return response_1["default"](JSON.stringify(res.rows), 200);
+                    }
+                    else {
+                        return response_1["default"]('', 400);
+                    }
+                    ;
                 })];
             case 1:
                 //we want the name of category and the id
-                response = _a.sent();
-                if (response) {
-                    return [2 /*return*/, response_1["default"](JSON.stringify(response.rows), 200)];
-                }
-                else {
-                    return [2 /*return*/, response_1["default"]('', 400)];
-                }
-                ;
+                _a.sent();
                 return [2 /*return*/];
         }
     });

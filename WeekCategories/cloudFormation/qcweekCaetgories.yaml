@@ -2,12 +2,16 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: lambda for weekCategories lambda
 Resources:
-  weekCategoriesLambda:
+  BatchesLambda:
     Type: AWS::Lambda::Function
     Properties:
+      FunctionName: handler
+      Role:
+        arn:aws:iam::855430746673:role/caliber-mobile-cf
       Code:
-        ImageUri: !Join ["/",[!Join [".",[!Sub "${AWS::AccountId}", "dkr", "ecr", !Sub "${AWS::Region}", "amazonaws", "com"]], "weekcategories:latest"]]
-      Role: arn:aws:iam::169748077841:role/service-role/getApprovedBooks-role-635ptj5r
-      # Role: arn:aws:iam::855430746673:role/caliber-mobile-cf
-      FunctionName: "handler"
+        ImageUri: !Join ["/",[!Join [".",[!Sub "${AWS::AccountId}", "dkr", "ecr", !Sub "${AWS::Region}", "amazonaws", "com"]], "handler:latest"]]
+      Timeout: 5
       PackageType: "Image"
+
+
+  

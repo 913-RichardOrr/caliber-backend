@@ -45,13 +45,7 @@ exports.handler =
                 switch (_a.label) {
                     case 0:
                         Client = require('pg').Client;
-                        client = new Client({
-                            user: 'calibermobile',
-                            host: 'calibermobile.cvtq9j4axrge.us-east-1.rds.amazonaws.com',
-                            database: 'calibermobile',
-                            password: '8Sy2MoFBRxY1Rt0prtuOh',
-                            port: 5432
-                        });
+                        client = new Client({});
                         return [4 /*yield*/, client.connect()];
                     case 1:
                         _a.sent();
@@ -62,18 +56,18 @@ exports.handler =
                                 WeekCategoriesHelper_1.getCategories(client, { weekID: Number(id) });
                                 break;
                             case 'POST':
-                                postCategory = JSON.stringify(event.body);
+                                postCategory = JSON.stringify(event.body.categoryid);
                                 postWeek = event.path.substring(event.path.lastIndexOf('/') + 1, event.path.length);
                                 WeekCategoriesHelper_1.addCategory(client, { weekID: Number(postWeek), categoryID: Number(postCategory) });
                                 break;
                             case 'DELETE':
-                                deleteVarCategory = JSON.stringify(event.body);
+                                deleteVarCategory = JSON.stringify(event.body.categoryid);
                                 deleteWeek = event.path.substring(event.path.lastIndexOf('/') + 1, event.path.length);
                                 WeekCategoriesHelper_1.deleteCategory(client, { weekID: Number(deleteWeek), categoryID: Number(deleteVarCategory) });
                                 break;
                             default:
                                 console.log("Does not support HTTP method " + method);
-                                // client.end();
+                                //  client.end();
                                 break;
                         }
                         return [2 /*return*/];
