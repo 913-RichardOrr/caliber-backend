@@ -37,14 +37,23 @@ export const addCategory = async (client: any, params: categoryParams) => {
 export const getCategories = async (client: any, params:getCategoryParams) => {
 
     //we want the name of category and the id
-    await client.query(`select c.skill, c.categoryid from categories c join weekcategories w on c.categoryid = w.categoryid where w.qcweekid = ${params.weekID}`, (err: any, res: any) => {
-        client.end();
-        if (res) {
-            return createResponse(JSON.stringify(res.rows), 200);
-        } else {
-            return createResponse('', 400);
-        };
+    return await client.query(`select c.skill, c.categoryid from categories c join weekcategories w on c.categoryid = w.categoryid where w.qcweekid = ${params.weekID}`
+    ).then((res:any)=>{
+      //  console.log("OUR RES in the helper is  " + res);
+        //return res.rows; 
+    return createResponse(JSON.stringify(res.rows), 200);
     });
+    
+    // , (err: any, res: any) => {
+    //     client.end();
+    //     if (res) {
+    //        // return res;  
+    //        return createResponse(JSON.stringify(res.rows), 200);
+    //     } else {
+    //         return createResponse('', 400);
+    //     };
+    // });
+    
 
     
 }

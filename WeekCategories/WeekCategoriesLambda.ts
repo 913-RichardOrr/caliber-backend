@@ -1,7 +1,12 @@
 import {getCategories, addCategory, deleteCategory} from './WeekCategoriesHelper';
 
+interface getCategoryParams {
+    weekID: number
+
+}
 console.log("We have entered the Container Made by Salman Saeed"); 
 
+let response:any;
 
 exports.handler = 
 async function (event:any){
@@ -14,14 +19,13 @@ async function (event:any){
         port: 5432
     });
     await client.connect(); 
-    var response;    
-    
-   const method = event.httpMethod;
+
+    const method = event.httpMethod;
     switch (method) {
         case 'GET':
             let id = event.path.substring(event.path.lastIndexOf('/') + 1, event.path.length);
-            getCategories(client,{weekID:Number(id)});
-            
+            return await  getCategories(client,{weekID:Number(id)})
+     
             break;
         case 'POST':
             let postCategory = JSON.stringify(event.body.categoryid);
