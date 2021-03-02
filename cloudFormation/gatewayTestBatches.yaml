@@ -79,11 +79,6 @@ Resources:
         PassthroughBehavior: WHEN_NO_MATCH
         RequestTemplates:
           application/json: '{"statusCode": 200}'
-        RequestParameters:
-          method.request.querystring.year: true
-          method.request.querystring.trainer: true
-          method.request.querystring.trainerEmail: true
-          method.request.path.query: true
         # Type: MOCK
         Type: AWS_PROXY
         IntegrationHttpMethod: POST

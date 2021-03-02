@@ -37,6 +37,8 @@ Resources:
         Name: caliber-mobile-api-cf
   Authorizer:
     Type: AWS::ApiGateway::Authorizer
+    DependsOn:
+      - apiGateway
     Properties:
       Name: calibermobileauthorizer
       AuthorizerResultTtlInSeconds: '0'
@@ -514,12 +516,12 @@ Resources:
     Properties:
       RestApiId: !Ref apiGateway
       StageName: default
-  InvokeBatchesLambda:
-    Type: AWS::Lambda::Permission
-    Properties:
-      Action: lambda:InvokeFunction
-      FunctionName: !Ref batchesLambdaName
-      Principal: apigateway.amazonaws.com
+  # InvokeBatchesLambda:
+  #   Type: AWS::Lambda::Permission
+  #   Properties:
+  #     Action: lambda:InvokeFunction
+  #     FunctionName: !Ref batchesLambdaName
+  #     Principal: apigateway.amazonaws.com
   # InvokeCategoriesLambda:
   #   Type: AWS::Lambda::Permission
   #   Properties:
@@ -550,12 +552,12 @@ Resources:
   #     Action: lambda:InvokeFunction
   #     FunctionName: !Ref batchAssociatesLambdaName
   #     Principal: apigateway.amazonaws.com
-  # InvokeFirebaseLambda:
-  #   Type: AWS::Lambda::Permission
-  #   Properties:
-  #     Action: lambda:InvokeFunction
-  #     FunctionName: !Ref fireBaseLambdaName
-  #     Principal: apigateway.amazonaws.com
+  InvokeFirebaseLambda:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref fireBaseLambdaName
+      Principal: apigateway.amazonaws.com
 Outputs:
   apiGatewayInvokeUrl:
     Value: !Sub https://${apiGateway}.execute-api.${AWS::Region}.amazonaws.com/default
