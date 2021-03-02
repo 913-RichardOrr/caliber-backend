@@ -19,10 +19,10 @@ Parameters:
     Default: batchassociates
   qcWeekLambdaName:
     Type: String
-    Default: batchWeekLambda
+    Default: batchWeekLambda1
   qcCategoriesLambdaName:
     Type: String
-    Default: qccategories
+    Default: weekcategories-lambda
   fireBaseLambdaName:
     Type: String
     Default: firebaselambda
@@ -466,12 +466,11 @@ Resources:
       AuthorizerId: !Ref Authorizer
       HttpMethod: GET
       Integration:
-        Type: MOCK
-        # Type: AWS_PROXY
-        # IntegrationHttpMethod: POST
-        # Uri: !Sub
-        #   - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
-        #   - lambdaArn: !Join ["",[!Ref lambdaARNTemplate, !Ref qcCategoriesLambdaName]]
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Sub
+          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
+          - lambdaArn: !Join ["",[!Ref lambdaARNTemplate, !Ref qcCategoriesLambdaName]]
       ResourceId: !Ref qcCategoriesResource
       RestApiId: !Ref apiGateway
   # POST method for qc/batches/{batchId}/weeks/{week}/categories
@@ -482,12 +481,11 @@ Resources:
       AuthorizerId: !Ref Authorizer
       HttpMethod: POST
       Integration:
-        Type: MOCK
-        # Type: AWS_PROXY
-        # IntegrationHttpMethod: POST
-        # Uri: !Sub
-        #   - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
-        #   - lambdaArn: !Join ["",[!Ref lambdaARNTemplate, !Ref qcCategoriesLambdaName]]
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Sub
+          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
+          - lambdaArn: !Join ["",[!Ref lambdaARNTemplate, !Ref qcCategoriesLambdaName]]
       ResourceId: !Ref qcCategoriesResource
       RestApiId: !Ref apiGateway
   # API Gateway Resource - /qc/batches/{batchId}/weeks/{week}/categories/{categoryId}
@@ -536,12 +534,11 @@ Resources:
       AuthorizerId: !Ref Authorizer
       HttpMethod: DELETE
       Integration:
-        Type: MOCK
-        # Type: AWS_PROXY
-        # IntegrationHttpMethod: POST
-        # Uri: !Sub
-        #   - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
-        #   - lambdaArn: !Join ["",[!Ref lambdaARNTemplate, !Ref qcCategoriesLambdaName]]
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Uri: !Sub
+          - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
+          - lambdaArn: !Join ["",[!Ref lambdaARNTemplate, !Ref qcCategoriesLambdaName]]
       ResourceId: !Ref qcCategoryResource
       RestApiId: !Ref apiGateway
 
@@ -677,12 +674,12 @@ Resources:
       Action: lambda:InvokeFunction
       FunctionName: !Join ["",[!Ref lambdaARNTemplate, !Ref qcWeekLambdaName]]
       Principal: apigateway.amazonaws.com
-  # InvokeQCCategoriesLambda:
-  #   Type: AWS::Lambda::Permission
-  #   Properties:
-  #     Action: lambda:InvokeFunction
-  #     FunctionName: !Ref qcCategoriesLambdaName
-  #     Principal: apigateway.amazonaws.com
+  InvokeQCCategoriesLambda:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Join ["",[!Ref lambdaARNTemplate, !Ref associateLambdaName]]
+      Principal: apigateway.amazonaws.com
   InvokeAssociatesLambda:
     Type: AWS::Lambda::Permission
     Properties:

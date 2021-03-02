@@ -31,3 +31,5 @@ aws cloudformation deploy --template-file authorizer/new.yaml --stack-name calib
 aws cloudformation describe-stack-events --stack-name calibermobile-apigateway
 
 aws cloudformation delete-stack --stack-name calibermobile-apigateway
+
+aws lambda list-functions
