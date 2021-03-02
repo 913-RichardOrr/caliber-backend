@@ -570,7 +570,7 @@ Resources:
       RestApiId:
         Ref: apiGateway
       ResourceId:
-        Ref: qcAssociatesResource
+        Ref: qcAssociateResource
       HttpMethod: OPTIONS
       Integration:
         IntegrationResponses:
