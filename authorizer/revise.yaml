@@ -673,42 +673,42 @@ Resources:
     Properties:
       RestApiId: !Ref apiGateway
       StageName: default
-  # InvokeBatchesLambda:
-  #   Type: AWS::Lambda::Permission
-  #   Properties:
-  #     Action: lambda:InvokeFunction
-  #     FunctionName:
-  #     Principal: apigateway.amazonaws.com
+  InvokeBatchesLambda:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: ["",[!Ref lambdaARNTemplate, !Ref batchesLambdaName]]
+      Principal: apigateway.amazonaws.com
   InvokeCategoriesLambda:
     Type: AWS::Lambda::Permission
     Properties:
       Action: lambda:InvokeFunction
       FunctionName: !Join ["",[!Ref lambdaARNTemplate, !Ref categoriesLambdaName]]
       Principal: apigateway.amazonaws.com
-  # InvokeQCWeekLambda:
-  #   Type: AWS::Lambda::Permission
-  #   Properties:
-  #     Action: lambda:InvokeFunction
-  #     FunctionName:
-  #     Principal: apigateway.amazonaws.com
+  InvokeQCWeekLambda:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Join ["",[!Ref lambdaARNTemplate, !Ref qcWeekLambdaName]]
+      Principal: apigateway.amazonaws.com
   # InvokeQCCategoriesLambda:
   #   Type: AWS::Lambda::Permission
   #   Properties:
   #     Action: lambda:InvokeFunction
   #     FunctionName:
   #     Principal: apigateway.amazonaws.com
-  # InvokeAssociatesLambda:
-  #   Type: AWS::Lambda::Permission
-  #   Properties:
-  #     Action: lambda:InvokeFunction
-  #     FunctionName:
-  #     Principal: apigateway.amazonaws.com
-  # InvokeBatchAssociatesLambda:
-  #   Type: AWS::Lambda::Permission
-  #   Properties:
-  #     Action: lambda:InvokeFunction
-  #     FunctionName: !Ref 
-  #     Principal: apigateway.amazonaws.com
+  InvokeAssociatesLambda:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: ["",[!Ref lambdaARNTemplate, !Ref associatesLambdaName]]
+      Principal: apigateway.amazonaws.com
+  InvokeBatchAssociatesLambda:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: ["",[!Ref lambdaARNTemplate, !Ref batchAssociatesLambdaName]]
+      Principal: apigateway.amazonaws.com
   InvokeFirebaseLambda:
     Type: AWS::Lambda::Permission
     Properties:
