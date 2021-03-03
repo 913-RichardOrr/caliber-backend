@@ -11,5 +11,5 @@ export default function createResponse(body: any = {}, statusCode: number = 200,
         body,
         statusCode,
         headers: baseHeader
-    };
+    }
 }
