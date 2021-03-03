@@ -1,3 +1,4 @@
+import createResponse from './response';
 import {getCategories, addCategory, deleteCategory} from './WeekCategoriesHelper';
 
 interface getCategoryParams {
@@ -44,6 +45,7 @@ async function (event:any){
         default:
             console.log(`Does not support HTTP method ${method}`);
             client.end();
+            return createResponse('', 400);
             break;
     }
     

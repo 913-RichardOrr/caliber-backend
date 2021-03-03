@@ -24,6 +24,10 @@ export const addCategory = async (client: any, params: categoryParams) => {
         } else {
             return createResponse('No Rows Available', 400);
         }
+    }).catch((err: Error) => {
+        console.log(err);
+        client.end();
+        return createResponse('Could not add row', 404);
     });
 }
 
@@ -37,7 +41,16 @@ export const addCategory = async (client: any, params: categoryParams) => {
 export const getCategories = async (client: any, weeknumber: number, batchid: string) => {
 
     //we want the name of category and the id
-    let res = await client.query('select qcweekid from qcweeks where batchid=$1::text and weeknumber=$2::integer', [batchid, weeknumber]);
+    let res;
+    try {
+        res = await client.query('select qcweekid from qcweeks where batchid=$1::text and weeknumber=$2::integer', [batchid, weeknumber]);
+    } catch(err) {
+        console.log(err);
+        client.end();
+        return null;
+    }
+    
+    
     let qcweekid = Number(res.rows[0].qcweekid);
     console.log(JSON.stringify(res));
     console.log('qc week id '+qcweekid);
@@ -53,14 +66,26 @@ export const getCategories = async (client: any, weeknumber: number, batchid: st
 }
 
 export const deleteCategory = async (client: any, weeknumber: number, batchid: string, categoryid: number) => {
-    let res = await client.query('select qcweekid from qcweeks where batchid=$1::text and weeknumber=$2::integer', [batchid, weeknumber]);
+    let res;
+    try {
+        res = await client.query('select qcweekid from qcweeks where batchid=$1::text and weeknumber=$2::integer', [batchid, weeknumber]);
+    } catch(err) {
+        console.log(err);
+        client.end();
+        return createResponse('', 400);
+    }
+    
     let qcweekid = Number(res.rows[0].qcweekid);
     await client.query('delete from weekcategories where qcweekid = $1::integer and categoryid = $2::integer', [qcweekid, categoryid] ).then((response: any) => {
         client.end();
         if (response) {
             return createResponse('', 200);
         } else {
-            return createResponse('', 400)
+            return createResponse('', 400);
         }
+    }).catch((err: Error) => {
+        console.log(err);
+        client.end();
+        return createResponse('', 400);
     });
 }
