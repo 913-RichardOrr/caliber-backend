@@ -12,14 +12,7 @@ exports.handler =
 async function (event:any){
     const { Client } = require('pg');
     const client = new Client();  
-        // user: process.env.PGUSER   ,
-        // host: process.env.PGHOST,
-        // database: process.env.PGDATABASE,
-        // password: process.env.PGPASSWORD, 
-        // port: 5432
-    //});
     await client.connect(); 
-
     const method = event.httpMethod;
     switch (method) {
         case 'GET':
@@ -37,10 +30,6 @@ async function (event:any){
             console.log(typeof(event.body));
 
             let postWeek = JSON.parse(event.body).qcWeekId;
-            //console.log("post week "+event.body.qcWeekId);
-
-            //console.log("post category "+postCategory);
-            //console.log('postweek '+postWeek);
             return await addCategory(client,{weekID: Number(postWeek), categoryID: Number(postCategory)});
             break;
         case 'DELETE':
@@ -50,8 +39,6 @@ async function (event:any){
             let del_weeknumber: number = Number(del_parts[del_parts.length - 3]);
             let del_categoryid: number = Number(del_parts[del_parts.length-1]);
             console.log(del_batchid + "  " + del_weeknumber + "  " + del_categoryid);
-            //let deleteVarCategory = JSON.stringify(event.body.categoryid);
-            //let deleteWeek = event.path.substring(event.path.lastIndexOf('/') + 1, event.path.length);
             return await deleteCategory(client, del_weeknumber, del_batchid, del_categoryid);
             break;
         default:

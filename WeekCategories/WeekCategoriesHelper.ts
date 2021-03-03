@@ -43,28 +43,13 @@ export const getCategories = async (client: any, weeknumber: number, batchid: st
     console.log('qc week id '+qcweekid);
     return await client.query(`select c.skill, c.categoryid from categories c join weekcategories w on c.categoryid = w.categoryid where w.qcweekid = ${qcweekid}`
     ).then((res:any)=>{
-      //  console.log("OUR RES in the helper is  " + res);
-        //return res.rows; 
         client.end();
         return createResponse(JSON.stringify(res.rows), 200);
     }).catch((err: any)=> {
         console.log(err);
         client.end();
         return null;
-    });
-    
-    // , (err: any, res: any) => {
-    //     client.end();
-    //     if (res) {
-    //        // return res;  
-    //        return createResponse(JSON.stringify(res.rows), 200);
-    //     } else {
-    //         return createResponse('', 400);
-    //     };
-    // });
-    
-
-    
+    });  
 }
 
 export const deleteCategory = async (client: any, weeknumber: number, batchid: string, categoryid: number) => {
