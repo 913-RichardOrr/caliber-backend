@@ -1,4 +1,4 @@
-# Make the associate lambda from an existingimage
+# Make the weekcategories lambda from an existingimage
 AWSTemplateFormatVersion: 2010-09-09
 Description: lambda for weekcategories-lambda
 Resources:
