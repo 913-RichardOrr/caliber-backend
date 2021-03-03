@@ -56,4 +56,4 @@ export async function handler (event: any, context: any) {
     } catch (err) {
         return generateIamPolicy('Deny', event.methodArn);
     }
-};
+}
