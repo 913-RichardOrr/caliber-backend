@@ -12,8 +12,8 @@ export default async function UpdateFeedbackLambda(event: any) {
     const weekInfo = JSON.parse(event.body);
     client.connect();
 
-    const query = `update qcweeks set note = $1::text, overallstatus = $2::STATUS where weeknumber = $3::int`;
-    const values = [weekInfo.note, weekInfo.overallstatus, weekInfo.weeknumber];
+    const query = `update qcweeks set note = $1::text, overallstatus = $2::STATUS where weeknumber = $3::int and batchid = $4::text`;
+    const values = [weekInfo.note, weekInfo.overallstatus, weekInfo.weeknumber, weekInfo.batchid];
 
     let response = await client.query(query, values);
 
