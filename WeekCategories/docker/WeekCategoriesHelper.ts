@@ -34,14 +34,23 @@ export const addCategory = async (client: any, params: categoryParams) => {
  * @param {getCategoryParams} params - the weekId that specifies which week we want categories for
  */
 
-export const getCategories = async (client: any, params:getCategoryParams) => {
+export const getCategories = async (client: any, weeknumber: number, batchid: string) => {
 
     //we want the name of category and the id
-    return await client.query(`select c.skill, c.categoryid from categories c join weekcategories w on c.categoryid = w.categoryid where w.qcweekid = ${params.weekID}`
+    let res = await client.query('select qcweekid from qcweeks where batchid=$1::text and weeknumber=$2::integer', [batchid, weeknumber]);
+    let qcweekid = Number(res.rows[0].qcweekid);
+    console.log(JSON.stringify(res));
+    console.log('qc week id '+qcweekid);
+    return await client.query(`select c.skill, c.categoryid from categories c join weekcategories w on c.categoryid = w.categoryid where w.qcweekid = ${qcweekid}`
     ).then((res:any)=>{
       //  console.log("OUR RES in the helper is  " + res);
         //return res.rows; 
-    return createResponse(JSON.stringify(res.rows), 200);
+        client.end();
+        return createResponse(JSON.stringify(res.rows), 200);
+    }).catch((err: any)=> {
+        console.log(err);
+        client.end();
+        return null;
     });
     
     // , (err: any, res: any) => {
@@ -58,8 +67,10 @@ export const getCategories = async (client: any, params:getCategoryParams) => {
     
 }
 
-export const deleteCategory = async (client: any, params: categoryParams) => {
-    await client.query(`delete from weekcategories where qcweekid = ${params.weekID} and categoryid = ${params.categoryID}` ).then((response: any) => {
+export const deleteCategory = async (client: any, weeknumber: number, batchid: string, categoryid: number) => {
+    let res = await client.query('select qcweekid from qcweeks where batchid=$1::text and weeknumber=$2::integer', [batchid, weeknumber]);
+    let qcweekid = Number(res.rows[0].qcweekid);
+    await client.query('delete from weekcategories where qcweekid = $1::integer and categoryid = $2::integer', [qcweekid, categoryid] ).then((response: any) => {
         client.end();
         if (response) {
             return createResponse('', 200);
