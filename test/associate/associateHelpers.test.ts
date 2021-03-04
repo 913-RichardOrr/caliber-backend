@@ -161,11 +161,10 @@ describe('tests for patchAssociate', () => {
     ]);
 
     expect(mockQuery.mock.calls[1][0]).toBe(
-      'select batchid, weeknumber, associateid, notecontent, technicalstatus from qcnotes where associateid = $2::text and weeknumber = $3::integer and batchid = $4::text'
+      'select batchid, weeknumber, associateid, notecontent, technicalstatus from qcnotes where associateid = $1::text and weeknumber = $2::integer and batchid = $3::text'
     );
 
     expect(mockQuery.mock.calls[1][1]).toEqual([
-      testUpdateObject.notecontent,
       original.associateid,
       original.weeknumber,
       original.batchid,
@@ -193,22 +192,21 @@ describe('tests for patchAssociate', () => {
     expect(mockQuery).toHaveBeenCalledTimes(2);
 
     expect(mockQuery.mock.calls[0][0]).toBe(
-      'update qcnotes set technicalstatus = $1::integer where associateid = $2::text and weeknumber = $3::integer and batchid = $4::text'
+      'update qcnotes set technicalstatus = $1::STATUS where associateid = $2::text and weeknumber = $3::integer and batchid = $4::text'
     );
 
     expect(mockQuery.mock.calls[0][1]).toEqual([
-      testUpdateObject.technicalstatus,
+      'Good',
       original.associateid,
       original.weeknumber,
       original.batchid,
     ]);
 
     expect(mockQuery.mock.calls[1][0]).toBe(
-      'select batchid, weeknumber, associateid, notecontent, technicalstatus from qcnotes where associateid = $2::text and weeknumber = $3::integer and batchid = $4::text'
+      'select batchid, weeknumber, associateid, notecontent, technicalstatus from qcnotes where associateid = $1::text and weeknumber = $2::integer and batchid = $3::text'
     );
 
     expect(mockQuery.mock.calls[1][1]).toEqual([
-      '',
       original.associateid,
       original.weeknumber,
       original.batchid,
@@ -252,22 +250,21 @@ describe('tests for patchAssociate', () => {
     ]);
 
     expect(mockQuery.mock.calls[1][0]).toBe(
-      'update qcnotes set technicalstatus = $1::integer where associateid = $2::text and weeknumber = $3::integer and batchid = $4::text'
+      'update qcnotes set technicalstatus = $1::STATUS where associateid = $2::text and weeknumber = $3::integer and batchid = $4::text'
     );
 
     expect(mockQuery.mock.calls[1][1]).toEqual([
-      testUpdateObject.technicalstatus,
+      'Good',
       original.associateid,
       original.weeknumber,
       original.batchid,
     ]);
 
     expect(mockQuery.mock.calls[2][0]).toBe(
-      'select batchid, weeknumber, associateid, notecontent, technicalstatus from qcnotes where associateid = $2::text and weeknumber = $3::integer and batchid = $4::text'
+      'select batchid, weeknumber, associateid, notecontent, technicalstatus from qcnotes where associateid = $1::text and weeknumber = $2::integer and batchid = $3::text'
     );
 
     expect(mockQuery.mock.calls[2][1]).toEqual([
-      testUpdateObject.notecontent,
       original.associateid,
       original.weeknumber,
       original.batchid,
@@ -287,5 +284,16 @@ describe('tests for patchAssociate', () => {
     expect(mockConnect).toHaveBeenCalledTimes(0);
     expect(mockQuery).toHaveBeenCalledTimes(0);
     expect(mockEnd).toHaveBeenCalledTimes(0);
+  });
+});
+
+describe('Tests for parsePath', () => {
+
+  test("That parsePath returns the expected values", () => {
+    const testPath = 'blablabla/batches/YYMM-mmmDD-Stuff/weeks/1/associates/example@example.net';
+    const expected = { batchid: 'YYMM-mmmDD-Stuff', weeknumber: 1, associateid: 'example@example.net' };
+
+    expect(associateLambda.parsePath(testPath)).toEqual(expected);
+
   });
 });
