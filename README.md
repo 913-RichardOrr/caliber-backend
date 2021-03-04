@@ -28,6 +28,9 @@
 * Dockerfiles for containerization
 * Database setup scripts
 
+## Getting Started:
+Please read SETUP.md to set up all backend technologies.
+
 ## Contributors
 * [Medbh Campbell](https://github.com/medbhcampbell)
 * [Kathryn Clark](https://github.com/kathrync23)
