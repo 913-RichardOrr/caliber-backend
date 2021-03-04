@@ -2,7 +2,7 @@ const getCategories = require('../categories/categories.get')
 const addCategory = require('../categories/category.add')
 const deleteCategory = require('../categories/category.delete')
 
-import { createResponse } from '../response'
+import  createResponse  from '../response'
 import { Client } from 'pg';
 
 jest.mock('pg', () => {

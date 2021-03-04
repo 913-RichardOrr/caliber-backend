@@ -5,10 +5,25 @@ Resources:
     Type: AWS::Lambda::Function
     Properties:
       FunctionName: batches
-      Role:
-        arn:aws:iam::855430746673:role/caliber-mobile-cf
+      Role: arn:aws:iam::855430746673:role/caliber-mobile-cf
       Code:
-        ImageUri: !Join ["/",[!Join [".",[!Sub "${AWS::AccountId}", "dkr", "ecr", !Sub "${AWS::Region}", "amazonaws", "com"]], "batches-lambda:latest"]]
+        ImageUri:
+          !Join [
+            '/',
+            [
+              !Join [
+                '.',
+                [
+                  !Sub '${AWS::AccountId}',
+                  'dkr',
+                  'ecr',
+                  !Sub '${AWS::Region}',
+                  'amazonaws',
+                  'com',
+                ],
+              ],
+              'batches-lambda:latest',
+            ],
+          ]
       Timeout: 5
-      PackageType: "Image"
-
+      PackageType: 'Image'

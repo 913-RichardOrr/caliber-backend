@@ -1,6 +1,5 @@
-import { Client } from 'pg';
-import { handler } from '../../categoriesFeature/CategoriesLambda';
-import * as categoriesHelpers from '../../categoriesFeature/CategoriesHelpers';
+import { handler } from '../categoriesFeature/categoriesLambda';
+import * as categoriesHelpers from '../categoriesFeature/categoriesHelpers';
 
 // mocked client
 jest.mock('pg', () => {
@@ -13,7 +12,7 @@ jest.mock('pg', () => {
 });
 
 // mocked helper functions
-jest.mock('../../categoriesFeature/CategoriesHelpers', () => {
+jest.mock('../categoriesFeature/categoriesHelpers', () => {
     const mockget = jest.fn();
     const mockpost = jest.fn();
     const mockput = jest.fn();

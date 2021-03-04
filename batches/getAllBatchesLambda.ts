@@ -31,10 +31,14 @@ export async function getAllBatchesLambda(
 		.then((res) => {
 			if (res.data) {
 				batchInfo = res.data.map((batch: any) => {
+<<<<<<< HEAD
 					/**
 					 * @type {BatchInfo}
 					 */
 					let batchData: BatchInfo = {
+=======
+					let batchData = {
+>>>>>>> dev
 						id: batch.id,
 						batchId: batch.batchId,
 						name: batch.name,
@@ -43,20 +47,31 @@ export async function getAllBatchesLambda(
 						skill: batch.skill,
 						location: batch.location,
 						type: batch.type,
+<<<<<<< HEAD
 						trainerEmail: '',
 						trainerFirstName: '',
 						trainerLastName: '',
 					};
+=======
+						trainer: '',
+					};
+					let trainer: string;
+>>>>>>> dev
 					if (
 						batch.employeeAssignments &&
 						batch.employeeAssignments[0].role === 'ROLE_LEAD_TRAINER'
 					) {
+<<<<<<< HEAD
 						batchData.trainerEmail =
 							batch.employeeAssignments[0].employee.email;
 						batchData.trainerFirstName =
 							batch.employeeAssignments[0].employee.firstName;
 						batchData.trainerLastName =
 							batch.employeeAssignments[0].employee.lastName;
+=======
+						trainer = `${batch.employeeAssignments[0].employee.firstName} ${batch.employeeAssignments[0].employee.lastName}`;
+						batchData.trainer = trainer;
+>>>>>>> dev
 					}
 					return batchData;
 				});
