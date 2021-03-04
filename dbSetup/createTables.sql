@@ -1,6 +1,17 @@
 /******************************************************
-   Create Tables
+	Delete Tables
 ******************************************************/
+
+drop table if exists categories cascade;
+drop table if exists qcWeeks cascade;
+drop table if exists weekCategories cascade;
+drop table if exists qcNotes cascade;
+
+/******************************************************
+	Create Tables
+******************************************************/
+
+create type STATUS as enum ('Undefined', 'Poor', 'Average', 'Good', 'Superstar');
 
 create table categories
 (
@@ -8,9 +19,6 @@ create table categories
 	skill text not null,
 	active boolean
 );
-
-
-create type STATUS as enum ('Undefined', 'Poor', 'Average', 'Good', 'Superstar');
 
 create table qcWeeks
 (
@@ -34,7 +42,7 @@ create table qcNotes
 	qcNoteId serial primary key,
 	weekNumber int,
 	batchId text, 
-	associateId int,
+	associateId text,
 	technicalStatus STATUS,
 	noteContent text
 );
