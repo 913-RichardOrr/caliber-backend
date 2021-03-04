@@ -6,7 +6,6 @@ import { Client } from 'pg';
  * @param {object} event - the event that triggers the API gateway which contains the information for that week.
  * @returns {object} - HTTP response containing the status code and headers to deal with CORS issues.
  */
-
 export default async function UpdateFeedbackLambda(event: any) {
     const client = new Client();
     const weekInfo = JSON.parse(event.body);

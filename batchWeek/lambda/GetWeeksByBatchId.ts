@@ -5,7 +5,7 @@ import { Client } from 'pg';
  * database. The 'pg' environment variables point to our RDS instance and should be set up using
  * CloudFormation. Called using GET on /qc/batches/{batchId}/weeks/.
  * @param {string} batchId - The batch's id we want to get the weeks for (this id comes from the mock api)
- * @returns {object} An HTTP resopnse with an array of weeks in the body
+ * @returns {object} - An HTTP resopnse with an array of weeks in the body
  */
 export default async function getWeeksByBatchId(batchId: string) {
     const client = new Client();
