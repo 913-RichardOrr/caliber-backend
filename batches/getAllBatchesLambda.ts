@@ -1,79 +1,44 @@
 import axios from 'axios';
 import https from 'https';
+import { BatchInfo } from './getBatchesLambda';
 
-export interface AllBatchesEvent {
-	queryStringParameters: {
-		year: number;
-		quarter: number;
-	};
-}
-
-export interface AllBatchInfo {
-	id: string;
-	batchId: string;
-	name: string;
-	startDate: string;
-	endDate: string;
-	skill: string;
-	location: string;
-	type: string;
-	trainer: string;
-}
-
-export default async function handler(event: AllBatchesEvent) {
-	const resp = {
-		statusCode: 200,
-		headers: {
-			'Access-Control-Allow-Headers': 'Content-Type',
-			'Access-Control-Allow-Origin': '*',
-			'Access-Control-Allow-Methods': 'OPTIONS,POST,GET',
-		},
-		body: '',
-	};
-
-	let year: number;
-	let quarter: number;
-
-	if (event.queryStringParameters.year) {
-		year = event.queryStringParameters.year;
-	} else {
-		resp.statusCode = 400;
-		resp.body = 'Bad request.';
-		return resp;
-	}
-
-	if (event.queryStringParameters.quarter) {
-		quarter = event.queryStringParameters.quarter;
-	} else {
-		resp.statusCode = 400;
-		resp.body = 'Bad request.';
-		return resp;
-	}
-
-	const batchInfo = await getAllBatchesLambda(year, quarter);
-
-	if (batchInfo) {
-		resp.body = JSON.stringify(batchInfo);
-	}
-	return resp;
-}
-
+/**
+ * @type {string}
+ */
 const URI = 'https://caliber2-mock.revaturelabs.com:443/mock/training/batch';
+
+/**
+ * @typedef {import("https").Agent} Agent
+ */
+/**
+ * @type {Agent}
+ */
 export const allBatchesAgent = new https.Agent({ rejectUnauthorized: false });
 
+/**
+ * Gets all the Batches for a specific year
+ * @param year {string}
+ */
 export async function getAllBatchesLambda(
-	year: number,
-	quarter: number
-): Promise<any | null> {
-	let batchInfo: AllBatchInfo[] = [];
+	year: string
+): Promise<BatchInfo[] | null> {
+	let batchInfo: BatchInfo[] = [];
 	await axios
-		.get(`${URI}?year=${year}&quarter=${quarter}`, {
+		.get(`${URI}`, {
 			httpsAgent: allBatchesAgent,
+			params: year ? { year: year } : '',
 		})
 		.then((res) => {
 			if (res.data) {
 				batchInfo = res.data.map((batch: any) => {
+<<<<<<< HEAD
+					/**
+					 * @type {BatchInfo}
+					 */
+					let batchData: BatchInfo = {
+=======
 					let batchData = {
+>>>>>>> dev
 						id: batch.id,
 						batchId: batch.batchId,
 						name: batch.name,
@@ -82,15 +47,31 @@ export async function getAllBatchesLambda(
 						skill: batch.skill,
 						location: batch.location,
 						type: batch.type,
+<<<<<<< HEAD
+						trainerEmail: '',
+						trainerFirstName: '',
+						trainerLastName: '',
+					};
+=======
 						trainer: '',
 					};
 					let trainer: string;
+>>>>>>> dev
 					if (
 						batch.employeeAssignments &&
 						batch.employeeAssignments[0].role === 'ROLE_LEAD_TRAINER'
 					) {
+<<<<<<< HEAD
+						batchData.trainerEmail =
+							batch.employeeAssignments[0].employee.email;
+						batchData.trainerFirstName =
+							batch.employeeAssignments[0].employee.firstName;
+						batchData.trainerLastName =
+							batch.employeeAssignments[0].employee.lastName;
+=======
 						trainer = `${batch.employeeAssignments[0].employee.firstName} ${batch.employeeAssignments[0].employee.lastName}`;
 						batchData.trainer = trainer;
+>>>>>>> dev
 					}
 					return batchData;
 				});

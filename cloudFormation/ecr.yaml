@@ -27,6 +27,12 @@ Resources:
       RepositoryName: "batches-lambda"
       LifecyclePolicy:
         LifecyclePolicyText: !Ref PolicyTemplate
+<<<<<<< HEAD
+  AssociateECR:
+    Type: AWS::ECR::Repository
+    Properties:
+      RepositoryName: "associate-lambda"
+=======
   AssociatesECR:
     Type: AWS::ECR::Repository
     Properties:
@@ -37,6 +43,7 @@ Resources:
     Type: AWS::ECR::Repository
     Properties:
       RepositoryName: "batch-associates-lambda"
+>>>>>>> dev
       LifecyclePolicy:
         LifecyclePolicyText: !Ref PolicyTemplate
   BatchWeekECR:
@@ -68,12 +75,17 @@ Outputs:
     Value: !GetAtt BatchesECR.Arn
     Export:
       Name: BatchesECRArn
+<<<<<<< HEAD
+  AssociateECRArn:
+    Value: !GetAtt AssociateECR.Arn
+=======
   AssociatesECRArn:
     Value: !GetAtt AssociatesECR.Arn
     Export:
       Name: AssociatesECRArn
   BatchAssociatesECRArn:
     Value: !GetAtt BatchAssociatesECR.Arn
+>>>>>>> dev
     Export:
       Name: AssociateECRArn
   BatchWeekECRArn:

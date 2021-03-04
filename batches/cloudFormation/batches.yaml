@@ -1,62 +1,29 @@
 AWSTemplateFormatVersion: '2010-09-09'
+Description: Lambda for Batches Group
 Resources:
-  BatchLayer:
-    Type: AWS::Lambda::LayerVersion
-    Properties:
-      CompatibleRuntimes:
-        - nodejs14.x
-      Content:
-        S3Bucket: caliber-batches # need to update this to S3 bucket holding the lambdas
-        S3Key: BatchesLayersCode # need to update this to key for the file holding layers zip file
-      Description: BatchesLayersCode
-      LayerName: batches-layers
-  Batches:
+  BatchesLambda:
     Type: AWS::Lambda::Function
     Properties:
-      FunctionName: Batches
-      Handler: lambda/index.handler
-      Layers:
-        - !Ref BatchLayer
-      Role:
-        Fn::GetAtt:
-          - BatchesRole
-          - Arn
+      FunctionName: batches
+      Role: arn:aws:iam::855430746673:role/caliber-mobile-cf
       Code:
-        S3Bucket: caliber-batches # need to update this to S3 bucket holding the lambdas
-        S3Key: BatchesCode # need to update this to key for the file holding lambda zip file
-      Runtime: nodejs14.x
+        ImageUri:
+          !Join [
+            '/',
+            [
+              !Join [
+                '.',
+                [
+                  !Sub '${AWS::AccountId}',
+                  'dkr',
+                  'ecr',
+                  !Sub '${AWS::Region}',
+                  'amazonaws',
+                  'com',
+                ],
+              ],
+              'batches-lambda:latest',
+            ],
+          ]
       Timeout: 5
-  BatchesRole:
-    Type: 'AWS::IAM::Role'
-    Properties:
-      RoleName: BatchesRole
-      AssumeRolePolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service:
-                - lambda.amazonaws.com
-            Action:
-              - 'sts:AssumeRole'
-      Path: /
-      Policies:
-        - PolicyName: AWSLambdaBasicExecutionRole
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Effect: Allow
-                Action:
-                  - 'logs:CreateLogGroup'
-                  - 'logs:CreateLogStream'
-                  - 'logs:PutLogEvents'
-                Resource: '*'
-        - PolicyName: AmazonS3FullAccess
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Effect: Allow
-                Action: 's3:*'
-                Resource:
-                  - 'arn:aws:s3:::exchange-data-raw'
-                  - 'arn:aws:s3:::exchange-data-raw/*'
+      PackageType: 'Image'
