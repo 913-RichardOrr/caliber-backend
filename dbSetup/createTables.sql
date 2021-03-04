@@ -25,6 +25,7 @@ create table qcWeeks
 	qcWeekId serial primary key,
 	weekNumber int,
 	note text,
+	overallStatus STATUS,
 	batchId int
 );
 
