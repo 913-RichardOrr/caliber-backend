@@ -16,7 +16,7 @@ export const addCategory = async (client: any, params: categoryParams) => {
     const query = `insert into weekcategories (categoryid, qcweekid) values ($1, $2)`;
     const values = [params.categoryID, params.weekID];
 
-    await client.query(query, values).then((response: any) => {
+    return await client.query(query, values).then((response: any) => {
         client.end();
         if (response) {
             console.log("i am runnign in the response retutn location");
@@ -38,6 +38,8 @@ export const addCategory = async (client: any, params: categoryParams) => {
  * @param {getCategoryParams} params - the weekId that specifies which week we want categories for
  */
 
+ 
+
 export const getCategories = async (client: any, weeknumber: number, batchid: string) => {
 
     //we want the name of category and the id
@@ -47,9 +49,13 @@ export const getCategories = async (client: any, weeknumber: number, batchid: st
     } catch(err) {
         console.log(err);
         client.end();
-        return null;
+        return createResponse('Not Found',404);
     }
     
+    if(!res.rows[0].qcweekid) {
+        return createResponse('Not Found',404);
+    }
+
     
     let qcweekid = Number(res.rows[0].qcweekid);
     console.log(JSON.stringify(res));
@@ -61,7 +67,7 @@ export const getCategories = async (client: any, weeknumber: number, batchid: st
     }).catch((err: any)=> {
         console.log(err);
         client.end();
-        return null;
+        return createResponse('Not Found',404);
     }); 
 }
 
@@ -72,20 +78,24 @@ export const deleteCategory = async (client: any, weeknumber: number, batchid: s
     } catch(err) {
         console.log(err);
         client.end();
-        return createResponse('', 400);
+        return createResponse('Id Does Not Exist', 400);
     }
     
+    if(!res.rows[0].qcweekid) {
+        return createResponse('Not Found',404);
+    }
+
     let qcweekid = Number(res.rows[0].qcweekid);
-    await client.query('delete from weekcategories where qcweekid = $1::integer and categoryid = $2::integer', [qcweekid, categoryid] ).then((response: any) => {
+    return await client.query('delete from weekcategories where qcweekid = $1::integer and categoryid = $2::integer', [qcweekid, categoryid] ).then((response: any) => {
         client.end();
         if (response) {
-            return createResponse('', 200);
+            return createResponse('Successfully Deleted', 200);
         } else {
-            return createResponse('', 400);
+            return createResponse('Does Not Exist', 400);
         }
     }).catch((err: Error) => {
         console.log(err);
         client.end();
-        return createResponse('', 400);
+        return createResponse('Does Not Exist', 400);
     });
 }
