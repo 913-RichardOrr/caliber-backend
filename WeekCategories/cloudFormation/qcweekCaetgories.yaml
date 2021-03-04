@@ -1,0 +1,17 @@
+# Make the weekcategories lambda from an existingimage
+AWSTemplateFormatVersion: 2010-09-09
+Description: lambda for weekcategories-lambda
+Resources:
+  BatchesLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: weekcategories-lambda
+      Role:
+        arn:aws:iam::855430746673:role/caliber-mobile-cf
+      Code:
+        ImageUri: !Join ["/",[!Join [".",[!Sub "${AWS::AccountId}", "dkr", "ecr", !Sub "${AWS::Region}", "amazonaws", "com"]], "weekcategories-lambda:latest"]]
+      Timeout: 5
+      PackageType: "Image"
+
+
+  
