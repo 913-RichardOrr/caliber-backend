@@ -7,9 +7,9 @@ Parameters:
     Default: calibermobile
     Description: Instance for Caliber Mobile RDS to track QC feedback
     Type: String
-    MinLength: '1'
-    MaxLength: '63'
-    AllowedPattern: '[a-zA-Z][a-zA-Z0-9]*'
+    MinLength: "1"
+    MaxLength: "63"
+    AllowedPattern: "[a-zA-Z][a-zA-Z0-9]*"
     ConstraintDescription: >-
       Must begin with a letter and must not end with a hyphen or contain two
       consecutive hyphens.
@@ -17,9 +17,9 @@ Parameters:
     Default: calibermobile
     Description: Database for Caliber Mobile to track QC feedback
     Type: String
-    MinLength: '1'
-    MaxLength: '64'
-    AllowedPattern: '[a-zA-Z][a-zA-Z0-9]*'
+    MinLength: "1"
+    MaxLength: "64"
+    AllowedPattern: "[a-zA-Z][a-zA-Z0-9]*"
     ConstraintDescription: Must begin with a letter and contain only alphanumeric characters.
   DBInstanceClass:
     Default: db.t3.micro
@@ -27,22 +27,22 @@ Parameters:
     Type: String
     ConstraintDescription: Must select a valid DB instance type.
   DBAllocatedStorage:
-    Default: '20'
+    Default: "20"
     Description: The size of the database (GiB)
     Type: Number
-    MinValue: '5'
-    MaxValue: '1024'
+    MinValue: "5"
+    MaxValue: "1024"
     ConstraintDescription: must be between 20 and 65536 GiB.
   DBUsername:
-    NoEcho: 'true'
+    NoEcho: "true"
     Description: Username for postgreSQL database access
     Type: String
-    MinLength: '1'
-    MaxLength: '16'
-    AllowedPattern: '[a-zA-Z][a-zA-Z0-9]*'
+    MinLength: "1"
+    MaxLength: "16"
+    AllowedPattern: "[a-zA-Z][a-zA-Z0-9]*"
     ConstraintDescription: must begin with a letter and contain only alphanumeric characters.
   DBPassword:
-    NoEcho: 'true'
+    NoEcho: "true"
     Description: Password postgreSQL database access
     Type: String
     MinLength: '8'
@@ -52,7 +52,7 @@ Parameters:
 
 Resources:
   MyDB:
-    Type: 'AWS::RDS::DBInstance'
+    Type: "AWS::RDS::DBInstance"
     Properties:
       DBInstanceIdentifier: !Ref DBInstanceID
       DBName: !Ref DBName
