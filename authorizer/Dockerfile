@@ -17,5 +17,5 @@ RUN npx tsc
 RUN ls
 
 # Tell lambda what to call
-CMD ["authorizer.handler"]
+CMD ["authorizerHandler.handler"]
 

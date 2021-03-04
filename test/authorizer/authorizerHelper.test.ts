@@ -1,4 +1,4 @@
-import { helper } from '../authorizerHelper';
+import { helper } from '../../authorizer/authorizerHelper';
 
 describe('Authorizer Helper Test Suite', () => {
     //don't need to test vp, allowed access to all endpoints in main handler
