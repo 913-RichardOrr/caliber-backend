@@ -23,11 +23,13 @@ To start, make sure you are in root directory. Also make sure to ask product own
   * Use `WeekCategoriesECR` for ECR repo name
 
 ## Build each Docker file with environment variables (paths listed above)
-`Docker build -t <image-name> -f <path-to-Dockerfile> --build-arg USER=<pg-user> --build-arg HOST=<pg-host> --build-arg PASSWORD=<pg-password> --build-arg DATABASE=<pg-database> .`
+`docker build -t <image-name> -f <path-to-Dockerfile> --build-arg USER=<pg-user> --build-arg HOST=<pg-host> --build-arg PASSWORD=<pg-password> --build-arg DATABASE=<pg-database> .`
 
 ## Push Docker images to AWS
 * log in to aws cli
-* `aws configure`
+  * `aws configure`
+* If you want to create a profile called caliber, you can easily switch between different AWS accounts. Each command must be appended with `--profile caliber`.
+  * `aws configure --profile caliber`
 
 ## Enter the user credentials of your AWS account
 * Enter access key id
@@ -36,6 +38,9 @@ To start, make sure you are in root directory. Also make sure to ask product own
 
 ## Confirm  the logged in user
 * `aws sts get-caller-identity`
+
+## Create the Elastic Container Registry Repositories
+* `aws cloudformation deploy --template-file ./cloudFormation/ecr.yaml --stack-name <stackname> --role-arn arn:aws:iam::855430746673:role/caliber-mobile-cf`
 
 ## Log in to Elastic Container Registry server
 * `aws ecr get-login-password --region <region> | docker login --username AWS --password-stdin <account>.dkr.ecr.<region>.amazonaws.com`
