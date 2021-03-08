@@ -3,7 +3,7 @@
 To start, make sure you are in root directory. Also make sure to ask product owner for database password if you will not be creating a new database instance.
 
 # Deploy RDS Template if starting with a new DB instance
-`aws cloudformation deploy --template-file ./cloudFOrmation/rds.yaml --stack-name <stack-name> --role-arn arn:aws:iam::855430746673:role/caliber-mobile-cf --parameter-overrides DBUsername=<db-name> DBPassword=<db-password>`
+`aws cloudformation deploy --template-file ./cloudFormation/rds.yaml --stack-name <stack-name> --role-arn arn:aws:iam::855430746673:role/caliber-mobile-cf --parameter-overrides DBUsername=<db-name> DBPassword=<db-password>`
 
 # Containerize Lambdas with Docker
 ## Paths for files needed for Docker
