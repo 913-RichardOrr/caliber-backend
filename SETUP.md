@@ -62,10 +62,14 @@ To start, make sure you are in root directory. Also make sure to ask product own
 * ./weekCategories/cloudFormation/qcweekCaetgories.yaml
 
 ## Create lambda stacks using CloudFormation (with paths listed above)
-* `aws cloudformation deploy --template-file <path-to-file>.yaml --stack-name <stack-name>`
+* `aws cloudformation deploy --template-file <path-to-file> --stack-name <stack-name>`
 
 # Deploy API Gateway
 * `aws cloudformation deploy --template-file ./cloudFormation/apigateway.yaml --stack-name <stack-name>`
 
 ## Deploy the Invoke Template to give API Gateway permission to use Lambdas
 * `aws cloudformation deploy --template-file ./cloudFormation/invoke.yaml --stack-name <stack-name> --capabilities CAPABILITY_IAM`
+
+## Using the backend shell script
+If you would rather use a shell script to deploy, create an .env file from the .env.example and modify the stackName and roleARN and source of the .env in the backendSetup.sh. 
+If you want to deploy the database, uncomment out the RDS deployment.
