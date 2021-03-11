@@ -3,7 +3,7 @@
 To start, make sure you are in root directory. Also make sure to ask product owner for database password if you will not be creating a new database instance.
 
 # Deploy RDS Template if starting with a new DB instance
-`aws cloudformation deploy --template-file ./cloudFOrmation/rds.yaml --stack-name <stack-name> --role-arn arn:aws:iam::855430746673:role/caliber-mobile-cf --parameter-overrides DBUsername=<db-name> DBPassword=<db-password>`
+`aws cloudformation deploy --template-file ./cloudFormation/rds.yaml --stack-name <stack-name> --role-arn arn:aws:iam::855430746673:role/caliber-mobile-cf --parameter-overrides DBUsername=<db-name> DBPassword=<db-password>`
 
 # Containerize Lambdas with Docker
 ## Paths for files needed for Docker
@@ -23,11 +23,13 @@ To start, make sure you are in root directory. Also make sure to ask product own
   * Use `WeekCategoriesECR` for ECR repo name
 
 ## Build each Docker file with environment variables (paths listed above)
-`Docker build -t <image-name> -f <path-to-Dockerfile> --build-arg USER=<pg-user> --build-arg HOST=<pg-host> --build-arg PASSWORD=<pg-password> --build-arg DATABASE=<pg-database> .`
+`docker build -t <image-name> -f <path-to-Dockerfile> --build-arg USER=<pg-user> --build-arg HOST=<pg-host> --build-arg PASSWORD=<pg-password> --build-arg DATABASE=<pg-database> .`
 
 ## Push Docker images to AWS
 * log in to aws cli
-* `aws configure`
+  * `aws configure`
+* If you want to create a profile called caliber, you can easily switch between different AWS accounts. Each command must be appended with `--profile caliber`.
+  * `aws configure --profile caliber`
 
 ## Enter the user credentials of your AWS account
 * Enter access key id
@@ -36,6 +38,9 @@ To start, make sure you are in root directory. Also make sure to ask product own
 
 ## Confirm  the logged in user
 * `aws sts get-caller-identity`
+
+## Create the Elastic Container Registry Repositories
+* `aws cloudformation deploy --template-file ./cloudFormation/ecr.yaml --stack-name <stackname> --role-arn arn:aws:iam::855430746673:role/caliber-mobile-cf`
 
 ## Log in to Elastic Container Registry server
 * `aws ecr get-login-password --region <region> | docker login --username AWS --password-stdin <account>.dkr.ecr.<region>.amazonaws.com`
@@ -57,10 +62,14 @@ To start, make sure you are in root directory. Also make sure to ask product own
 * ./weekCategories/cloudFormation/qcweekCaetgories.yaml
 
 ## Create lambda stacks using CloudFormation (with paths listed above)
-* `aws cloudformation deploy --template-file <path-to-file>.yaml --stack-name <stack-name>`
+* `aws cloudformation deploy --template-file <path-to-file> --stack-name <stack-name>`
 
 # Deploy API Gateway
 * `aws cloudformation deploy --template-file ./cloudFormation/apigateway.yaml --stack-name <stack-name>`
 
 ## Deploy the Invoke Template to give API Gateway permission to use Lambdas
 * `aws cloudformation deploy --template-file ./cloudFormation/invoke.yaml --stack-name <stack-name> --capabilities CAPABILITY_IAM`
+
+## Using the backend shell script
+If you would rather use a shell script to deploy, create an .env file from the .env.example and modify the stackName and roleARN and source of the .env in the backendSetup.sh. 
+If you want to deploy the database, uncomment out the RDS deployment.
